@@ -13,8 +13,6 @@ Octopush is built on PHP and MySQL. Its PHP dependencies are managed with compos
 * php5-mysql
 * MySQL
 * HttpRequest PHP Library (pecl_http)
-* Memchache (for future use)
-* APC (for future use)
 * phpunit
 
 
@@ -65,5 +63,8 @@ Octopush API
 
 In the folder sample_scripts you can find some scripts that will show you how to interact with Octopush API.
 
+More Doc
+--------
+http://olx-inc.github.io/octopush
 ###
 
