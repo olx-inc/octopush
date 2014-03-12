@@ -6,4 +6,8 @@ php:
 install:
   - composer install
 
+branches:
+  only:
+    - master
+    
 script: phpunit
