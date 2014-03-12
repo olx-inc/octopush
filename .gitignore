@@ -1,0 +1,20 @@
+# Bootstrap
+app/bootstrap*
+
+# External dependencies
+vendor
+# Symfony directories
+*/logs/*
+*/cache/*
+web/uploads/*
+web/bundles/*
+composer.phar
+
+# Configuration files
+app/config/parameters.ini
+app/config/parameters.yml
+src/config/*
+!src/config/config.sample.yml
+
+# phpunit reports
+build/*

@@ -1,0 +1,13 @@
+{
+    "require": {
+        "silex/silex": "1.*",
+        "twig/twig": ">=1.8,<2.0-dev",
+        "symfony/twig-bridge": "~2.3",
+        "doctrine/dbal": "2.2.*",
+        "monolog/monolog": ">=1.0.0",
+        "symfony/yaml": "2.2.*",
+        "symfony/form": "~2.3",
+        "symfony/security": "~2.3",
+        "gigablah/silex-oauth": "~0.1"
+    }
+}

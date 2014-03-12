@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+gem 'watir-webdriver'
+gem 'rspec', :require => 'spec'
+gem 'json', '~> 1.7.7'
+gem 'watir-webdriver-performance'
+gem 'builder'
+gem 'httparty'

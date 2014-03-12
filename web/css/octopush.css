@@ -1,0 +1,56 @@
+.actions-column {
+  width: 200px;
+}
+
+.module-column {
+  width: 150px;
+}
+
+.status-column {
+  width: 120px;
+}
+
+.label-DEPLOYING {
+  background-color: orange;
+}
+
+.label-PENDING_TESTS {
+  background-color: orange;
+}
+
+.label-TESTS_PASSED {
+  background-color: #5cb85c;
+}
+
+.label-DEPLOY_FAILED {
+  background-color: red;
+}
+
+.label-TESTS_FAILED {
+  background-color: red;
+}
+
+.label-QUEUED {
+  background-color: silver;
+}
+
+.label-QUEUED_FOR_LIVE {
+  background-color: orange;
+}
+
+.label-GOING_LIVE {
+  background-color: orange;
+}
+
+.label-GO_LIVE_FAILED {
+  background-color: red;
+}
+
+.label-GO_LIVE_DONE {
+  background-color: #5cb85c;
+}
+
+.glyphicon {
+  padding: 5px;
+}
+
