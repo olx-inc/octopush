@@ -100,6 +100,7 @@ class Jenkins
             $httpAuth = $this->_user . ':' . $this->_pass;
             $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
             $response = $this->_httpRequest->send();
+            $this->_log->addInfo("Response:" . $this->_httpRequest->getResponseCode());
             if ($this->_httpRequest->getResponseCode() > 400) {
                 $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());            
                 throw new \Exception();
@@ -159,7 +160,7 @@ class Jenkins
             $httpAuth = $this->_user . ':' . $this->_pass;
             $this->_httpRequest->setUrl($pushUrl);
             $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
-            $this->_log->addInfo("About calling JenkinsRM to queue job: " . $pushUrl); 
+            $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl); 
             $this->_send();
             $this->_log->addInfo("JenkinsRM called: " . $job->getId()); 
             while ($lastBuildId>=$currentBuildId) {
