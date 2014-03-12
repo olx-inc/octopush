@@ -33,15 +33,6 @@ class QueueController
         $config = $this->_config;
         $jenkins = '';
 
-        if (!in_array($env, $config['environments'])) {
-            $error = array(
-                'status' => "error",
-                'message' => "$env is not a valid environment."
-            );
-            $this->_log->addError($error['message']);
-            return json_encode($error);
-        }
-
         if (!array_key_exists($module, $config['modules'])) {
             $error = array(
                 'status' => "error",

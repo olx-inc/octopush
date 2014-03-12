@@ -1,6 +1,5 @@
 database:
     driver: pdo_mysql
-<<<<<<< HEAD
     dbname:   #DB NAME
     host:     #DB HOST
     user:     #DB USER
@@ -14,54 +13,17 @@ jenkins:
         prefix: 'Push_Artifactory_'
         live.prefix: 'Push_'
         notifications: 'Octopush_Notification'
-environments: ['qa1','testing','production']  #list of environments
 modules: 
-    billing: 3
     ok-project: 2
     fail-project: 2
 jobs:
     queue.lenght: 5       #amount of jobs listed in the queue
     processed.lenght: 15  #amount of jobs listed as processed
-=======
-    dbname: OCTOPUSH
-    host: localhost
-    user: root
-    password: admin
-    port: 3306
-jenkins:
-    host: localhost:8080
-    user: 
-    pass: 
-    jobs: 
-        prefix: 'Push_Artifactory_'
-        liveprefix: 'Push_'
-        notifications: 'Octopush_Notification'
-modules:
-    ok-project: 1
-    fail-project: 1
-    frontend-br: 1
-    frontend-in: 1
-    fp: 2
-    smaug: 2
-    abl: 3
-    yerba: 1
-    dummy_octopush: 1
-jobs:
-    queue.lenght: 25      #amount of jobs listed in the queue
-    processed.lenght: 5   #amount of jobs listed as processed
->>>>>>> 4f1c8020582c49c31510281ea3e67843253ceac8
     priority: queue_date  #priority column 
     waiting.seconds: 10   #seconds between each call to jenkins
 log.level: DEBUG          #could be DEBUG, INFO, ERROR
 log.path: /var/log/octopush.log
-<<<<<<< HEAD
-github_key: 'TBC'
-github_secret: 'TBC'
-github_management_key: 'TBC'
-admin_team_id: 'TBC'
-=======
 github_key: 'your_key'
 github_secret: 'your_secret'
 github_management_key: 'your_management_key'
 admin_team_id: 'your_admin_team_id'
->>>>>>> 4f1c8020582c49c31510281ea3e67843253ceac8

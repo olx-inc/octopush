@@ -39,19 +39,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{"status":"success","message":"Job inserted in queue","job_id":0}', $result);
     }
     
-    public function testInvalidEnvironment() 
-    {
-        $appMock = new ApplicationMock();
-        
-        $jobsMapperMock = $this->getMockBuilder('Models\JobMapper')
-            ->disableOriginalConstructor()
-            ->getMock();
-        
-        $queueController = new QueueController($appMock, $jobsMapperMock, $this->_jenkinsMock, $this->_logMock);
-        $result = $queueController->queueJob("xxx", "billing", "3.3.3");
-        $this->assertEquals('{"status":"error","message":"xxx is not a valid environment."}', $result);
-    }
-    
+
     public function testInvalidModule() 
     {
         $appMock = new ApplicationMock();

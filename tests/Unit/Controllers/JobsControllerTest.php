@@ -15,7 +15,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
     {
         $this->_config = array(
             'environments' => array('qa1'),
-            'modules' => array("billing"),
+            'modules' => array("ok-project"),
             'jobs' => array(
                 'queue.lenght' => 5,
                 'priority' => 'queue_date',
@@ -32,7 +32,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
 
         $job_array = array(
             'job_id' => 1,
-            'module' => 'billing',
+            'module' => 'ok-project',
             'version' => '3.43.2',
             'environment' => 'qa1',
             'status' => JobStatus::QUEUED,

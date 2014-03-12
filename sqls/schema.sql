@@ -7,6 +7,7 @@ CREATE TABLE jobs (
   module varchar(100) NOT NULL DEFAULT '',
   version varchar(15) NOT NULL DEFAULT '',
   status varchar(15) NOT NULL DEFAULT 'queued',
+  environment varchar(20) NOT NULL DEFAULT '',
   queue_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamp,
   jenkins varchar(200),
