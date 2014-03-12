@@ -32,36 +32,54 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="welcome-to-octopush-project" class="anchor" href="#welcome-to-octopush-project"><span class="octicon octicon-link"></span></a>Welcome to Octopush project</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Octopush is a project born out of the necessity to orchestrate Our Jenkins Deployment pipeline at OLX. We started up connecting Jenkins CI Servers with Jenkins RM Server in order to keep things separate, clean and scalable. We needed to be able to request a Deployment automatically from a Jenkins CI Server (managed by a certain Dev Team) to the Release Management Jenkins (managed by RM Team) once the builds where OK. There is no native or pretty way of doing this, we just curl from one Jenkins to the other like:</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<pre><code>curl --user $JENKINS_USER:$API_TOKEN "http://jenkins-rm.olx.com/job/Deploy_Component/buildWithParameters?env=Staging&amp;repo=CompX&amp;revision=1.0.0"
+
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>and checked out the response using Jenkins API like:</p>
+
+<pre><code>curl "http://jenkins-rm.olx.com/job/Deploy_Component/lastBuild/api/json"
+</code></pre>
+
+<p>This was ok for a while, but then we needed better arbitration and visibility on how to handle a long queue of awaiting components to deploy.
+That's how Octopush was born.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="octopush-orchestration-engine" class="anchor" href="#octopush-orchestration-engine"><span class="octicon octicon-link"></span></a>Octopush Orchestration engine</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Octopush handles a Queue were every request waits for its turn to be deployed, available components to be deployed are configured on src/config/config.yml where you also specify a groupId. This groupId works as a tier identification, front-end components use one, backend use another. This is used by Octopush to identify dependecies and be able to parallelize non-dependant components (on the same group) and serialize dependant ones (This is an improvement point, dependency graph would be much better).</p>
 
 <h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<a name="jenkins-integration" class="anchor" href="#jenkins-integration"><span class="octicon octicon-link"></span></a>Jenkins integration</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>For Jenkins integration there are a couple of configuration parameters:</p>
+
+<pre><code>jenkins:
+    host:     http://jenkins-rm.olx.com.ar
+    user:     jenkins-user
+    pass:     password
+    jobs: 
+        prefix: 'Push_Staging_'
+        live.prefix: 'Push_LIVE_'
+        notifications: 'Octopush_Notification'
+</code></pre>
+
+<p>The firsts params are pretty clear, they configure URL and credentials for Jenkins RM.
+The prefix ones are used by Octopush to call the proper Jenkins RM job, it will concat the requested module name like: 'Push_Staging_Component1', so as to use convention over configuration.</p>
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Diego Garber (<a href="https://github.com/diego-garber" class="user-mention">@diego-garber</a>), Nicolas Paez (<a href="https://github.com/nicopaez" class="user-mention">@nicopaez</a>), Osvaldo Toja Suarez (<a href="https://github.com/osvaldotoja-olx" class="user-mention">@osvaldotoja-olx</a>), German Scoglio (<a href="https://github.com/german-olx" class="user-mention">@german-olx</a>)</p>
 
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>Please don't hesitate to contact us</p>
       </section>
     </div>
 
