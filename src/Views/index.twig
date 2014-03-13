@@ -8,7 +8,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="css/octopush.css" rel="stylesheet" media="screen">
     </head>
-    <body>        
+    <body>
         <!--script src="code.jquery.com/jquery.js"></script-->
         <script src="js/bootstrap.min.js"></script>
         <script src="js/index.js"></script>
@@ -16,8 +16,8 @@
             <div class="page-header">
                 <h1>Octopush <small>v{{ version }}</small></h1>
                      {% if app.user %}
-                    <p>Hello {{ app.user.username }} 
-                        {% if app.is_admin_user %} 
+                    <p>Hello {{ app.user.username }}
+                        {% if app.is_admin_user %}
                             (admin)
                         {% endif %}
                         | <a href="{{ logoutUrl }}">Logout</a></p>
@@ -26,9 +26,9 @@
                 <h3>Pre-Production</h3>
                 <div id="preprod">
                 <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    {% if queued_jobs is empty %}               
-                        <div class="alert alert-info"><strong>EMPTY!</strong> No pending jobs</div>              
-                    {% else %}    
+                    {% if queued_jobs is empty %}
+                        <div class="alert alert-info"><strong>EMPTY!</strong> No pending jobs</div>
+                    {% else %}
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -61,10 +61,10 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>
                     {% endif %}
                 {% if in_progress_jobs != false %}
-                <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>                    
+                <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -74,11 +74,11 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last date</small></th>
-                                <th class="actions-column"><small>Actions</small></th>  
+                                <th class="actions-column"><small>Actions</small></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for in_progress_job in in_progress_jobs %}  
+                            {% for in_progress_job in in_progress_jobs %}
                             <tr>
                                 <td><small>{{ in_progress_job.Id }}</small></td>
                                 <td><small>{{ in_progress_job.getTargetModule() }}</small></td>
@@ -89,13 +89,13 @@
 
                                 <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                 <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
-                                <td><small> 
-                                    {% if in_progress_job.getRequestorJenkins != "" %}                                 
+                                <td><small>
+                                    {% if in_progress_job.getRequestorJenkins != "" %}
                                     <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job">
                                        <span class="glyphicon glyphicon-log-in" />
                                     </a>
                                     {% endif %}
-                                    {% if in_progress_job.getDeploymentJobId() > 0 %}    
+                                    {% if in_progress_job.getDeploymentJobId() > 0 %}
                                     <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job">
                                         <span class="glyphicon glyphicon-log-out" />
                                     </a>
@@ -109,12 +109,12 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>
                 {% endif %}
                 <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
                     {% if processed_jobs is empty %}
-                        <div class="alert alert-info"><strong>EMPTY!</strong> No processed jobs</div>                
-                    {% else %}  
+                        <div class="alert alert-info"><strong>EMPTY!</strong> No processed jobs</div>
+                    {% else %}
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -134,16 +134,16 @@
                                     <td><small>{{ processed_job.getTargetModule() }}</small></td>
                                     <td><small>{{ processed_job.getTargetVersion() }}</small></td>
                                     <td><span class="label label-{{processed_job.getStatus()}}"><small>{{ processed_job.status }}</small></span></td>
-                                    
+
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td><small> 
-                                        {% if processed_job.getRequestorJenkins != "" %}                                 
+                                    <td><small>
+                                        {% if processed_job.getRequestorJenkins != "" %}
                                         <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">
                                            <span class="glyphicon glyphicon-log-in" />
                                         </a>
                                         {% endif %}
-                                        {% if processed_job.getDeploymentJobId() > 0 %}    
+                                        {% if processed_job.getDeploymentJobId() > 0 %}
                                         <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job">
                                             <span class="glyphicon glyphicon-log-out" />
                                         </a>
@@ -163,8 +163,8 @@
                                             {% if (not processed_job.wentLive) and processed_job.canGoLive %}
                                             <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live">
                                                 <span class="glyphicon glyphicon-new-window" />
-                                            </a> 
-                                            {% endif %}    
+                                            </a>
+                                            {% endif %}
 
                                         {% endif %}
                                     </small></td>
@@ -178,9 +178,9 @@
                 <h3>Production</h3>
                 <div id="prod">
                 <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    {% if liveQueue is empty %}               
-                        <div class="alert alert-info"><strong>EMPTY!</strong> No pending jobs</div>              
-                    {% else %}    
+                    {% if liveQueue is empty %}
+                        <div class="alert alert-info"><strong>EMPTY!</strong> No pending jobs</div>
+                    {% else %}
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -212,10 +212,10 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>
                     {% endif %}
                 {% if liveInProgress != false %}
-                <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>                    
+                <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -225,29 +225,29 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last date</small></th>
-                                <th><small>Actions</small></th>  
+                                <th><small>Actions</small></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for in_progress_job in liveInProgress %}  
+                            {% for in_progress_job in liveInProgress %}
                             <tr>
                                 <td><small>{{ in_progress_job.Id }}</small></td>
                                 <td><small>{{ in_progress_job.getTargetModule() }}</small></td>
                                 <td><small>{{ in_progress_job.getTargetVersion() }}</small></td>
-                               
+
                                 <td><span class="label label-{{ in_progress_job.getStatus() }}">
                                     <small>{{ in_progress_job.status }}</small>
                                 </span></td>
 
                                 <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                 <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
-                                <td><small> 
-                                    {% if in_progress_job.getRequestorJenkins != "" %}                                 
+                                <td><small>
+                                    {% if in_progress_job.getRequestorJenkins != "" %}
                                     <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job">
                                        <span class="glyphicon glyphicon-log-in" />
                                     </a>
                                     {% endif %}
-                                    {% if in_progress_job.getDeploymentJobId() > 0 %}    
+                                    {% if in_progress_job.getDeploymentJobId() > 0 %}
                                     <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job">
                                         <span class="glyphicon glyphicon-log-out" />
                                     </a>
@@ -261,12 +261,12 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>
                 {% endif %}
                 <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
                     {% if liveProcessed is empty %}
-                        <div class="alert alert-info"><strong>EMPTY!</strong> No processed jobs</div>                
-                    {% else %}  
+                        <div class="alert alert-info"><strong>EMPTY!</strong> No processed jobs</div>
+                    {% else %}
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
@@ -286,16 +286,16 @@
                                     <td><small>{{ processed_job.getTargetModule() }}</small></td>
                                     <td><small>{{ processed_job.getTargetVersion() }}</small></td>
                                     <td><span class="label label-{{processed_job.getStatus()}}"><small>{{ processed_job.status }}</small></span></td>
-                                    
+
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td><small> 
-                                        {% if processed_job.getRequestorJenkins != "" %}                                 
+                                    <td><small>
+                                        {% if processed_job.getRequestorJenkins != "" %}
                                         <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">
                                            <span class="glyphicon glyphicon-log-in" />
                                         </a>
                                         {% endif %}
-                                        {% if processed_job.getDeploymentJobId() > 0 %}    
+                                        {% if processed_job.getDeploymentJobId() > 0 %}
                                         <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job">
                                             <span class="glyphicon glyphicon-log-out" />
                                         </a>
@@ -310,14 +310,14 @@
                                             <span class="glyphicon glyphicon-new-window" />
                                         </a>
                                         {% endif %}
-                                       
+
                                     </small></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                     {% endif %}
-                </div>                
+                </div>
         </div>
     </body>
 </html>

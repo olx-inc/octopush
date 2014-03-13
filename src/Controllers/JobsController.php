@@ -9,7 +9,6 @@ use Models\JobStatus,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 
-
 /* Handle requests related to specific jobs, all request expects a job_id parameter */
 class JobsController
 {
@@ -17,22 +16,22 @@ class JobsController
     private $_jobMapper;
     private $_log;
 
-    public function __construct($config, 
+    public function __construct($config,
                                 JobMapper $jobMapper,
-                                $log) 
+                                $log)
     {
         $this->_config = $config;
         $this->_jobMapper = $jobMapper;
         $this->_log = $log;
     }
 
-    public function createJob(Request $request) 
+    public function createJob(Request $request)
     {
         $config = $this->_config;
         $jenkins = '';
 
         $env = 'testing';
-        $jenkins = $request->get('requestor'); 
+        $jenkins = $request->get('requestor');
         $module = $request->get('module');
         $version = $request->get('version');
 
@@ -42,13 +41,14 @@ class JobsController
                 'message' => $module . " is not a valid module to push."
             );
             $this->_log->addError($error['message']);
+
             return json_encode($error);
         }
-        
+
         try {
             $job = Job::createWith($module, $version, $env, $jenkins);
             $this->_jobMapper->save($job);
-            
+
             $result = array(
                 'status' => "success",
                 'message' => "Job inserted in queue",
@@ -63,7 +63,7 @@ class JobsController
             );
             $this->_log->addError($result['message'] . " :: " . $result['detail']);
         }
-        
+
         return json_encode($result);
     }
 
@@ -75,6 +75,7 @@ class JobsController
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId
             );
+
             return json_encode($result);
         } catch (\Exception $exc) {
             $error = array(
@@ -83,6 +84,7 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
         }
     }
@@ -98,6 +100,7 @@ class JobsController
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId
             );
+
             return json_encode($result);
         } catch (\Exception $exc) {
             $error = array(
@@ -106,6 +109,7 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
         }
     }
@@ -123,6 +127,7 @@ class JobsController
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId
                 );
+
                 return json_encode($result);
             } else {
                 $result = array(
@@ -131,6 +136,7 @@ class JobsController
                 'status' => "Error",
                 'message' => "The job is not in a valid status to go live"
                 );
+
                 return json_encode($result);
             }
         } catch (\Exception $exc) {
@@ -140,6 +146,7 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
         }
     }
@@ -148,7 +155,7 @@ class JobsController
     {
         try {
             $jobId = $request->get('jobId');
-            $url = $request->get('test_job_url');            
+            $url = $request->get('test_job_url');
             $job = $this->_jobMapper->get($jobId);
             $job->setTestJobUrl($url);
 
@@ -158,6 +165,7 @@ class JobsController
                 'status' => "success",
                 'message' => "Test job url registerd"
             );
+
             return json_encode($result);
         } catch (\Exception $exc) {
             $error = array(
@@ -166,15 +174,16 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
-        }        
+        }
     }
 
     public function registerTestJobResult(Request $request)
     {
         try {
             $jobId = $request->get('jobId');
-            $success = $request->get('success');     
+            $success = $request->get('success');
             $status = $success == 'true' ? JobStatus::TESTS_PASSED : JobStatus::TESTS_FAILED;
 
             $job = $this->_jobMapper->get($jobId);
@@ -186,6 +195,7 @@ class JobsController
                 'status' => "success",
                 'message' => "Test result registerd"
             );
+
             return json_encode($result);
         } catch (\Exception $exc) {
             $error = array(
@@ -194,11 +204,11 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
-        }        
+        }
     }
-    
-    
+
     public function registerTestResult($jobId, $success)
     {
         try {
@@ -213,6 +223,7 @@ class JobsController
                 'status' => "success",
                 'message' => "Test result registerd"
             );
+
             return json_encode($result);
         } catch (\Exception $exc) {
             $error = array(
@@ -221,9 +232,9 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
             return json_encode($error);
         }
     }
-
 
 }

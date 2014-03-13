@@ -2,7 +2,7 @@
 
 echo "rpm version: ";
 $rpm = system('rpm -qa | grep octopush');
-ereg("([[:alnum:]]+)-([[:alnum:]]+)-([[:alnum:]]+)_([[:alnum:]]+)", $rpm, $regs); 
+ereg("([[:alnum:]]+)-([[:alnum:]]+)-([[:alnum:]]+)_([[:alnum:]]+)", $rpm, $regs);
 
 echo "<br />\n";
 echo "<br />\n";
@@ -16,4 +16,3 @@ echo '<a href="https://github.com/olx-inc/octopush/tree/'.$regs[4].'">code in gi
 echo "</li>";
 echo "</ul>";
 echo "<br />\n";
-?>

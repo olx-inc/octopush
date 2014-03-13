@@ -20,7 +20,7 @@ class JobMapper
     {
         $this->_db = $db;
     }
-    
+
     public function get($jobId)
     {
         $data = $this->_db->fetchAssoc(JobMapper::GET_JOB_STATEMENT, array($jobId));
@@ -28,6 +28,7 @@ class JobMapper
             throw new \Exception();
         }
         $job = Job::createFromArray($data);
+
         return $job;
     }
 
@@ -46,6 +47,7 @@ class JobMapper
         foreach ($data as $record) {
             array_push($result, Job::createFromArray($record));
         }
+
         return $result;
     }
 
@@ -53,17 +55,17 @@ class JobMapper
     {
         $targetStatus = implode("','", $statusArray);
         $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY queue_date DESC";
-        
-        
+
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;
         }
 
         $data = $this->_db->fetchAll($sql);
-        $result = array();        
+        $result = array();
         foreach ($data as $record) {
             array_push($result, Job::createFromArray($record));
         }
+
         return $result;
     }
 
@@ -71,17 +73,17 @@ class JobMapper
     {
         $targetStatus = implode("','", $statusArray);
         $sql = "SELECT * FROM jobs WHERE STATUS not in ('" . $targetStatus ."') ORDER BY queue_date DESC";
-        
-        
+
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;
         }
 
         $data = $this->_db->fetchAll($sql);
-        $result = array();        
+        $result = array();
         foreach ($data as $record) {
             array_push($result, Job::createFromArray($record));
         }
+
         return $result;
     }
 
@@ -96,14 +98,15 @@ class JobMapper
 
         $data = $this->_db->fetchAll($sql, $params);
 
-        $result = array();        
+        $result = array();
         foreach ($data as $record) {
             array_push($result, Job::createFromArray($record));
         }
+
         return $result;
     }
 
-    public function save($job) 
+    public function save($job)
     {
         if ($job->getId() == 0) {
             $this->_executeInsert($job);
@@ -111,10 +114,10 @@ class JobMapper
             $this->_executeUpdate($job);
         }
     }
-    
+
     private function _executeInsert($job)
     {
-        $sql = JobMapper::INSERT_STATEMENT;    
+        $sql = JobMapper::INSERT_STATEMENT;
         $this->_db->executeUpdate(
             $sql,
             array(
@@ -129,7 +132,7 @@ class JobMapper
         );
         $job->setId($this->_db->lastInsertId());
     }
-  
+
     private function _executeUpdate($job)
     {
         $sql = JobMapper::UPDATE_STATEMENT;

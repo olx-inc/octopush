@@ -27,13 +27,14 @@ class GitHub
         $rawResponse = $req->send();
         $jsonResponse = json_decode($rawResponse['body'], true);
         $login = $jsonResponse['login'];
-      
-        $url = 'https://api.github.com/teams/' . $this->_adminTeamId 
-                . '/members/' . $login . '?access_token=' 
+
+        $url = 'https://api.github.com/teams/' . $this->_adminTeamId
+                . '/members/' . $login . '?access_token='
                 . $this->_managementKey;
 
         $req->setUrl($url);
         $rawResponse = $req->send();
+
         return $req->getResponseCode() == 204;
     }
 
@@ -47,6 +48,7 @@ class GitHub
         if (strpos($rawResponse['body'], $username) > 1) {
             $result = true;
         }
+
         return $result;
     }
 }
