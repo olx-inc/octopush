@@ -36,8 +36,8 @@
 
 <p>Octopush is a project born out of the necessity to orchestrate Our Jenkins Deployment pipeline at OLX. We started up connecting Jenkins CI Servers with Jenkins RM Server in order to keep things separate, clean and scalable. We needed to be able to request a Deployment automatically from a Jenkins CI Server (managed by a certain Dev Team) to the Release Management Jenkins (managed by RM Team) once the builds where OK. There is no native or pretty way of doing this, we just curl from one Jenkins to the other like:</p>
 
-<pre><code>curl --user $JENKINS_USER:$API_TOKEN "http://jenkins-rm.olx.com/job/Deploy_Component/buildWithParameters?env=Staging&amp;repo=CompX&amp;revision=1.0.0"
-
+<pre><code>curl --user $JENKINS_USER:$API_TOKEN 
+      "http://jenkins-rm.olx.com/job/Deploy_Component/buildWithParameters?env=Staging&amp;repo=CompX&amp;revision=1.0.0"
 </code></pre>
 
 <p>and checked out the response using Jenkins API like:</p>
@@ -52,6 +52,13 @@ That's how Octopush was born.</p>
 <a name="octopush-orchestration-engine" class="anchor" href="#octopush-orchestration-engine"><span class="octicon octicon-link"></span></a>Octopush Orchestration engine</h3>
 
 <p>Octopush handles a Queue were every request waits for its turn to be deployed, available components to be deployed are configured on src/config/config.yml where you also specify a groupId. This groupId works as a tier identification, front-end components use one, backend use another. This is used by Octopush to identify dependecies and be able to parallelize non-dependant components (on the same group) and serialize dependant ones (This is an improvement point, dependency graph would be much better).</p>
+<pre><code>jenkins:
+modules: 
+    frontend-project1: 1
+    frontend-project2: 1
+    middle-ware: 2
+    backend-project: 3
+</code></pre>
 
 <h3>
 <a name="jenkins-integration" class="anchor" href="#jenkins-integration"><span class="octicon octicon-link"></span></a>Jenkins integration</h3>
