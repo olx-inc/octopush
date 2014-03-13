@@ -1,7 +1,7 @@
 <?php
 
 use Services\Jenkins,
-    Models\JobStatus,    
+    Models\JobStatus,
     Models\Job;
 
 class JenkinsTest extends \PHPUnit_Framework_TestCase
@@ -10,16 +10,16 @@ class JenkinsTest extends \PHPUnit_Framework_TestCase
     private $_config;
     private $_job;
     private $_mockLog;
-    
+
     public function setUp()
-    {   
+    {
         $this->_httpRequest = $this->getMockBuilder('Library\HttpRequest')
             ->setMethods(array('send', 'setUrl', 'setOptions','getUrl', 'getResponseCode'))
             ->getMock();
 
         $this->_mockLog = $this->getMockBuilder('Monolog\Logger')
             ->disableOriginalConstructor()
-            ->getMock();         
+            ->getMock();
 
         $this->_config = array(
             'environments' => array('qa1'),
@@ -51,51 +51,51 @@ class JenkinsTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->_job = Job::CreateFromArray($job_array);
-    }    
-       
-    public function testPushShouldReturnFalseWhenHttpError()
-    {   
-        $this->_httpRequest->expects($this->once())
-            ->method('setUrl');
-        
-        $this->_httpRequest->expects($this->once())
-            ->method('setOptions');
-        
-        $this->_httpRequest->expects($this->once())
-            ->method('send')
-            ->will($this->throwException(new Exception));
-        
-        $jenkinsTest = new Jenkins($this->_config, $this->_httpRequest, $this->_mockLog);
-        $response = $jenkinsTest->push($this->_job);
-        
-        $this->assertEquals(false, $response);
     }
-    
-    public function testNotifyResult() 
+
+    public function testPushShouldReturnFalseWhenHttpError()
     {
         $this->_httpRequest->expects($this->once())
             ->method('setUrl');
-        
+
+        $this->_httpRequest->expects($this->once())
+            ->method('setOptions');
+
+        $this->_httpRequest->expects($this->once())
+            ->method('send')
+            ->will($this->throwException(new Exception));
+
+        $jenkinsTest = new Jenkins($this->_config, $this->_httpRequest, $this->_mockLog);
+        $response = $jenkinsTest->push($this->_job);
+
+        $this->assertEquals(false, $response);
+    }
+
+    public function testNotifyResult()
+    {
+        $this->_httpRequest->expects($this->once())
+            ->method('setUrl');
+
         $this->_httpRequest->expects($this->once())
             ->method('send')
             ->will($this->returnValue("Respuesta"));
-        
+
         $jenkinsTest = new Jenkins($this->_config, $this->_httpRequest,$this->_mockLog);
         $jenkinsTest->notifyResult($this->_job, "SUCESS");
     }
-    
+
     /**
      * @expectedException Exception
      */
-    public function testNotifyResultWithException() 
+    public function testNotifyResultWithException()
     {
         $this->_httpRequest->expects($this->once())
             ->method('setUrl');
-        
+
         $this->_httpRequest->expects($this->once())
             ->method('send')
             ->will($this->throwException(new Exception));
-        
+
         $jenkinsTest = new Jenkins($this->_config, $this->_httpRequest,$this->_mockLog);
         $jenkinsTest->notifyResult($this->_job, "SUCESS");
     }

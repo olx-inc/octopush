@@ -30,6 +30,7 @@ class Jenkins
         $url .= 'env=' . $job->getTargetEnvironment();
         $url .= '&repo=' . $job->getTargetModule();
         $url .= '&revision=' . $job->getTargetVersion();
+
         return $this->_doPush($job, $url);
     }
 
@@ -38,9 +39,9 @@ class Jenkins
         $url = $this->_getLiveUrlForJob($job);
         $url .= '/buildWithParameters?';
         $url .= 'tag=' . $job->getTargetVersion();
+
         return $this->_doPush($job, $url);
     }
-    
 
     public function getLastBuildStatus($job)
     {
@@ -50,7 +51,8 @@ class Jenkins
         $this->_httpRequest->setUrl($url);
         $rawResponse = $this->_send();
         $jsonResponse = json_decode($rawResponse['body'], true);
-        return $jsonResponse['result']; 
+
+        return $jsonResponse['result'];
     }
 
     public function getLastBuildId($job)
@@ -58,14 +60,15 @@ class Jenkins
         $url = "";
         if ( ($job->getStatus() == JobStatus::QUEUED) or ($job->getStatus() == JobStatus::DEPLOYING)) {
             $url = $this->_getUrlForJob($job);
-        } else {    
+        } else {
             $url = $this->_getLiveUrlForJob($job);
         }
         $url .= '/lastBuild/api/json';
         $this->_httpRequest->setUrl($url);
         $rawResponse = $this->_send();
         $jsonResponse = json_decode($rawResponse['body'], true);
-        return $jsonResponse['number']; 
+
+        return $jsonResponse['number'];
     }
 
     public function notifyResult($job, $status)
@@ -76,21 +79,21 @@ class Jenkins
         $url .= 'env=' . $job->getTargetEnvironment();
         $url .= '&repo=' . $job->getTargetModule();
         $url .= '&revision=' . $job->getTargetVersion();
-        $url .= '&status=' . $status;       
+        $url .= '&status=' . $status;
         $url .= '&jobId=' . $job->getId();
         $this->_httpRequest->setUrl($url);
-        
+
         return $this->_send();
     }
-    
+
     public function ping()
     {
         $url = $this->_host;
-        $this->_httpRequest->setUrl($url); 
+        $this->_httpRequest->setUrl($url);
         $rawResponse = $this->_send();
         if ($this->_httpRequest->getResponseCode() != 200) {
-            throw new \Exception(); 
-        } 
+            throw new \Exception();
+        }
     }
 
     private function _send()
@@ -102,79 +105,85 @@ class Jenkins
             $response = $this->_httpRequest->send();
             $this->_log->addInfo("Response:" . $this->_httpRequest->getResponseCode());
             if ($this->_httpRequest->getResponseCode() > 400) {
-                $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());            
+                $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());
                 throw new \Exception();
             }
         } catch (\Exception $e) {
-            $this->_log->addError($e->getMessage());            
+            $this->_log->addError($e->getMessage());
             throw $e;
         }
+
         return $response;
     }
 
     public function getBuildUrl($job)
     {
         $url = $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId();
-        
-        return $url;        
+
+        return $url;
     }
 
     public function getRequestorJobConsoleUrl($job)
     {
         $url = $job->getRequestorJenkins();
+
         return empty($url) ? "Not available" : $url . "/console";
     }
 
     public function getTestJobConsoleUrl($job)
     {
         $url = $job->getTestJobUrl();
+
         return empty($url) ? "Not available" : $url . "/console";
     }
 
     public function getLiveJobConsoleUrl($job)
     {
         $url = $this->_getLiveUrlForJob($job) . "_LIVE/lastBuild/console";
+
         return $url;
     }
 
     private function _getUrlForJob($job)
     {
-        $url = $this->_host . "/job/" . 
+        $url = $this->_host . "/job/" .
             $this->_jobs['prefix'] . $job->getTargetModule();
-        
+
         return $url;
     }
 
     private function _getLiveUrlForJob($job)
     {
-        $url = $this->_host . "/job/" . 
+        $url = $this->_host . "/job/" .
             $this->_jobs['liveprefix'] . ucfirst($job->getTargetModule());
     }
 
     private function _doPush($job, $pushUrl)
     {
         try {
-            $currentBuildId = 0; 
+            $currentBuildId = 0;
             $lastBuildId = $this->getLastBuildId($job);
-            $this->_log->addInfo("lastBuildId: " . $lastBuildId);  
+            $this->_log->addInfo("lastBuildId: " . $lastBuildId);
             $httpAuth = $this->_user . ':' . $this->_pass;
             $this->_httpRequest->setUrl($pushUrl);
             $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
-            $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl); 
+            $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);
             $this->_send();
-            $this->_log->addInfo("JenkinsRM called: " . $job->getId()); 
+            $this->_log->addInfo("JenkinsRM called: " . $job->getId());
             while ($lastBuildId>=$currentBuildId) {
-                $this->_log->addInfo("lastBuildId: " . $lastBuildId);  
-                $this->_log->addInfo("currentBuildId: " . $currentBuildId);  
-                sleep(2);  
+                $this->_log->addInfo("lastBuildId: " . $lastBuildId);
+                $this->_log->addInfo("currentBuildId: " . $currentBuildId);
+                sleep(2);
                 $job->setDeploymentJobId($this->getLastBuildId($job));
                 if (is_numeric($job->getDeploymentJobId()))
-                    $currentBuildId = $job->getDeploymentJobId();  
+                    $currentBuildId = $job->getDeploymentJobId();
             }
-            $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());  
+            $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());
+
             return true;
         } catch (\Exception $ex) {
-            $this->_log->addError("Error while pushing Job to Jenkins RM:" . $ex->getMessage());  
+            $this->_log->addError("Error while pushing Job to Jenkins RM:" . $ex->getMessage());
+
             return false;
         }
 

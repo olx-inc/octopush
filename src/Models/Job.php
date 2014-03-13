@@ -17,7 +17,6 @@ class Job
     private $_testJobUrl;
     private $_liveJobId;
 
-
     public function setId($id)
     {
         $this->_id = (int) $id;
@@ -32,7 +31,7 @@ class Job
     {
         return $this->_targetModule;
     }
-    
+
     public function getTargetVersion()
     {
         return $this->_targetVersion;
@@ -121,7 +120,7 @@ class Job
             3 => JobStatus::PENDING_TESTS,
             4 => JobStatus::TESTS_PASSED,
             5 => JobStatus::TESTS_FAILED,
-            6 => JobStatus::QUEUED_FOR_LIVE,            
+            6 => JobStatus::QUEUED_FOR_LIVE,
             7 => JobStatus::GOING_LIVE,
             8 => JobStatus::GO_LIVE_DONE,
             9 => JobStatus::GO_LIVE_FAILED
@@ -135,7 +134,7 @@ class Job
         $this->_initStatusArray();
         $this->_deploymentJobId = 0;
     }
-    
+
     public function canRun($jobsInProgress, $modules)
     {
         $dependencyTag = $modules[$this->getTargetModule()];
@@ -148,6 +147,7 @@ class Job
                 return false;
             }
         }
+
         return true;
     }
 
@@ -169,6 +169,7 @@ class Job
         $job->_targetEnvironment = $env;
         $job->_requestorJenkins = $jenkins;
         $job->_testJobUrl = "";
+
         return $job;
     }
 
@@ -189,7 +190,8 @@ class Job
         $job->_deploymentJobId = isset($data[$key]) ? $data[$key] : 0;
         $key = 'live_job_id';
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
+
         return $job;
     }
- 
+
 }

@@ -5,7 +5,7 @@ namespace Library;
 class HttpRequest extends \HttpRequest
 {
     public function send(array $data = array())
-    { 
+    {
         $this->addQueryData($data);
         try {
             parent::send();

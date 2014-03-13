@@ -10,7 +10,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
     private $_jobsMapperMock;
     private $_jenkinsControllerMock;
     private $_logMock;
-    
+
     public function setUp()
     {
         $this->_config = array(
@@ -21,11 +21,11 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
                 'priority' => 'queue_date',
             )
         );
-        
+
         $this->_jobMapperMock = $this->getMockBuilder('Models\JobMapper')
             ->disableOriginalConstructor()
-            ->getMock();    
-        
+            ->getMock();
+
         $this->_logMock = $this->getMockBuilder('Monolog\Logger')
             ->disableOriginalConstructor()
             ->getMock();
@@ -43,7 +43,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->_job = Job::CreateFromArray($job_array);
     }
-       
+
     public function testGetJobStatusShouldCallMapperAndReturnJson()
     {
         $this->_job->moveStatusTo(JobStatus::PENDING_TESTS);

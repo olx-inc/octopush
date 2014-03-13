@@ -15,12 +15,10 @@ $app->get('/health', "queue.controller:health");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 
-
 // deprecated
 $app->get('/jobs/{jobId}/tests/{success}', "jobs.controller:registerTestResult");
 $app->get('/environments/{env}/modules/{module}/versions/{version}/push', "queue.controller:queueJob");
 $app->get('/status/{jobId}', "jobs.controller:getJobStatus");
-
 
 // new API
 $app->post('/jobs/create', "jobs.controller:createJob");
@@ -40,6 +38,7 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($
 
 $app->get('/login', function () use ($app) {
     $url = "/auth/GitHub?_csrf_token=" . $app['form.csrf_provider']->generateCsrfToken('oauth');
+
     return $app->redirect($url);
 });
 

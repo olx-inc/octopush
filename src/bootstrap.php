@@ -6,7 +6,7 @@ $app = new Silex\Application();
 
 if (!defined('APPLICATION_ENV')) {
     define(
-        'APPLICATION_ENV', 
+        'APPLICATION_ENV',
         getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'
     );
 }
@@ -42,40 +42,38 @@ $app->register(new SessionServiceProvider());
 
 /*
 $app['models.JobsMapper'] = $app->share(
-    function($app) {
+    function ($app) {
         return new Models\JobsMapper($app['db']);
     }
 );
 */
 
 $app['models.JobMapper'] = $app->share(
-    function($app) {
+    function ($app) {
         return new Models\JobMapper($app['db']);
     }
 );
 
 $app['services.jenkins'] = $app->share(
-    function($app) {
+    function ($app) {
         return new Services\Jenkins($app['config'], new \Library\HttpRequest(), $app['monolog']);
     }
 );
 
-
 $app['services.GitHub'] = $app->share(
-    function($app) {
+    function ($app) {
         return new Services\GitHub($app['config'], new \Library\HttpRequest(), $app['monolog']);
     }
 );
 
-
 $app['queue.controller'] = $app->share(
-    function() use ($app) {
+    function () use ($app) {
         return new Controllers\QueueController($app, $app['models.JobMapper'],$app['services.jenkins'], $app['monolog']);
     }
 );
 
 $app['jobs.controller'] = $app->share(
-    function() use ($app) {
+    function () use ($app) {
         return new Controllers\JobsController($app['config'], $app['models.JobMapper'], $app['monolog'], $app);
     }
 );

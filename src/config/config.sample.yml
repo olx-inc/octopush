@@ -9,17 +9,17 @@ jenkins:
     host:     #RM jenkins host
     user:     #RM jenkins user
     pass:     #RM jenkins password
-    jobs: 
+    jobs:
         prefix: 'Push_Artifactory_'
         live.prefix: 'Push_'
         notifications: 'Octopush_Notification'
-modules: 
+modules:
     ok-project: 2
     fail-project: 2
 jobs:
     queue.lenght: 5       #amount of jobs listed in the queue
     processed.lenght: 15  #amount of jobs listed as processed
-    priority: queue_date  #priority column 
+    priority: queue_date  #priority column
     waiting.seconds: 10   #seconds between each call to jenkins
 log.level: DEBUG          #could be DEBUG, INFO, ERROR
 log.path: /var/log/octopush.log

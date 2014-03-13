@@ -17,16 +17,16 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $this->_environment = "qa";
         $this->_jenkins = "jdev";
         $this->_job = Job::createWith(
-            $this->_module, 
-            $this->_version, 
-            $this->_environment, 
+            $this->_module,
+            $this->_version,
+            $this->_environment,
             $this->_jenkins
         );
 
         $this->_otherJob = Job::createWith(
-            'otherModule', 
-            'otherVersion', 
-            'qa', 
+            'otherModule',
+            'otherVersion',
+            'qa',
             'jdev2'
         );
 
@@ -35,7 +35,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
                 $this->_otherJob->getTargetModule() =>2
                 );
     }
-   
+
     public function testContructorShouldInitializeFields()
     {
         $this->assertEquals($this->_module, $this->_job->getTargetModule());
@@ -61,22 +61,22 @@ class JobTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testCanRunShouldReturnTrueIfNoJobsInProgress()
-    {   
+    {
         $jobsInProgress = array();
         $result = $this->_job->canRun($jobsInProgress, $this->_modules);
         $this->assertTrue($result);
     }
 
     public function testCanRunShouldReturnFalseIfSameModuleIsInProgress()
-    {   
+    {
         $jobsInProgress = array($this->_job);
         $result = $this->_job->canRun($jobsInProgress, $this->_modules);
         $this->assertFalse($result);
     }
 
     public function testCanRunShouldReturnTrueIfOtherModuleWithSameTagIsInProgress()
-    {  
- 
+    {
+
         $jobsInProgress = array($this->_otherJob);
         $modules = array(
                 $this->_job->getTargetModule() => 1,
@@ -87,7 +87,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testCanRunShouldReturnFalseIfOtheModuleWithOtherTagIsInProgress()
-    {  
+    {
         $jobsInProgress = array($this->_otherJob);
         $modules = array(
                 $this->_job->getTargetModule() => 1,
@@ -98,25 +98,25 @@ class JobTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testCanGoLiveShouldReturnTrueIsStatusIsTestPassed()
-    {  
+    {
         $this->_job->moveStatusTo(JobStatus::TESTS_PASSED);
         $this->assertTrue($this->_job->canGoLive());
     }
 
     public function testCanGoLiveShouldReturnFalseIsStatusIsNotTestPassed()
-    {  
+    {
         $this->_job->moveStatusTo(JobStatus::TESTS_FAILED);
         $this->assertFalse($this->_job->canGoLive());
     }
 
     public function testWentLiveShouldReturnTrueIsStatusIsGoingLive()
-    {  
+    {
         $this->_job->moveStatusTo(JobStatus::GOING_LIVE);
         $this->assertTrue($this->_job->wentLive());
     }
 
     public function testWentLiveShouldReturnFalseIsStatusIsTestPasses()
-    {  
+    {
         $this->_job->moveStatusTo(JobStatus::TESTS_PASSED);
         $this->assertFalse($this->_job->wentLive());
     }

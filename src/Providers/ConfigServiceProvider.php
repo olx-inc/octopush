@@ -10,25 +10,28 @@ class ConfigServiceProvider implements ServiceProviderInterface
 {
     protected $file;
 
-    public function __construct($file) {
+    public function __construct($file)
+    {
         $this->file = $file;
     }
 
-
-    public function register(Application $app) {
+    public function register(Application $app)
+    {
         $config = Yaml::parse($this->file);
 
-    	if (isset($app['config']) && is_array($app['config'])) {
-			$app['config'] = array_merge($app['config'], $config);
-		} else {
-			$app['config'] = $config;
-		}
+        if (isset($app['config']) && is_array($app['config'])) {
+            $app['config'] = array_merge($app['config'], $config);
+        } else {
+            $app['config'] = $config;
+        }
     }
 
-    public function boot(Application $app) {
+    public function boot(Application $app)
+    {
     }
 
-    public function getConfigFile() {
+    public function getConfigFile()
+    {
         return $this->file;
     }
 }
