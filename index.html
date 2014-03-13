@@ -52,7 +52,7 @@ That's how Octopush was born.</p>
 <a name="octopush-orchestration-engine" class="anchor" href="#octopush-orchestration-engine"><span class="octicon octicon-link"></span></a>Octopush Orchestration engine</h3>
 
 <p>Octopush handles a Queue were every request waits for its turn to be deployed, available components to be deployed are configured on src/config/config.yml where you also specify a groupId. This groupId works as a tier identification, front-end components use one, backend use another. This is used by Octopush to identify dependecies and be able to parallelize non-dependant components (on the same group) and serialize dependant ones (This is an improvement point, dependency graph would be much better).</p>
-<pre><code>jenkins:
+<pre><code>
 modules: 
     frontend-project1: 1
     frontend-project2: 1
@@ -86,7 +86,7 @@ The prefix ones are used by Octopush to call the proper Jenkins RM job, it will 
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Please don't hesitate to contact us</p>
+<p>Please don't hesitate to contact us at release@olx.com</p>
       </section>
     </div>
 
