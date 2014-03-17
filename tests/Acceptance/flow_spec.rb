@@ -59,21 +59,13 @@ describe "End to End flow" do
 
   end
   
-  it "should enqueu mark as failed when the job does not exist in jenkins" do
-    # enqueue    
-    url = "http://octopush.com/environments/qa1/modules/yerba/versions/1.1.1/push"
-    json_response = Octopush.get(url)
+  it "enqueu should return error when the job does not exist in configuration" do  
+    url = "http://octopush.com/jobs/create"
+    data = { :body => {:module => 'yerba', :version => '1.1.1', :requestor => 'zzzzz'} }
+    json_response = Octopush.post(url, data)
     response = JSON.parse(json_response)
-    job_id = response['job_id']
-
-    Octopush.get("http://octopush.com/run");
-
-    sleep 60
-    # getStatus   
-    url = "http://octopush.com/status/#{job_id}"
-    puts url
-    json_response = Octopush.get(url)
-    json_response.body.should include 'FAILED'
+  
+    json_response.body.should include 'error'
   end
 
 end

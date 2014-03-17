@@ -98,21 +98,27 @@ class QueueController
 
     public function processJob()
     {
-        if ($this->_isPaused()) {
-            $this->_log->addInfo("The service is paused");
+        $resultOk = true;
+        try {
+            if ($this->_isPaused()) {
+                $this->_log->addInfo("The service is paused");
 
-            return $this->_jsonResult(true, "The service is paused");
+                return $this->_jsonResult(true, "The service is paused");
+            }
+
+            $modules = $this->_config['modules'];
+
+            $this->_processJobs();
+            $this->_processQueue($modules);
+
+            $this->_processLiveJobs();
+            $this->_processLiveQueue($modules);
+        } catch (\Exception $exception) {
+            $resultOk = false;
+            $this->_log->addError("Error when processing Jobs queue:" . $exception->getMessage());
         }
 
-        $modules = $this->_config['modules'];
-
-        $this->_processJobs();
-        $this->_processQueue($modules);
-
-        $this->_processLiveJobs();
-        $this->_processLiveQueue($modules);
-
-        return $this->_jsonResult(true, "Successful operation");
+        return $this->_jsonResult($resultOk);
     }
 
     private function _processQueue($modules)
