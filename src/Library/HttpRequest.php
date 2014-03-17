@@ -20,13 +20,11 @@ class HttpRequest extends \HttpRequest
                     break;
                 case 401:
                 case 403:
-                    throw new Exception();
+                    throw new \Exception();
                     break;
             }
         } catch (\HttpException $exception) {
             return false;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        } 
     }
 }
