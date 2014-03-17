@@ -79,6 +79,19 @@ modules:
 The prefix ones are used by Octopush to call the proper Jenkins RM job, it will concat the requested module name like: 'Push_Staging_Component1', so as to use convention over configuration.</p>
 
 <h3>
+<a name="authentication-and-authorization" class="anchor" href="#authentication-and-authorization"><span class="octicon octicon-link"></span></a>Authentication and authorization</h3>
+
+<p>Some Octopush features requires the user to be authorized. User authentication is based on GitHub (OAuth), so for this to work you need to <a href="https://github.com/settings/applications/new">register the application in GitHub</a> and add your keys to the configuration file</p>
+
+<pre>
+  <code>
+      github_key: 'place_your_key_here'
+      github_secret: 'place_your_secret_here'
+  </code>
+</pre>
+
+
+<h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
 <p>Diego Garber (<a href="https://github.com/diego-garber" class="user-mention">@diego-garber</a>), Nicolas Paez (<a href="https://github.com/nicopaez" class="user-mention">@nicopaez</a>), Osvaldo Toja Suarez (<a href="https://github.com/osvaldotoja-olx" class="user-mention">@osvaldotoja-olx</a>), German Scoglio (<a href="https://github.com/german-olx" class="user-mention">@german-olx</a>)</p>
