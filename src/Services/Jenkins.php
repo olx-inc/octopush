@@ -65,6 +65,7 @@ class Jenkins
         }
         $url .= '/lastBuild/api/json';
         $this->_httpRequest->setUrl($url);
+        $this->_log->addInfo("GettingLastBuild:" . $url);
         $rawResponse = $this->_send();
         $jsonResponse = json_decode($rawResponse['body'], true);
 
