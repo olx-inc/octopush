@@ -21,26 +21,25 @@ class Jenkins
         $this->_jobs = $config['jenkins']['jobs'];
         $this->_log = $log;
         $this->_httpRequest = $httpRequest;
+        $this->_log->addInfo("New Jenkins instance created");
     }
 
     public function push($job)
     {
         $url = $this->_getUrlForJob($job);
-        $url .= '/buildWithParameters?';
-        $url .= 'env=' . $job->getTargetEnvironment();
-        $url .= '&repo=' . $job->getTargetModule();
-        $url .= '&revision=' . $job->getTargetVersion();
-
-        return $this->_doPush($job, $url);
+        $url .= '/buildWithParameters';
+        $this->_httpRequest->addPostFields(array('env' => $job->getTargetEnvironment(), 'repo' => $job->getTargetModule(), 'env' =>  $job->getTargetEnvironment()));
+        $toLive = false;
+        return $this->_doPush($job, $url, $toLive);
     }
 
     public function pushLive($job)
     {
         $url = $this->_getLiveUrlForJob($job);
-        $url .= '/buildWithParameters?';
-        $url .= 'tag=' . $job->getTargetVersion();
-
-        return $this->_doPush($job, $url);
+        $url .= '/buildWithParameters';
+        $this->_httpRequest->addPostFields(array('tag' => $job->getTargetVersion()));
+        $toLive = true;
+        return $this->_doPush($job, $url, $toLive);
     }
 
     public function getLastBuildStatus($job)
@@ -117,6 +116,26 @@ class Jenkins
         return $response;
     }
 
+    private function _sendPost()
+    {
+        try {
+            $this->_log->addInfo("Calling Jenkins:" . $this->_httpRequest->getUrl());
+            $httpAuth = $this->_user . ':' . $this->_pass;
+            $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
+            $response = $this->_httpRequest->send();
+            $this->_log->addInfo("Response:" . $this->_httpRequest->getResponseCode());
+            if ($this->_httpRequest->getResponseCode() > 400) {
+                $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());
+                throw new \Exception();
+            }
+        } catch (\Exception $e) {
+            $this->_log->addError($e->getMessage());
+            throw $e;
+        }
+
+        return $response;
+    }
+
     public function getBuildUrl($job)
     {
         $url = $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId();
@@ -140,7 +159,7 @@ class Jenkins
 
     public function getLiveJobConsoleUrl($job)
     {
-        $url = $this->_getLiveUrlForJob($job) . "_LIVE/lastBuild/console";
+        $url = $this->_getLiveUrlForJob($job) . "/" . $job->getLiveJobId();
 
         return $url;
     }
@@ -156,10 +175,12 @@ class Jenkins
     private function _getLiveUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['liveprefix'] . ucfirst($job->getTargetModule());
+            $this->_jobs['liveprefix'] . $job->getTargetModule();
+
+        return $url;
     }
 
-    private function _doPush($job, $pushUrl)
+    private function _doPush($job, $pushUrl, $toLive)
     {
         try {
             $currentBuildId = 0;
@@ -175,9 +196,16 @@ class Jenkins
                 $this->_log->addInfo("lastBuildId: " . $lastBuildId);
                 $this->_log->addInfo("currentBuildId: " . $currentBuildId);
                 sleep(2);
-                $job->setDeploymentJobId($this->getLastBuildId($job));
-                if (is_numeric($job->getDeploymentJobId()))
-                    $currentBuildId = $job->getDeploymentJobId();
+                if ($toLive) {
+                    $job->setLiveJobId($this->getLastBuildId($job));
+                    if (is_numeric($job->getLiveJobId()))
+                        $currentBuildId = $job->getLiveJobId();
+                } else {
+                    $job->setDeploymentJobId($this->getLastBuildId($job));
+                    if (is_numeric($job->getDeploymentJobId()))
+                        $currentBuildId = $job->getDeploymentJobId();
+                }
+                
             }
             $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());
 

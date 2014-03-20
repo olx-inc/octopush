@@ -1,8 +1,10 @@
 describe "Octopush control functions" do
 
+  octopush_url = ENV['octopush_url'] || "http://octopush.com"
+
   describe 'pause' do
     it "should return result SUCCESS" do
-      url = "http://octopush.com/pause"
+      url = octopush_url + "/pause"
       response = Octopush.get(url)
       response.body.should include 'SUCCESS'
     end
@@ -11,11 +13,13 @@ describe "Octopush control functions" do
   describe 'run' do
 
     it "should return result SUCCESS when is Paused" do
-      url = "http://octopush.com/pause"
+      # first pause it
+      url = octopush_url + "/pause"
       response = Octopush.get(url)
       response.body.should include 'SUCCESS'
 
-      url = "http://octopush.com/run"
+      # then make it run and check it is still paused
+      url = octopush_url + "/run"
       response = Octopush.get(url)
       response.body.should include 'SUCCESS'
       response.body.should include 'The service is paused'
@@ -27,7 +31,7 @@ describe "Octopush control functions" do
   describe 'resume' do
 
     it "should return result SUCCESS" do
-      url = "http://octopush.com/resume"
+      url =  octopush_url + "/resume"
       response = Octopush.get(url)
       response.body.should include 'SUCCESS'
     end
