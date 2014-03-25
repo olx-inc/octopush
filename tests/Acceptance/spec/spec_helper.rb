@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'rspec'
 require 'watir-webdriver'
-#require 'watir-webdriver-performance'
 require 'junit'
 require 'httparty'
 
