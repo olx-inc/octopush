@@ -2,9 +2,13 @@ Octopush
 ========
 
 Unit tests:
+
 [![Build Status](https://travis-ci.org/olx-inc/octopush.png?branch=master)](https://travis-ci.org/olx-inc/octopush)
+
 Acceptance tests:
+
 [![Build Status](http://162.242.230.200/jenkins/job/octopush_run_acceptance_test/badge/icon)](http://162.242.230.200/jenkins/job/octopush_run_acceptance_test/)
+
 Octopush is an application to manage deployment requests executed by Jenkins.  
 
 Installation
