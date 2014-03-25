@@ -28,18 +28,18 @@ class Jenkins
     {
         $url = $this->_getUrlForJob($job);
         $url .= '/buildWithParameters';
-        $this->_httpRequest->addPostFields(array('env' => $job->getTargetEnvironment(), 'repo' => $job->getTargetModule(), 'env' =>  $job->getTargetEnvironment()));
+        $data = array('env' => $job->getTargetEnvironment(), 'repo' => $job->getTargetModule(), 'env' =>  $job->getTargetEnvironment());
         $toLive = false;
-        return $this->_doPush($job, $url, $toLive);
+        return $this->_doPush($job, $url, $data, $toLive);
     }
 
     public function pushLive($job)
     {
         $url = $this->_getLiveUrlForJob($job);
         $url .= '/buildWithParameters';
-        $this->_httpRequest->addPostFields(array('tag' => $job->getTargetVersion()));
+        $data = array('tag' => $job->getTargetVersion());
         $toLive = true;
-        return $this->_doPush($job, $url, $toLive);
+        return $this->_doPush($job, $url, $data, $toLive);
     }
 
     public function getLastBuildStatus($job)
@@ -116,26 +116,6 @@ class Jenkins
         return $response;
     }
 
-    private function _sendPost()
-    {
-        try {
-            $this->_log->addInfo("Calling Jenkins:" . $this->_httpRequest->getUrl());
-            $httpAuth = $this->_user . ':' . $this->_pass;
-            $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
-            $response = $this->_httpRequest->send();
-            $this->_log->addInfo("Response:" . $this->_httpRequest->getResponseCode());
-            if ($this->_httpRequest->getResponseCode() > 400) {
-                $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());
-                throw new \Exception();
-            }
-        } catch (\Exception $e) {
-            $this->_log->addError($e->getMessage());
-            throw $e;
-        }
-
-        return $response;
-    }
-
     public function getBuildUrl($job)
     {
         $url = $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId();
@@ -180,18 +160,23 @@ class Jenkins
         return $url;
     }
 
-    private function _doPush($job, $pushUrl, $toLive)
+    private function _doPush($job, $pushUrl, $data, $toLive)
     {
         try {
             $currentBuildId = 0;
             $lastBuildId = $this->getLastBuildId($job);
             $this->_log->addInfo("lastBuildId: " . $lastBuildId);
+            $req = new HttpRequest($pushUrl, HttpRequest::METH_POST);
             $httpAuth = $this->_user . ':' . $this->_pass;
-            $this->_httpRequest->setUrl($pushUrl);
-            $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
+            $req->setOptions(array('httpauth' => $httpAuth));
+            $req->addPostFields($data);
             $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);
-            $this->_send();
-            $this->_log->addInfo("JenkinsRM called: " . $job->getId());
+            $req->send();
+            $this->_log->addInfo("Response:" . $req->getResponseCode());
+            if ($req->getResponseCode() > 400) {
+                $this->_log->addError("Error while calling jenkins: " . $req->getUrl());
+                throw new \Exception();
+            }
             while ($lastBuildId>=$currentBuildId) {
                 $this->_log->addInfo("lastBuildId: " . $lastBuildId);
                 $this->_log->addInfo("currentBuildId: " . $currentBuildId);
