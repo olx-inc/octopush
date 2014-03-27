@@ -1,43 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Octopush : Open Source Octopush project" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Octopush by olx-inc</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Octopush</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1>Octopush</h1>
+        <p>Open Source Octopush project</p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/olx-inc/octopush">View on GitHub</a>
+        <p class="view"><a href="https://github.com/olx-inc/octopush">View the Project on GitHub <small>olx-inc/octopush</small></a></p>
 
-          <h1 id="project_title">Octopush</h1>
-          <h2 id="project_tagline">Open Source Octopush project</h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/olx-inc/octopush/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/olx-inc/octopush/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+        <ul>
+          <li><a href="https://github.com/olx-inc/octopush/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/olx-inc/octopush/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/olx-inc/octopush">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         <h3>
 <a name="welcome-to-octopush-project" class="anchor" href="#welcome-to-octopush-project"><span class="octicon octicon-link"></span></a>Welcome to Octopush project</h3>
 
 <p>Octopush is a project born out of the necessity to orchestrate Our Jenkins Deployment pipeline at OLX. We started up connecting Jenkins CI Servers with Jenkins RM Server in order to keep things separate, clean and scalable. We needed to be able to request a Deployment automatically from a Jenkins CI Server (managed by a certain Dev Team) to the Release Management Jenkins (managed by RM Team) once the builds where OK. There is no native or pretty way of doing this, we just curl from one Jenkins to the other like:</p>
 
-<pre><code>curl --user $JENKINS_USER:$API_TOKEN 
-      "http://jenkins-rm.olx.com/job/Deploy_Component/buildWithParameters?env=Staging&amp;repo=CompX&amp;revision=1.0.0"
+<pre><code>curl --user $JENKINS_USER:$API_TOKEN "http://jenkins-rm.olx.com/job/Deploy_Component/buildWithParameters?env=Staging&amp;repo=CompX&amp;revision=1.0.0"
+
 </code></pre>
 
 <p>and checked out the response using Jenkins API like:</p>
@@ -52,13 +49,6 @@ That's how Octopush was born.</p>
 <a name="octopush-orchestration-engine" class="anchor" href="#octopush-orchestration-engine"><span class="octicon octicon-link"></span></a>Octopush Orchestration engine</h3>
 
 <p>Octopush handles a Queue were every request waits for its turn to be deployed, available components to be deployed are configured on src/config/config.yml where you also specify a groupId. This groupId works as a tier identification, front-end components use one, backend use another. This is used by Octopush to identify dependecies and be able to parallelize non-dependant components (on the same group) and serialize dependant ones (This is an improvement point, dependency graph would be much better).</p>
-<pre><code>
-modules: 
-    frontend-project1: 1
-    frontend-project2: 1
-    middle-ware: 2
-    backend-project: 3
-</code></pre>
 
 <h3>
 <a name="jenkins-integration" class="anchor" href="#jenkins-integration"><span class="octicon octicon-link"></span></a>Jenkins integration</h3>
@@ -79,20 +69,6 @@ modules:
 The prefix ones are used by Octopush to call the proper Jenkins RM job, it will concat the requested module name like: 'Push_Staging_Component1', so as to use convention over configuration.</p>
 
 <h3>
-<a name="authentication-and-authorization" class="anchor" href="#authentication-and-authorization"><span class="octicon octicon-link"></span></a>Authentication and authorization</h3>
-
-<p>User authentication is based on GitHub (OAuth), so for this to work you need to <a href="https://github.com/settings/applications/new">register the application in GitHub</a> and add your keys to the configuration file</p>
-<pre><code>
-  github_key: 'place_your_key_here'
-  github_secret: 'place_your_secret_here'
-</code></pre>
-<p>Once the user is authenticated, authorization is performed by checking if the user belongs to a certain GitHub team. For this to work you need to set in the configuration file your GitHub management key (/settings/applications/Personal Access Token) and the id of the GitHub team that includes authorized users.</p>
-<pre><code>
-  github_management_key: 'your_management_key'
-  admin_team_id: 'your_admin_team_id'
-</code></pre>
-<h3>
-
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
 <p>Diego Garber (<a href="https://github.com/diego-garber" class="user-mention">@diego-garber</a>), Nicolas Paez (<a href="https://github.com/nicopaez" class="user-mention">@nicopaez</a>), Osvaldo Toja Suarez (<a href="https://github.com/osvaldotoja-olx" class="user-mention">@osvaldotoja-olx</a>), German Scoglio (<a href="https://github.com/german-olx" class="user-mention">@german-olx</a>)</p>
@@ -100,19 +76,14 @@ The prefix ones are used by Octopush to call the proper Jenkins RM job, it will 
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Please don't hesitate to contact us at release@olx.com</p>
+<p>Please don't hesitate to contact us</p>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Octopush maintained by <a href="https://github.com/olx-inc">olx-inc</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/olx-inc">olx-inc</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-
+    <script src="javascripts/scale.fix.js"></script>
     
-
   </body>
 </html>
