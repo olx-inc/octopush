@@ -12,9 +12,7 @@ Octopush is a project born out of the necessity to orchestrate Our Jenkins Deplo
 <ul>
         {% for p in site.pages %}
         <li>
-        	<a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a>
-        	
-		<a href="{{ url }}{{ p.url }}">{{ p.title }}</a>
+		<a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a>
         </li>
         {% endfor %}
     </ul>
