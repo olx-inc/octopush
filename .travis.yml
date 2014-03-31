@@ -14,3 +14,4 @@ script: phpunit
 
 after_success:
   - "curl http://travis-ci:LZzhkv7lVf5Yc@162.242.230.200/deploy/octopush.php"
+  - "curl --data '' http://162.242.230.200/jenkins/job/octopush_run_acceptance_test/build"
