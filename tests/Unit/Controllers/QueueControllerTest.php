@@ -150,6 +150,7 @@ class ApplicationMock extends Silex\Application
             'environments' => array('qa1'),
             'modules' => array(
                 "billing" => 1),
+            'control_file' => __DIR__.'/../../../src/control/control.txt',
             'jobs' => array(
                 'queue.lenght' => 5,
                 'processed.lenght' => 10,
