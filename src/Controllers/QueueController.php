@@ -24,7 +24,7 @@ class QueueController
         $this->_app = $app;
         $this->_jenkins = $jenkins;
         $this->_log = $log;
-        $this->_controlFile = __DIR__.'/../control/control.txt';
+        $this->_controlFile = $this->_config['control_file'];
     }
 
     /**********************   API METHODS ***********************/
