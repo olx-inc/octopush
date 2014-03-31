@@ -16,6 +16,7 @@ Octopush is built on PHP and MySql but some other tools are used for its develop
 
 So to start developing follow the steps below (the procedure to install each item will depend on your OS):
 
+
 * Install LAMP stack
 * Install PECL HttpRequest Library
 * Install Git
@@ -34,25 +35,23 @@ So to start developing follow the steps below (the procedure to install each ite
 * Run bundle install under test/Acceptance
 * Run acceptance test under test/Acceptance by executing the script run_all_test.sh
 
+
 Apache configuration
 
-<pre>
-    <VirtualHost *:80>
-        ServerName  octopush.com
-        ServerAlias demo.octopush.com
 
-        DocumentRoot "/var/www/octopush/"
-
-        <Directory "/var/www/octopush">
-            Options -MultiViews
-        AllowOverride None
-            RewriteEngine On
-            #RewriteBase /path/to/app
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteRule ^ index.php [L]
-        </Directory>
-
-        ErrorLog            /var/log/octopush/error_log
-        CustomLog           /var/log/octopush/access_log combined
-    </VirtualHost>
-</pre>
+<pre><code>&lt;VirtualHost *:80&gt;
+ServerName  octopush.com
+ServerAlias demo.octopush.com
+DocumentRoot "/var/www/octopush/"
+&lt;Directory "/var/www/octopush"&gt;
+  Options -MultiViews
+  AllowOverride None
+  RewriteEngine On
+  #RewriteBase /path/to/app
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [L]
+  ErrorLog            /var/log/octopush/error_log
+  CustomLog           /var/log/octopush/access_log combined
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
