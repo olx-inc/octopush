@@ -2,7 +2,8 @@
 layout: default
 title: Quickstart for developers
 ---
- 
+
+
 Octopush is built on PHP and MySql but some other tools are used for its development: 
 
 * Depedencies are managed with Composer
