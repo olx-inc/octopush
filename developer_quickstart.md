@@ -3,7 +3,6 @@ layout: default
 title: Quickstart for developers
 ---
 
-
 Octopush is built on PHP and MySql but some other tools are used for its development: 
 
 * Depedencies are managed with Composer
@@ -16,7 +15,6 @@ Octopush is built on PHP and MySql but some other tools are used for its develop
 * HttpRequest PHP Library (pecl_http)
 
 So to start developing follow the steps below (the procedure to install each item will depend on your OS):
-
 
 * Install LAMP stack
 * Install PECL HttpRequest Library
