@@ -7,7 +7,10 @@ Unit tests:
 Acceptance tests:
 [![Build Status](http://162.242.230.200/jenkins/buildStatus/icon?job=octopush_run_acceptance_test)](http://162.242.230.200/jenkins/job/octopush_run_acceptance_test/)
 
-Octopush is an application to manage deployment requests executed by Jenkins.  
+Octopush is an application to manage deployment requests executed by Jenkins.
+
+You can check out our running demo [here](http://162.242.230.200/)
+ and play arround with its [Jenkins](http://162.242.230.200/jenkins)
 
 Installation
 ------------
