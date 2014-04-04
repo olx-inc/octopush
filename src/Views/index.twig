@@ -5,25 +5,23 @@
       type="image/png" 
       href="/images/favicon.png" />
         <title>Octopush</title>
-        <meta http-equiv="refresh" content="15" >
+        <!--<meta http-equiv="refresh" content="15" >-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="css/octopush.css" rel="stylesheet" media="screen">
     </head>
     <body>
-        <script src="http://code.jquery.com/jquery.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/index.js"></script>
         <div class="container">
             <div class="page-header">
-                <h1>Octopush <small>v{{ version }}</small></h1>
+                <img src="/images/logo.png" />
+                <small>v{{ version }}</small>
                      {% if app.user %}
-                    <p>Hello {{ app.user.username }}
+                    <span class="loginBox">Hello {{ app.user.username }}
                         {% if app.is_admin_user %}
                             (admin)
                         {% endif %}
-                        | <a href="{{ logoutUrl }}">Logout</a></p>
+                        | <a href="{{ logoutUrl }}">Logout</a></span>
                     {% endif %}
             </div>
                 <h3>Pre-Production</h3>
@@ -322,5 +320,8 @@
                     {% endif %}
                 </div>
         </div>
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/index.js"></script>
     </body>
 </html>
