@@ -6,11 +6,11 @@ title: API specification
 Octopush is basically API based, you can pretty much do everything from it, here are the commands:
 
 These 3 control the queue. 
-<pre><code>
+<code>
 /run
 /pause
 /resume
-</code></pre>
+</code>
 
 This is the health check
 <pre><code>
