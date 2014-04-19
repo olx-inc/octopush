@@ -22,7 +22,6 @@ This is the health check:
 These are useful for manually removing a blocking job on PENDING_TESTS (first) or cancelling a QUEUED job (2nd):
 
 ````
-
 /jobs/{jobId}/tests/{success}
 /jobs/{jobId}/cancel
 
@@ -31,7 +30,6 @@ These are useful for manually removing a blocking job on PENDING_TESTS (first) o
 These are the usual ones, you can check their uses at jenkins:
 
 ````
-
 /environments/{env}/modules/{module}/versions/{version}/push
 /jobs/create
 /jobs/{jobId}/register_test_job_result
@@ -40,4 +38,3 @@ These are the usual ones, you can check their uses at jenkins:
 /jobs/{jobId}/golive
 
 ````
-
