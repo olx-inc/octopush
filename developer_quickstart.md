@@ -38,11 +38,12 @@ So to start developing follow the steps below (the procedure to install each ite
 Apache configuration
 
 
-<pre><code>&lt;VirtualHost *:80&gt;
+````
+<VirtualHost *:80>
 ServerName  octopush.com
 ServerAlias demo.octopush.com
 DocumentRoot "/var/www/octopush/"
-&lt;Directory "/var/www/octopush"&gt;
+  <Directory "/var/www/octopush">
   Options -MultiViews
   AllowOverride None
   RewriteEngine On
@@ -51,6 +52,6 @@ DocumentRoot "/var/www/octopush/"
   RewriteRule ^ index.php [L]
   ErrorLog            /var/log/octopush/error_log
   CustomLog           /var/log/octopush/access_log combined
-  &lt;/Directory&gt;
-&lt;/VirtualHost&gt;
-</code></pre>
+  </Directory>
+</VirtualHost>
+````

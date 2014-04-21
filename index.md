@@ -7,10 +7,11 @@ Octopush is a project born out of the necessity to orchestrate Our Jenkins Deplo
 
 Octopush handles a Queue were every request waits for its turn to be deployed, available components to be deployed are configured on src/config/config.yml where you also specify a groupId. This groupId works as a tier identification, front-end components use one, backend use another. This is used by Octopush to identify dependecies and be able to parallelize non-dependant components (on the same group) and serialize dependant ones (this is an improvement point, dependency graph would be much better).
 
-<ul>
-        {% for p in site.pages %}
-        <li>
-		<a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a>
-        </li>
-	{% endfor %}
-</ul>
+* [A bit of history]({{ site.baseurl }}/history)
+* [Quickstart for developers]({{ site.baseurl }}/developer_quickstart) 
+* [Application Architecture]({{ site.baseurl }}/architecture) 
+* [API specification]({{ site.baseurl }}/api) 
+* [Demo instance]({{ site.baseurl }}/demo_environment) 
+* [Authentication and authorization]({{ site.baseurl }}/authentication) 
+* [Contributions]({{ site.baseurl }}/contributions) 
+
