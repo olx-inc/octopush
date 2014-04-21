@@ -10,13 +10,11 @@ These three control the queue:
 /run
 /pause
 /resume
-
 ````
 
 This is the health check:
 ````
 /health
-
 ````
 
 These are useful for manually removing a blocking job on PENDING_TESTS (first) or cancelling a QUEUED job (2nd):
@@ -24,7 +22,6 @@ These are useful for manually removing a blocking job on PENDING_TESTS (first) o
 ````
 /jobs/{jobId}/tests/{success}
 /jobs/{jobId}/cancel
-
 ````
 
 These are the usual ones, you can check their uses at jenkins:
@@ -36,5 +33,4 @@ These are the usual ones, you can check their uses at jenkins:
 /jobs/{jobId}/register_test_job_url
 /jobs/{jobId}/status
 /jobs/{jobId}/golive
-
 ````
