@@ -13,8 +13,8 @@ class JobMapper
     const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = :status ORDER BY queue_date limit :limit";
     const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC";
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC limit :limit";
-    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
-    const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ? WHERE job_id = ?";
+    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_job_url = ? WHERE job_id = ?";
 
     public function __construct(Connection $db)
     {
@@ -145,9 +145,10 @@ class JobMapper
                 $job->getTestJobUrl(),
                 $job->getDeploymentJobId(),
                 $job->getLiveJobId(),
-                $job->getId()
-                $job->getUser()
-                $job->getTicket()
+                $job->getId(),
+                $job->getUser(),
+                $job->getTicket(),
+                $job->getRollbackJobUrl()
           )
         );
         $job->setUpdateDate($updatedDate);

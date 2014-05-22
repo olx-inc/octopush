@@ -88,6 +88,13 @@ class QueueController
         return $this->_jsonResult($success);
     }
 
+    public function status()
+    {
+        $status = 'OK';
+        if ($this->_isPaused()) $status = 'PAUSED';
+        return $status;
+    }
+
     public function health()
     {
         $this->_jenkins->ping();
@@ -95,7 +102,7 @@ class QueueController
 
         $status = 'Ok';
         if ($this->_isPaused()) $status = 'Paused';
-        return $status . ". Version: " . Version::getFull();
+        return "Status: " . $status . "\nVersion: " . Version::getFull();
     }
 
     public function processJob()

@@ -12,8 +12,9 @@ $app->get('/', "queue.controller:showJobs");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");
+$app->get('/status', "queue.controller:status");
 
-//$app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
+$app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 
 // deprecated
 $app->get('/jobs/{jobId}/tests/{success}', "jobs.controller:registerTestResult");
