@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
+    Silex\Application,
     Controllers\JenkinsController,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,8 @@ class JobsController
     private $_log;
     private $_app;
 
-    public function __construct(Application $app, $config,
+    public function __construct(Application $app, 
+                                $config,
                                 JobMapper $jobMapper,
                                 $log)
     {
@@ -123,7 +125,7 @@ class JobsController
 
             if ($job->canGoLive()) {
                 $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
-                $job->setUser(app['user']);
+                $job->setUser($this->_app['user']);
                 $this->_jobMapper->save($job);
 
                 $result = array(

@@ -202,7 +202,10 @@ class Job
         $job->_targetEnvironment = $env;
         $job->_requestorJenkins = $jenkins;
         $job->_testJobUrl = "";
-
+        $job->_user = "";
+        $job->_ticket = "";
+        $job->_rollbackJobUrl = "";
+        
         return $job;
     }
 

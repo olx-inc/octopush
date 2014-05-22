@@ -74,7 +74,7 @@ $app['queue.controller'] = $app->share(
 
 $app['jobs.controller'] = $app->share(
     function () use ($app) {
-        return new Controllers\JobsController($app['config'], $app['models.JobMapper'], $app['monolog'], $app);
+        return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['monolog']);
     }
 );
 

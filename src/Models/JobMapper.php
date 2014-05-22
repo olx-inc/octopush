@@ -10,10 +10,10 @@ class JobMapper
 
     const GET_JOB_STATEMENT = "SELECT * FROM jobs WHERE job_id = ?";
     const FIND_ALL_BY_STATUS_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY queue_date";
-    const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = :status ORDER BY queue_date limit :limit";
+    const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY queue_date limit ?";
     const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC";
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC limit :limit";
-    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_job_url = ? WHERE job_id = ?";
 
     public function __construct(Connection $db)
@@ -36,11 +36,10 @@ class JobMapper
     {
         $sql = JobMapper::FIND_ALL_BY_STATUS_STATEMENT;
         $params = array($status);
-        if (!is_null($limit)) {
-            $sql = JobMapper::FIND_ALL_BY_STATUS_LIMIT_STATEMENT;
-            $params['limit'] = $limit;
+        if (! is_null($limit)) {
+            $sql .= " limit " . $limit;
         }
-
+        
         $data = $this->_db->fetchAll($sql, $params);
 
         $result = array();
@@ -145,10 +144,10 @@ class JobMapper
                 $job->getTestJobUrl(),
                 $job->getDeploymentJobId(),
                 $job->getLiveJobId(),
-                $job->getId(),
                 $job->getUser(),
                 $job->getTicket(),
-                $job->getRollbackJobUrl()
+                $job->getRollbackJobUrl(),
+                $job->getId(),
           )
         );
         $job->setUpdateDate($updatedDate);
