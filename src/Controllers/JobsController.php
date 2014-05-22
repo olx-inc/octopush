@@ -15,14 +15,16 @@ class JobsController
     private $_config;
     private $_jobMapper;
     private $_log;
+    private $_app;
 
-    public function __construct($config,
+    public function __construct(Application $app, $config,
                                 JobMapper $jobMapper,
                                 $log)
     {
         $this->_config = $config;
         $this->_jobMapper = $jobMapper;
         $this->_log = $log;
+        $this->_app = $app;
     }
 
     public function createJob(Request $request)
@@ -121,6 +123,7 @@ class JobsController
 
             if ($job->canGoLive()) {
                 $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
+                $job->setUser(app['user']);
                 $this->_jobMapper->save($job);
 
                 $result = array(

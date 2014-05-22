@@ -14,5 +14,8 @@ CREATE TABLE jobs (
   deployment_job_id int DEFAULT 0,
   live_job_id int DEFAULT 0,
   test_job_url varchar(200),
+  user varchar(50),
+  ticket varchar(100),
+  rollback_job_url(200),
   PRIMARY KEY (job_id)
 );

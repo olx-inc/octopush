@@ -11,7 +11,7 @@ jenkins:
     pass:     #RM jenkins password
     jobs:
         prefix: 'Push_Artifactory_'
-        live.prefix: 'Push_'
+        live.prefix: 'Push_LIVE_'
         notifications: 'Octopush_Notification'
 modules:
     ok-project: 2
