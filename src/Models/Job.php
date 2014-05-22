@@ -16,6 +16,8 @@ class Job
     private $_deploymentJobId;
     private $_testJobUrl;
     private $_liveJobId;
+    private $_user;
+    private $_ticket;
 
     public function setId($id)
     {
@@ -111,6 +113,27 @@ class Job
         return $this->_liveJobId;
     }
 
+   public function setUser($user)
+    {
+        $this->_user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->_user;
+    }
+
+   public function setTicket($ticket)
+    {
+        $this->_ticket = $ticket;
+    }
+
+    public function getTicket()
+    {
+        return $this->_ticket;
+    }
+
+
     private function _initStatusArray()
     {
         $this->_statusArray = array(
@@ -190,6 +213,8 @@ class Job
         $job->_deploymentJobId = isset($data[$key]) ? $data[$key] : 0;
         $key = 'live_job_id';
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
+        $job->_user = isset($data[$user]) ? $data[$user] : "";
+        $job->_ticket = isset($data[$ticket]) ? $data[$ticket] : "";
 
         return $job;
     }

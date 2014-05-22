@@ -221,7 +221,7 @@ class JobsController
 
             $result = array(
                 'status' => "success",
-                'message' => "Test result registerd"
+                'message' => "Test result registered"
             );
 
             return json_encode($result);

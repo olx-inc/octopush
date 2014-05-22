@@ -93,7 +93,9 @@ class QueueController
         $this->_jenkins->ping();
         $this->_jobMapper->findAllByStatus(JobStatus::DEPLOYING, 1);
 
-        return "ok. Version: " . Version::getFull();
+        $status = 'Ok';
+        if ($this->_isPaused()) $status = 'Paused';
+        return $status . ". Version: " . Version::getFull();
     }
 
     public function processJob()
@@ -210,32 +212,29 @@ class QueueController
 
     private function _processLiveQueue($modules)
     {
-        $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED_FOR_LIVE);
+        $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED_FOR_LIVE, 1);
         $this->_log->addInfo("About processing the live queue");
         if (count($jobsToProcess) == 0) {
             $this->_log->addInfo("The Live queue is empty");
         }
         foreach ($jobsToProcess as $job) {
-            $jobsInProgress = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE));
-            if ($job->canRun($jobsInProgress, $modules)) {
-                $job->moveStatusTo(JobStatus::GOING_LIVE);
+            $job->moveStatusTo(JobStatus::GOING_LIVE);
+            $this->_jobMapper->save($job);
+            if ($this->_jenkins->pushLive($job)) {
                 $this->_jobMapper->save($job);
-                if ($this->_jenkins->pushLive($job)) {
-                    $this->_jobMapper->save($job);
-                    $result = array(
-                    'status' => "success",
-                    'message' => "Job {$job->getId()} going live in progress.",
-                    );
-                    $this->_log->addInfo($result['message']);
-                } else {
-                    $job->moveStatusTo(JobStatus::GO_LIVE_FAILED);
-                    $this->_jobMapper->save($job);
-                    $result = array(
-                    'status' => "error",
-                    'message' => "Job {$job->getId()} go live failed.",
-                    );
-                    $this->_log->addError($result['message']);
-                }
+                $result = array(
+                'status' => "success",
+                'message' => "Job {$job->getId()} going live in progress.",
+                );
+                $this->_log->addInfo($result['message']);
+            } else {
+                $job->moveStatusTo(JobStatus::GO_LIVE_FAILED);
+                $this->_jobMapper->save($job);
+                $result = array(
+                'status' => "error",
+                'message' => "Job {$job->getId()} go live failed.",
+                );
+                $this->_log->addError($result['message']);
             }
         }
     }
