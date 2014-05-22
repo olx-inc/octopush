@@ -13,6 +13,10 @@ jenkins:
         prefix: 'Push_Artifactory_'
         live.prefix: 'Push_LIVE_'
         notifications: 'Octopush_Notification'
+thirdparty:
+    pre-deploy: 'http://elvira.olx.com.ar/tags/api/pre-deploy.php'
+    security: 'http://elvira.olx.com.ar/api/checkUsersRepos'
+
 modules:
     ok-project: 2
     fail-project: 2
