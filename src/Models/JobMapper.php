@@ -15,6 +15,15 @@ class JobMapper
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC limit :limit";
     const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_job_url = ? WHERE job_id = ?";
+               $job->getStatus(),
+                $updatedDate,
+                $job->getTestJobUrl(),
+                $job->getDeploymentJobId(),
+                $job->getLiveJobId(),
+                $job->getId(),
+                $job->getUser(),
+                $job->getTicket(),
+                $job->getRollbackJobUrl()
 
     public function __construct(Connection $db)
     {
