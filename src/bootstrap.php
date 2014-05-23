@@ -32,6 +32,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.handler' => new \Monolog\Handler\SyslogHandler('octopush'),
     'monolog.logfile' => $app['config']['log.path'],
     'monolog.level' => $app['config']['log.level'],
     'monolog.name' => 'octopush',
