@@ -6,8 +6,7 @@ $app = new Silex\Application();
 
 if (!defined('APPLICATION_ENV')) {
     define(
-        'APPLICATION_ENV',
-        getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'
+            'APPLICATION_ENV', getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'
     );
 }
 
@@ -24,7 +23,7 @@ $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\SessionServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/Views',
+    'twig.path' => __DIR__ . '/Views',
 ));
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
@@ -41,47 +40,47 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new SessionServiceProvider());
 
 /*
-$app['models.JobsMapper'] = $app->share(
-    function ($app) {
-        return new Models\JobsMapper($app['db']);
-    }
-);
-*/
+  $app['models.JobsMapper'] = $app->share(
+  function ($app) {
+  return new Models\JobsMapper($app['db']);
+  }
+  );
+ */
 
 $app['models.JobMapper'] = $app->share(
-    function ($app) {
-        return new Models\JobMapper($app['db']);
-    }
+        function ($app) {
+    return new Models\JobMapper($app['db']);
+}
 );
 
 $app['services.jenkins'] = $app->share(
-    function ($app) {
-        return new Services\Jenkins($app['config'], new \Library\HttpRequest(), $app['monolog']);
-    }
+        function ($app) {
+    return new Services\Jenkins($app['config'], new \Library\HttpRequest(), $app['monolog']);
+}
 );
 
 $app['services.GitHub'] = $app->share(
-    function ($app) {
-        return new Services\GitHub($app['config'], new \Library\HttpRequest(), $app['monolog']);
-    }
+        function ($app) {
+    return new Services\GitHub($app['config'], new \Library\HttpRequest(), $app['monolog']);
+}
 );
 
 $app['services.ThirdParty'] = $app->share(
-    function ($app) {
-        return new Services\ThirdParty($app['config'], new \Library\HttpRequest(), $app['monolog']);
-    }
+        function ($app) {
+    return new Services\ThirdParty($app['config'], new \Library\HttpRequest(), $app['monolog']);
+}
 );
 
 $app['queue.controller'] = $app->share(
-    function () use ($app) {
-        return new Controllers\QueueController($app, $app['models.JobMapper'],$app['services.jenkins'], $app['monolog']);
-    }
+        function () use ($app) {
+    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['services.jenkins'], $app['services.ThirdParty'], $app['monolog']);
+}
 );
 
 $app['jobs.controller'] = $app->share(
-    function () use ($app) {
-        return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['monolog']);
-    }
+        function () use ($app) {
+    return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['monolog']);
+}
 );
 
 $app->register(new Gigablah\Silex\OAuth\OAuthServiceProvider(), array(

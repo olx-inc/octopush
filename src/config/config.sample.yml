@@ -29,5 +29,7 @@ log.path: /var/log/octopush.log
 github_key: 'your_key'
 github_secret: 'your_secret'
 github_management_key: 'your_management_key'
-admin_team_id: 'your_admin_team_id'
+teams:
+    admin: 'your_admin_team_id'
+    pocs: 'your_pocs_team_id'
 control_file: 'path_to_a_file_where_octopush_can_read_write'

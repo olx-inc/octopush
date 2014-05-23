@@ -13,16 +13,17 @@ class QueueController
     private $_jobMapper;
     private $_config;
     private $_jenkins;
+    private $_thirdParty;
     private $_app;
     private $_log;
     private $_controlFile;
 
-    public function __construct(Application $app, JobMapper $jobMapper, $jenkins, $log)
-    {
+    public function __construct(Application $app, JobMapper $jobMapper, $jenkins, $thirdParty, $log) {
         $this->_jobMapper = $jobMapper;
         $this->_config = $app['config'];
         $this->_app = $app;
         $this->_jenkins = $jenkins;
+        $this->_thirdParty = $thirdParty;
         $this->_log = $log;
         $this->_controlFile = $this->_config['control_file'];
     }
@@ -68,7 +69,7 @@ class QueueController
         }
 
         return json_encode($result);
-     }
+    }
 
     public function pause()
     {
@@ -146,16 +147,16 @@ class QueueController
                 if ($this->_jenkins->push($job)) {
                     $this->_jobMapper->save($job);
                     $result = array(
-                    'status' => "success",
-                    'message' => "Job {$job->getId()} in progress.",
+                        'status' => "success",
+                        'message' => "Job {$job->getId()} in progress.",
                     );
                     $this->_log->addInfo($result['message']);
                 } else {
                     $job->moveStatusTo(JobStatus::DEPLOY_FAILED);
                     $this->_jobMapper->save($job);
                     $result = array(
-                    'status' => "error",
-                    'message' => "Job {$job->getId()} failed.",
+                        'status' => "error",
+                        'message' => "Job {$job->getId()} failed.",
                     );
                     $this->_log->addError($result['message']);
                 }
@@ -230,16 +231,16 @@ class QueueController
             if ($this->_jenkins->pushLive($job)) {
                 $this->_jobMapper->save($job);
                 $result = array(
-                'status' => "success",
-                'message' => "Job {$job->getId()} going live in progress.",
+                    'status' => "success",
+                    'message' => "Job {$job->getId()} going live in progress.",
                 );
                 $this->_log->addInfo($result['message']);
             } else {
                 $job->moveStatusTo(JobStatus::GO_LIVE_FAILED);
                 $this->_jobMapper->save($job);
                 $result = array(
-                'status' => "error",
-                'message' => "Job {$job->getId()} go live failed.",
+                    'status' => "error",
+                    'message' => "Job {$job->getId()} go live failed.",
                 );
                 $this->_log->addError($result['message']);
             }
@@ -253,10 +254,10 @@ class QueueController
         $config = $this->_config;
 
         $queueLenght = $config['jobs']['queue.lenght'] ?
-            $config['jobs']['queue.lenght'] : null;
+                $config['jobs']['queue.lenght'] : null;
 
         $processedLenght = $config['jobs']['processed.lenght'] ?
-            $config['jobs']['processed.lenght'] : null;
+                $config['jobs']['processed.lenght'] : null;
 
         try {
             $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED));
@@ -282,8 +283,9 @@ class QueueController
             'version' => Version::getShort(),
 
             'jenkins' => $this->_jenkins,
+            'thirdParty' => $this->_thirdParty,
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
-              '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
+                '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
         ));
     }
 
