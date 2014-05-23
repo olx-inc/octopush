@@ -34,7 +34,7 @@ class ThirdParty
     
     
     private function _callToPreDeploy($params = array()) {
-        $url = $this->_preDeployUrl . http_build_query($params);
+        $url = $this->_preDeployUrl . '?' . http_build_query($params);
         return json_decode(file_get_contents($url));
     }
 

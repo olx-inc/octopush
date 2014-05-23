@@ -191,6 +191,7 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last update</small></th>
+                                <th><small>Ticket</small></th>
                                 <th class="actions-column"><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -205,6 +206,7 @@
                                 </span></td>
                                     <td><small>{{ queued_job.getQueuedDate() }}</small></td>
                                    <td><small>{{ queued_job.getUpdateDate() }}</small></td>
+                                   <td><small><a href="https://jira.olx.com/browse/{{ queued_job.getTicket() }}" target="__blank">{{ queued_job.getTicket() }}</a></small></td>
                                     {% if queued_job.getRequestorJenkins() is empty %}
                                         <td><small></small></td>
                                     {% else %}
@@ -226,6 +228,7 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last date</small></th>
+                                <th><small>Ticket</small></th>
                                 <th><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -242,6 +245,7 @@
 
                                 <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                 <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
+                                <td><small><a href="https://jira.olx.com/browse/{{ in_progress_job.getTicket() }}" target="__blank">{{ in_progress_job.getTicket() }}</a></small></td>
                                 <td><small>
                                     {% if in_progress_job.getRequestorJenkins != "" %}
                                     <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job">
@@ -276,7 +280,8 @@
                                 <th><small>Version</small></th>
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue Date</small></th>
-                                <th><small>Last update</small></th>
+                                <th><small>Last update</small></th
+                                <th><small>Ticket</small></th>>
                                 <th><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -290,6 +295,7 @@
 
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
+                                    <td><small><a href="https://jira.olx.com/browse/{{ processed_job.getTicket() }}" target="__blank">{{ processed_job.getTicket() }}</a></small></td>
                                     <td><small>
                                         {% if processed_job.getRequestorJenkins != "" %}
                                         <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">

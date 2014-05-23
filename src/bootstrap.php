@@ -66,6 +66,12 @@ $app['services.GitHub'] = $app->share(
     }
 );
 
+$app['services.ThirdParty'] = $app->share(
+    function ($app) {
+        return new Services\ThirdParty($app['config'], new \Library\HttpRequest(), $app['monolog']);
+    }
+);
+
 $app['queue.controller'] = $app->share(
     function () use ($app) {
         return new Controllers\QueueController($app, $app['models.JobMapper'],$app['services.jenkins'], $app['monolog']);

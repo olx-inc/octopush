@@ -17,6 +17,7 @@ class JobsController
     private $_jobMapper;
     private $_log;
     private $_app;
+    private $_thirdParty;
 
     public function __construct(Application $app, 
                                 $config,
@@ -27,6 +28,7 @@ class JobsController
         $this->_jobMapper = $jobMapper;
         $this->_log = $log;
         $this->_app = $app;
+        $this->_thirdParty = $app['services.ThirdParty'];
     }
 
     public function createJob(Request $request)
@@ -124,13 +126,23 @@ class JobsController
             $job = $this->_jobMapper->get($jobId);
 
             if ($job->canGoLive()) {
-                $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
-                $job->setUser($this->_app['user']);
+                $tagReporterResponse = $this->_thirdParty->TagReporterPreDeploy($job->getTargetModule(), $job->getTargetVersion());
+                $ticket = isset($tagReporterResponse->ticket) ? $tagReporterResponse->ticket : false;
+                
+                if($ticket){
+                    $job->setTicket($ticket);
+                    $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
+                    $job->setUser($this->_app['user']->getEmail());
+                } else {
+                    $job->movestatusTo(JobStatus::GO_LIVE_FAILED);
+                    $job->setUser($this->_app['user']);
+                }
+                
                 $this->_jobMapper->save($job);
 
                 $result = array(
-                'job_status' => $job->getStatus(),
-                'job_id' => $jobId
+                    'job_status' => $job->getStatus(),
+                    'job_id' => $jobId
                 );
 
                 return json_encode($result);

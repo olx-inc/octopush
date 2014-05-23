@@ -16,7 +16,6 @@ jenkins:
 thirdparty:
     pre-deploy: 'http://elvira.olx.com.ar/tags/api/pre-deploy.php'
     security: 'http://elvira.olx.com.ar/api/checkUsersRepos'
-
 modules:
     ok-project: 2
     fail-project: 2
