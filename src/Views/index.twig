@@ -9,6 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
+        <link href="css/font-awesome.css" rel="stylesheet" media="screen" />
+        <link href="css/bootstrap-social.css" rel="stylesheet" media="screen" />
         <link href="css/octopush.css" rel="stylesheet" media="screen" />
     </head>
     <body>
@@ -22,10 +24,20 @@
                             (admin)
                         {% endif %}
                         | <a href="{{ logoutUrl }}">Logout</a></span>
+                    {% else %}
+                        <span class="loginBox" style="width: 180px;">
+                            <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+                        </span>
                     {% endif %}
             </div>
-            <h3>Pre-Production</h3>
-            <div id="preprod">
+            {% if isPaused %}
+            <div class="bs-callout bs-callout-warning">
+                <h4>Octopush service is Paused right now due to a current incident</h4>
+                <p>Please contact {{ contact }}.</p>
+            </div>
+            {% endif %}
+                <h3>Pre-Production</h3>
+                <div id="preprod">
                 <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
                     {% if queued_jobs is empty %}
                     <div class="alert alert-info"><strong>EMPTY!</strong> No pending jobs</div>
@@ -296,28 +308,36 @@
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
                                     <td><small><a href="https://jira.olx.com/browse/{{ processed_job.getTicket() }}" target="__blank">{{ processed_job.getTicket() }}</a></small></td>
                                     <td><small>
-                                            {% if processed_job.getRequestorJenkins != "" %}
-                                                <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">
-                                                    <span class="glyphicon glyphicon-log-in" />
-                                                </a>
-                                            {% endif %}
-                                            {% if processed_job.getDeploymentJobId() > 0 %}
-                                                <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job">
-                                                    <span class="glyphicon glyphicon-log-out" />
-                                                </a>
-                                            {% endif %}
-                                            {% if processed_job.getTestJobUrl != "" %}
-                                                <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job">
-                                                    <span class="glyphicon glyphicon-ok" />
-                                                </a>
-                                            {% endif %}
-                                            {% if processed_job.wentLive%}
-                                                <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job">
-                                                    <span class="glyphicon glyphicon-new-window" />
-                                                </a>
+                                        {% if processed_job.getRequestorJenkins != "" %}
+                                        <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">
+                                           <span class="glyphicon glyphicon-log-in" />
+                                        </a>
+                                        {% endif %}
+                                        {% if processed_job.getDeploymentJobId() > 0 %}
+                                        <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job">
+                                            <span class="glyphicon glyphicon-log-out" />
+                                        </a>
+                                        {% endif %}
+                                        {% if processed_job.getTestJobUrl != "" %}
+                                        <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job">
+                                           <span class="glyphicon glyphicon-ok" />
+                                        </a>
+                                        {% endif %}
+                                        {% if processed_job.wentLive%}
+                                        <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job">
+                                            <span class="glyphicon glyphicon-new-window" />
+                                        </a>
+                                        {% endif %}
+                                        {% if (app.user and app.is_admin_user) %}
+
+                                            {% if (processed_job.wentLive)  %}
+                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="rollback">
+                                                <span class="glyphicon undo" />
+                                            </a>
                                             {% endif %}
 
-                                        </small></td>
+                                        {% endif %}
+                                    </small></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

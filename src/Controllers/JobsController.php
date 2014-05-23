@@ -168,6 +168,11 @@ class JobsController
         }
     }
 
+    public function rollback($jobId)
+    {
+
+    }
+    
     public function registerTestJobUrl(Request $request)
     {
         try {

@@ -272,6 +272,9 @@ class QueueController
         }
 
         return $app['twig']->render('index.twig', array(
+            'isPaused' => $this->_isPaused(),
+            'contact' => $config['contact_to'],
+            
             'queued_jobs' => $queuedJobs,
             'in_progress_jobs' => $inProgressJobs,
             'processed_jobs' => $processedJobs,

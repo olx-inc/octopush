@@ -15,6 +15,7 @@ class JobMapper
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC limit :limit";
     const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_job_url = ? WHERE job_id = ?";
+    const FIND_ROLLBACK_VERSION = "SELECT * FROM jobs WHERE job_id = (SELECT MAX(job_id) WHERE module = ? and version < ? AND rollback_job_url is NULL)";
 
     public function __construct(Connection $db)
     {
@@ -95,6 +96,21 @@ class JobMapper
             $sql = JobMapper::FIND_ALL_WITH_LIMIT_STATEMENT. $limit;
         }
 
+        $data = $this->_db->fetchAll($sql, $params);
+
+        $result = array();
+        foreach ($data as $record) {
+            array_push($result, Job::createFromArray($record));
+        }
+
+        return $result;
+    }
+
+    public function findRollbackVersion($module, $version)
+    {
+        $sql = JobMapper::FIND_ROLLBACK_VERSION;
+        $params = array($module, $version);
+        
         $data = $this->_db->fetchAll($sql, $params);
 
         $result = array();

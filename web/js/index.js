@@ -12,3 +12,18 @@ function goLive(jobId, moduleName, moduleVersion) {
 		  });
 	}
 }
+
+function rollback(jobId, moduleName, moduleVersion) {
+	var message = 'Are you sure you want to rollback [' + moduleName + '] version ' + moduleVersion + '?';
+	var answer = confirm(message);
+	if (answer == true) {
+		var url = '/jobs/' + jobId + '/rollback';
+		$.get( url)
+		  .done(function() {
+		    location.reload();
+		  })
+		  .fail(function() {
+		    alert( "error" );
+		  });
+	}
+}

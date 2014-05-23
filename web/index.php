@@ -16,6 +16,7 @@ $app->get('/health', "queue.controller:health");
 $app->get('/status', "queue.controller:status");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
+$app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");
 
 // deprecated
 $app->get('/jobs/{jobId}/tests/{success}', "jobs.controller:registerTestResult");
