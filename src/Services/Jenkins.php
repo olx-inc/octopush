@@ -157,7 +157,7 @@ class Jenkins
     private function _getLiveUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['liveprefix'] . $job->getTargetModule();
+            $this->_jobs['live.prefix'] . $job->getTargetModule();
 
         return $url;
     }
