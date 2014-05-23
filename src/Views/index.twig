@@ -30,10 +30,12 @@
                         </span>
                     {% endif %}
             </div>
+            {% if isPaused %}
             <div class="bs-callout bs-callout-warning">
                 <h4>Octopush service is Paused right now due to a current incident</h4>
                 <p>Please contact {{ contact }}.</p>
             </div>
+            {% endif %}
                 <h3>Pre-Production</h3>
                 <div id="preprod">
                 <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
