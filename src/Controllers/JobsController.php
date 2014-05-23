@@ -129,13 +129,13 @@ class JobsController
                 $tagReporterResponse = $this->_thirdParty->TagReporterPreDeploy($job->getTargetModule(), $job->getTargetVersion());
                 $ticket = isset($tagReporterResponse->ticket) ? $tagReporterResponse->ticket : false;
                 
+                $job->setUser($this->_app['user']->getEmail());
+                
                 if($ticket){
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
-                    $job->setUser($this->_app['user']->getEmail());
                 } else {
                     $job->movestatusTo(JobStatus::GO_LIVE_FAILED);
-                    $job->setUser($this->_app['user']);
                 }
                 
                 $this->_jobMapper->save($job);
