@@ -9,6 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
+        <link href="css/font-awesome.css" rel="stylesheet" media="screen" />
+        <link href="css/bootstrap-social.css" rel="stylesheet" media="screen" />
         <link href="css/octopush.css" rel="stylesheet" media="screen" />
     </head>
     <body>
@@ -22,6 +24,10 @@
                             (admin)
                         {% endif %}
                         | <a href="{{ logoutUrl }}">Logout</a></span>
+                    {% else %}
+                        <span class="loginBox" style="width: 180px;">
+                            <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+                        </span>
                     {% endif %}
             </div>
                 <h3>Pre-Production</h3>
