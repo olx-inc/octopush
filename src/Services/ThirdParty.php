@@ -14,14 +14,14 @@ class ThirdParty
 
     public function __construct($config, HttpRequest $httpRequest, $log)
     {
-        $this->_preDeployUrl = $config['thirdparty']['pre_deploy'];
+        $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
         $this->_security = $config['thirdparty']['security'];
         $this->_log = $log;
         $this->_httpRequest = $httpRequest;
         $this->_log->addInfo("ThirdParty instance created");
     }
 
-    public function TagReporterPreDeploy($repo, $version, $action = 'deploy')
+    public function preDeploy($repo, $version, $action = 'deploy')
     {
         $urlParams = array(
             'repo' => $repo,

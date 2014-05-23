@@ -126,8 +126,8 @@ class JobsController
             $job = $this->_jobMapper->get($jobId);
 
             if ($job->canGoLive()) {
-                $tagReporterResponse = $this->_thirdParty->TagReporterPreDeploy($job->getTargetModule(), $job->getTargetVersion());
-                $ticket = isset($tagReporterResponse->ticket) ? $tagReporterResponse->ticket : false;
+                $response = $this->_thirdParty->preDeploy($job->getTargetModule(), $job->getTargetVersion());
+                $ticket = isset($response->ticket) ? $response->ticket : false;
                 
                 $job->setUser($this->_app['user']->getEmail());
                 
