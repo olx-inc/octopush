@@ -180,15 +180,6 @@
                                             {% endif %}
 
                                         {% endif %}
-                                        {% if (app.user and app.is_admin_user) %}
-
-                                            {% if (processed_job.wentLive)  %}
-                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live">
-                                                <span class="glyphicon undo" />
-                                            </a>
-                                            {% endif %}
-
-                                        {% endif %}
                                     </small></td>
                                 </tr>
                             {% endfor %}
@@ -338,7 +329,15 @@
                                             <span class="glyphicon glyphicon-new-window" />
                                         </a>
                                         {% endif %}
+                                        {% if (app.user and app.is_admin_user) %}
 
+                                            {% if (processed_job.wentLive)  %}
+                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="rollback">
+                                                <span class="glyphicon undo" />
+                                            </a>
+                                            {% endif %}
+
+                                        {% endif %}
                                     </small></td>
                                 </tr>
                             {% endfor %}
