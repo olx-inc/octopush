@@ -170,6 +170,34 @@ class JobsController
 
     public function rollback($jobId)
     {
+        try {
+            $oldJob = $this->_jobMapper->get($jobId);
+
+            $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
+                    $oldJob->getTargetEnvironment, $oldJob->getRequestorJenkins());
+            $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
+            $job->setRollbackedFrom($oldJob->getId());
+            $job->setTicket($oldJob->getTicket());
+            $job->setUser($oldJob->getUser());
+
+            $response = $this->_thirdParty->preDeploy($job->getTargetModule(), $job->getTargetVersion(), "rollback");
+
+            $this->_jobMapper->save($oldJob);
+
+            $result = array(
+                'status' => "success",
+                'message' => "Job inserted in queue",
+                'job_id' => (int) $job->getId(),
+            );
+            $this->_log->addInfo($result['message'] . " with id: " . $result['job_id']);
+        } catch (\Exception $exc) {
+            $result = array(
+                'status' => "error",
+                'message' => "Job not inserted in queue",
+                'detail' => $exc->getMessage(),
+            );
+            $this->_log->addError($result['message'] . " :: " . $result['detail']);
+        }
 
     }
     

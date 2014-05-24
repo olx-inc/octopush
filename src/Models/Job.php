@@ -18,7 +18,7 @@ class Job
     private $_liveJobId;
     private $_user;
     private $_ticket;
-    private $_rollbackJobUrl;
+    private $_rollbackedFrom;
 
     public function setId($id)
     {
@@ -134,14 +134,14 @@ class Job
         return $this->_ticket;
     }
 
-   public function getRollbackJobUrl()
+   public function getRollbackedFrom()
     {
-        return $this->_rollbackJobUrl;
+        return $this->_rollbackedFrom;
     }
 
-    public function setRollbackJobUrl($url)
+    public function setRollbackedFrom($id)
     {
-        $this->_rollbackJobUrl = $url;
+        $this->_rollbackedFrom = $id;
     }
 
     private function _initStatusArray()
@@ -204,7 +204,7 @@ class Job
         $job->_testJobUrl = "";
         $job->_user = "";
         $job->_ticket = "";
-        $job->_rollbackJobUrl = "";
+        $job->_rollbackedFrom = "";
         
         return $job;
     }
@@ -228,7 +228,7 @@ class Job
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
-        $job->_rollbackJobUrl = isset($data['rollback_job_url']) ? $data['rollback_job_url'] : "";
+        $job->_rollbackFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
 
         return $job;
     }
