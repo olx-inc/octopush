@@ -306,7 +306,7 @@
 
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td><small><a href="https://jira.olx.com/browse/{{ processed_job.getTicket() }}" target="__blank">{{ processed_job.getTicket() }}</a></small></td>
+                                    <td><small><a href="{{ processed_job.getTicket() }}" target="__blank">{{ processed_job.getTicket() }}</a></small></td>
                                     <td><small>
                                         {% if processed_job.getRequestorJenkins != "" %}
                                         <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job">
@@ -331,7 +331,7 @@
                                         {% if (app.user and app.is_admin_user) %}
 
                                             {% if (processed_job.wentLive)  %}
-                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="rollback">
+                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="re-deploy">
                                                 <span class="glyphicon glyphicon-repeat" />
                                             </a>
                                             {% endif %}

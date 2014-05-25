@@ -126,7 +126,7 @@ class JobsController
             $job = $this->_jobMapper->get($jobId);
 
             if ($job->canGoLive()) {
-                $response = $this->_thirdParty->preDeploy($job->getTargetModule(), $job->getTargetVersion());
+                $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
                 
                 $job->setUser($this->_app['user']->getEmail());
@@ -174,13 +174,13 @@ class JobsController
             $oldJob = $this->_jobMapper->get($jobId);
 
             $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
-                    $oldJob->getTargetEnvironment, $oldJob->getRequestorJenkins());
+                    $oldJob->getTargetEnvironment(), $oldJob->getRequestorJenkins());
             $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
             $job->setRollbackedFrom($oldJob->getId());
             $job->setTicket($oldJob->getTicket());
             $job->setUser($oldJob->getUser());
 
-            $response = $this->_thirdParty->preDeploy($job->getTargetModule(), $job->getTargetVersion(), "rollback");
+            $response = $this->_thirdParty->preDeploy($job, "rollback");
 
             $this->_jobMapper->save($oldJob);
 

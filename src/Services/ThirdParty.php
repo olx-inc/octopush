@@ -27,11 +27,12 @@ class ThirdParty {
         $this->_log->addInfo("ThirdParty instance created");
     }
 
-    public function preDeploy($repo, $version, $action = 'deploy')
+    public function preDeploy($job, $action = 'deploy')
     {
         $urlParams = array(
-            'repo' => $repo,
-            'version' => $version,
+            'repo' => $job->getTargetModule(),
+            'version' => $job->getTargetVersion(),
+            'ticket' => $job->getTicket(),
             'action' => $action
         );
 
