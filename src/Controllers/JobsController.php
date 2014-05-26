@@ -198,7 +198,7 @@ class JobsController
 
             $response = $this->_thirdParty->preDeploy($job, "rollback");
 
-            $this->_jobMapper->save($oldJob);
+            $this->_jobMapper->save($job);
 
             $result = array(
                 'status' => "success",
@@ -206,6 +206,8 @@ class JobsController
                 'job_id' => (int) $job->getId(),
             );
             $this->_log->addInfo($result['message'] . " with id: " . $result['job_id']);
+            
+            return json_encode($result);
         } catch (\Exception $exc) {
             $result = array(
                 'status' => "error",
