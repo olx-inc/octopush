@@ -132,7 +132,7 @@ class JobsController
                 $job->setUser($this->_app['user']->getEmail());
                 
                 if($ticket){
-                    $job->setTicket(urldecode($ticket));
+                    $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
                     $job->movestatusTo(JobStatus::GO_LIVE_FAILED);
