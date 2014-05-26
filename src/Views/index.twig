@@ -172,8 +172,7 @@
                                                 </a>
                                             {% endif %}
                                             {% if (app.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}                                            
-                                            <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live" >>>>>>> 8367e366e19af1575fe793695333ebe637cb9caf
-                                                >
+                                            <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live">
                                                         <span class="glyphicon glyphicon-new-window" />
                                                     </a>
                                             {% endif %}
