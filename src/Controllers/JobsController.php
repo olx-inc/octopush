@@ -144,8 +144,6 @@ class JobsController
                     'job_status' => $job->getStatus(),
                     'job_id' => $jobId
                 );
-
-                return json_encode($result);
             } else {
                 $result = array(
                 'job_status' => $job->getStatus(),
@@ -153,8 +151,6 @@ class JobsController
                 'status' => "Error",
                 'message' => "The job is not in a valid status to go live"
                 );
-
-                return json_encode($result);
             }
         } catch (\Exception $exc) {
             $error = array(
@@ -164,8 +160,10 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->JSON($error);
         }
+        
+        return $this->_app->JSON($result);
     }
 
     public function rollback($jobId)
