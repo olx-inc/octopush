@@ -197,7 +197,9 @@ class JobsController
             $job->setUser($oldJob->getUser());
 
             $response = $this->_thirdParty->preDeploy($job, "rollback");
-
+            $job->setTicket($response->ticket);
+            $job->setUser($this->_app['user']->getEmail());
+            
             $this->_jobMapper->save($job);
 
             $result = array(
