@@ -146,6 +146,7 @@ class JobsController
                     'job_status' => $job->getStatus(),
                     'job_id' => $jobId
                 );
+                return $this->_app->json($result);
             } else {
                 $result = array(
                 'job_status' => $job->getStatus(),
@@ -154,6 +155,7 @@ class JobsController
                 'message' => "The job is not in a valid status to go live or "
                     . "you don't have permissions to do this action"
                 );
+                return $this->_app->json($result);
             }
         } catch (\Exception $exc) {
             $error = array(
@@ -165,8 +167,6 @@ class JobsController
 
             return $this->_app->json($error);
         }
-        
-        return $this->_app->json($result);
     }
 
     public function rollback($jobId)
@@ -207,7 +207,7 @@ class JobsController
             );
             $this->_log->addInfo($result['message'] . " with id: " . $result['job_id']);
             
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $result = array(
                 'status' => "error",
@@ -215,6 +215,7 @@ class JobsController
                 'detail' => $exc->getMessage(),
             );
             $this->_log->addError($result['message'] . " :: " . $result['detail']);
+            return $this->_app->json($result);
         }
 
     }
