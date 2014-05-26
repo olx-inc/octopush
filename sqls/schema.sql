@@ -16,6 +16,6 @@ CREATE TABLE jobs (
   test_job_url varchar(200),
   user varchar(50),
   ticket varchar(100),
-  rollback_job_url varchar(200),
+  rollback_id int(11) DEFAULT 0,
   PRIMARY KEY (job_id)
 );

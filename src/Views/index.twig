@@ -171,13 +171,17 @@
                                                     <span class="glyphicon glyphicon-new-window" />
                                                 </a>
                                             {% endif %}
+<<<<<<< HEAD
                                             {% if (app.user) %}                                            
                                                 {% if (not processed_job.wentLive) and processed_job.canGoLive and thirdParty.canMemberGoLive(app.permissions, processed_job.getTargetModule()) %}
                                                     <a data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" data-job-go-live title="Go Live" data-toggle="tooltip" data-placement="top" href="#">
                                                         <i class="glyphicon glyphicon-new-window"></i>
+=======
+                                            {% if (app.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}                                            
+                                                    <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live">
+                                                        <span class="glyphicon glyphicon-new-window" />
+>>>>>>> 8367e366e19af1575fe793695333ebe637cb9caf
                                                     </a>
-                                                {% endif %}
-
                                             {% endif %}
                                         </small></td>
                                 </tr>
@@ -328,14 +332,11 @@
                                             <span class="glyphicon glyphicon-new-window" />
                                         </a>
                                         {% endif %}
-                                        {% if (app.user and app.is_admin_user) %}
 
-                                            {% if (processed_job.wentLive)  %}
+                                        {% if (app.user and processed_job.wentLive and jobsController.canBePushedLive(processed_job)) %}
                                             <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="re-deploy" data-toggle="tooltip" data-placement="top">
                                                 <span class="glyphicon glyphicon-repeat" />
                                             </a>
-                                            {% endif %}
-
                                         {% endif %}
                                     </small></td>
                                 </tr>

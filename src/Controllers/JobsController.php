@@ -125,14 +125,16 @@ class JobsController
         try {
             $job = $this->_jobMapper->get($jobId);
 
-            if ($job->canGoLive()) {
+            if (isset($this->_app["permissions"]) && 
+                    $this->canBePushedLive($job, $this->_app["permissions"]) && 
+                    $job->canGoLive()) {
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
                 
                 $job->setUser($this->_app['user']->getEmail());
                 
                 if($ticket){
-                    $job->setTicket(urldecode($ticket));
+                    $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
                     $job->movestatusTo(JobStatus::GO_LIVE_FAILED);
@@ -149,7 +151,8 @@ class JobsController
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId,
                 'status' => "Error",
-                'message' => "The job is not in a valid status to go live"
+                'message' => "The job is not in a valid status to go live or "
+                    . "you don't have permissions to do this action"
                 );
             }
         } catch (\Exception $exc) {
@@ -167,10 +170,25 @@ class JobsController
     }
 
     public function rollback($jobId)
-    {
+    {   
         try {
             $oldJob = $this->_jobMapper->get($jobId);
+            
+            if (! isset($this->_app["permissions"]) || 
+                ! $this->canBePushedLive($oldJob, $this->_app["permissions"]) || 
+                ! $oldJob->wentLive()) {
+                
+                $result = array(
+                    'job_status' => $oldJob->getStatus(),
+                    'job_id' => $jobId,
+                    'status' => "Error",
+                    'message' => "The job is not in a valid status to rollback "
+                        . "or you don't have permissions to do this action"
+                );
 
+                return json_encode($result);
+            }
+            
             $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
                     $oldJob->getTargetEnvironment(), $oldJob->getRequestorJenkins());
             $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
@@ -284,5 +302,19 @@ class JobsController
             return json_encode($error);
         }
     }
+    
+    public function canBePushedLive($job) 
+    {
+        if (isset($this->_app["permissions"])) {
+            if ($this->_thirdParty->canMemberGoLive(
+                $this->_app["permissions"], 
+                $job->getTargetModule()
+            )) {
+                return true;
+            }
+        }               
+            
+        return false;
+    } 
 
 }
