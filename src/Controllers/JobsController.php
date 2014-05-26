@@ -125,13 +125,14 @@ class JobsController
         try {
             $job = $this->_jobMapper->get($jobId);
 
-            if ($job->canGoLive()) {
+            if (isset($this->_app["permissions"]) && 
+                    $this->canBePushedLive($job, $this->_app["permissions"])) {
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
                 
                 $job->setUser($this->_app['user']->getEmail());
                 
-                if($ticket){
+                if ($ticket) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
@@ -151,7 +152,8 @@ class JobsController
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId,
                 'status' => "Error",
-                'message' => "The job is not in a valid status to go live"
+                'message' => "The job is not in a valid status to go live or "
+                    . "you don't have permissions to do this action"
                 );
 
                 return json_encode($result);
@@ -286,5 +288,22 @@ class JobsController
             return json_encode($error);
         }
     }
+    
+    public function canBePushedLive($job) 
+    {
+        if (isset($this->_app["permissions"])) {
+            if ((! $job->wentLive()) && 
+                $job->canGoLive() && 
+                $this->_thirdParty->canMemberGoLive(
+                        $this->_app["permissions"], 
+                        $job->getTargetModule()
+                )
+            ) {
+                return true;
+            }
+        }               
+            
+        return false;
+    } 
 
 }

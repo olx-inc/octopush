@@ -13,17 +13,21 @@ class QueueController
     private $_jobMapper;
     private $_config;
     private $_jenkins;
-    private $_thirdParty;
+    private $_jobsController;
     private $_app;
     private $_log;
     private $_controlFile;
 
-    public function __construct(Application $app, JobMapper $jobMapper, $jenkins, $thirdParty, $log) {
+    public function __construct(Application $app, 
+                                JobMapper $jobMapper, 
+                                $jenkins, 
+                                $jobsController, 
+                                $log) {
         $this->_jobMapper = $jobMapper;
         $this->_config = $app['config'];
         $this->_app = $app;
         $this->_jenkins = $jenkins;
-        $this->_thirdParty = $thirdParty;
+        $this->_jobsController = $jobsController;
         $this->_log = $log;
         $this->_controlFile = $this->_config['control_file'];
     }
@@ -286,7 +290,7 @@ class QueueController
             'version' => Version::getShort(),
 
             'jenkins' => $this->_jenkins,
-            'thirdParty' => $this->_thirdParty,
+            'jobsController' => $this->_jobsController,
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
                 '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
         ));
