@@ -48,7 +48,7 @@ class JobsController
             );
             $this->_log->addError($error['message']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
 
         try {
@@ -70,7 +70,7 @@ class JobsController
             $this->_log->addError($result['message'] . " :: " . $result['detail']);
         }
 
-        return json_encode($result);
+        return $this->_app->json($result);
     }
 
     public function getJobStatus($jobId)
@@ -82,7 +82,7 @@ class JobsController
                 'job_id' => $jobId
             );
 
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -91,7 +91,7 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
     }
 
@@ -107,7 +107,7 @@ class JobsController
                 'job_id' => $jobId
             );
 
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -116,7 +116,7 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
     }
 
@@ -163,10 +163,10 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return $this->_app->JSON($error);
+            return $this->_app->json($error);
         }
         
-        return $this->_app->JSON($result);
+        return $this->_app->json($result);
     }
 
     public function rollback($jobId)
@@ -186,7 +186,7 @@ class JobsController
                         . "or you don't have permissions to do this action"
                 );
 
-                return json_encode($result);
+                return $this->_app->json($result);
             }
             
             $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
@@ -232,7 +232,7 @@ class JobsController
                 'message' => "Test job url registerd"
             );
 
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -241,7 +241,7 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
     }
 
@@ -262,7 +262,7 @@ class JobsController
                 'message' => "Test result registerd"
             );
 
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -271,7 +271,7 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
     }
 
@@ -290,7 +290,7 @@ class JobsController
                 'message' => "Test result registered"
             );
 
-            return json_encode($result);
+            return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -299,7 +299,7 @@ class JobsController
             );
             $this->_log->addError($error['message'] . " :: " . $error['detail']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
     }
     

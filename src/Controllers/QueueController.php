@@ -45,7 +45,7 @@ class QueueController
             );
             $this->_log->addError($error['message']);
 
-            return json_encode($error);
+            return $this->_app->json($error);
         }
 
         $this->_log->addInfo('checking jenkins');
@@ -72,7 +72,7 @@ class QueueController
             $this->_log->addError($result['message'] . " :: " . $result['detail']);
         }
 
-        return json_encode($result);
+        return $this->_app->json($result);
     }
 
     public function pause()
@@ -307,7 +307,7 @@ class QueueController
         $result = $success? 'SUCCESS':'ERROR';
         $data = array('result' => $result, 'message' => $message);
 
-        return json_encode($data);
+        return $this->_app->json($data);
     }
 
 }
