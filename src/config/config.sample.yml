@@ -14,8 +14,8 @@ jenkins:
         live.prefix: 'Push_LIVE_'
         notifications: 'Octopush_Notification'
 thirdparty:
-    pre-deploy: 'http://elvira.olx.com.ar/tags/api/pre-deploy.php'
-    security: 'http://elvira.olx.com.ar/api/checkUsersRepos'
+    pre-deploy: 'url_to_pre-deploy_service'
+    member-permissions: 'url_to_repos-teams_service'
 modules:
     ok-project: 2
     fail-project: 2
