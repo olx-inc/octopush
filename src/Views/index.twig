@@ -327,8 +327,8 @@
                                         {% endif %}
 
                                         {% if (app.user and processed_job.wentLive and jobsController.canBePushedLive(processed_job)) %}
-                                            <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="re-deploy" data-toggle="tooltip" data-placement="top">
-                                                <span class="glyphicon glyphicon-repeat" />
+                                            <a data-job-rollback data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" href="#" title="re-deploy" data-toggle="tooltip" data-placement="top">
+                                                <i class="glyphicon glyphicon-repeat" ></i>
                                             </a>
                                         {% endif %}
                                     </small></td>
