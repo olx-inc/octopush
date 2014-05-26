@@ -199,7 +199,7 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last update</small></th>
-                                <th><small>Ticket</small></th>
+                                <th class="text-center"><small>Ticket</small></th>
                                 <th class="actions-column"><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -214,7 +214,7 @@
                                         </span></td>
                                     <td><small>{{ queued_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ queued_job.getUpdateDate() }}</small></td>
-                                    <td><small><a href="{{ queued_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
+                                    <td class="text-center"><small><a href="{{ queued_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
                                             {% if queued_job.getRequestorJenkins() is empty %}
                                         <td><small></small></td>
                                     {% else %}
@@ -236,7 +236,7 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue date</small></th>
                                 <th><small>Last date</small></th>
-                                <th><small>Ticket</small></th>
+                                <th class="text-center"><small>Ticket</small></th>
                                 <th><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -253,7 +253,7 @@
 
                                     <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
-                                    <td><small><a href="{{ in_progress_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
+                                    <td class="text-center"><small><a href="{{ in_progress_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
                                     <td><small>
                                             {% if in_progress_job.getRequestorJenkins != "" %}
                                             <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
@@ -289,7 +289,7 @@
                                 <th class="status-column"><small>Status</small></th>
                                 <th><small>Queue Date</small></th>
                                 <th><small>Last update</small></th>
-                                <th><small>Ticket</small></th>
+                                <th class="text-center"><small>Ticket</small></th>
                                 <th><small>Actions</small></th>
                             </tr>
                         </thead>
@@ -303,7 +303,7 @@
 
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td><small><a href="{{ processed_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
+                                    <td class="text-center"><small><a href="{{ processed_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
                                     <td><small>
                                         {% if processed_job.getRequestorJenkins != "" %}
                                             <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
