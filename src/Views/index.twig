@@ -172,10 +172,9 @@
                                                 </a>
                                             {% endif %}
                                             {% if (app.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}                                            
-                                            <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live" >>>>>>> 8367e366e19af1575fe793695333ebe637cb9caf
-                                                >
-                                                        <span class="glyphicon glyphicon-new-window" />
-                                                    </a>
+                                                <a data-job-go-live data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" href="#" title="go live" data-toggle="tooltip" data-placement="top">
+                                                    <i class="glyphicon glyphicon-new-window"></i>
+                                                </a>
                                             {% endif %}
                                         </small></td>
                                 </tr>
