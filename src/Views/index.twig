@@ -171,7 +171,7 @@
                                                     <span class="glyphicon glyphicon-new-window" />
                                                 </a>
                                             {% endif %}
-                                            {% if (app.user and jobsController.canBePushedLive(processed_job)) %}                                            
+                                            {% if (app.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}                                            
                                                     <a href="javascript:goLive({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="go live">
                                                         <span class="glyphicon glyphicon-new-window" />
                                                     </a>
@@ -325,14 +325,10 @@
                                             <span class="glyphicon glyphicon-new-window" />
                                         </a>
                                         {% endif %}
-                                        {% if (app.user and jobsController.canBePushedLive(processed_job)) %}
-
-                                            {% if (processed_job.wentLive)  %}
+                                        {% if (app.user and processed_job.wentLive and jobsController.canBePushedLive(processed_job)) %}
                                             <a href="javascript:rollback({{ processed_job.id }}, '{{ processed_job.targetModule }}', '{{ processed_job.targetVersion }}')" title="re-deploy">
                                                 <span class="glyphicon glyphicon-repeat" />
                                             </a>
-                                            {% endif %}
-
                                         {% endif %}
                                     </small></td>
                                 </tr>

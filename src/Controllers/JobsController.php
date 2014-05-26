@@ -126,7 +126,8 @@ class JobsController
             $job = $this->_jobMapper->get($jobId);
 
             if (isset($this->_app["permissions"]) && 
-                    $this->canBePushedLive($job, $this->_app["permissions"])) {
+                    $this->canBePushedLive($job, $this->_app["permissions"]) && 
+                    $job->canGoLive()) {
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
                 
@@ -171,10 +172,25 @@ class JobsController
     }
 
     public function rollback($jobId)
-    {
+    {   
         try {
             $oldJob = $this->_jobMapper->get($jobId);
+            
+            if (! isset($this->_app["permissions"]) || 
+                ! $this->canBePushedLive($oldJob, $this->_app["permissions"]) || 
+                ! $oldJob->wentLive()) {
+                
+                $result = array(
+                    'job_status' => $oldJob->getStatus(),
+                    'job_id' => $jobId,
+                    'status' => "Error",
+                    'message' => "The job is not in a valid status to rollback "
+                        . "or you don't have permissions to do this action"
+                );
 
+                return json_encode($result);
+            }
+            
             $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
                     $oldJob->getTargetEnvironment(), $oldJob->getRequestorJenkins());
             $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
@@ -292,13 +308,10 @@ class JobsController
     public function canBePushedLive($job) 
     {
         if (isset($this->_app["permissions"])) {
-            if ((! $job->wentLive()) && 
-                $job->canGoLive() && 
-                $this->_thirdParty->canMemberGoLive(
-                        $this->_app["permissions"], 
-                        $job->getTargetModule()
-                )
-            ) {
+            if ($this->_thirdParty->canMemberGoLive(
+                $this->_app["permissions"], 
+                $job->getTargetModule()
+            )) {
                 return true;
             }
         }               
