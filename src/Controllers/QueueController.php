@@ -91,8 +91,8 @@ class QueueController
 
     public function status()
     {
-        $status = 'OK';
-        if ($this->_isPaused()) $status = 'PAUSED';
+        $status = 'ON';
+        if ($this->_isPaused()) $status = 'OFF';
         return $status;
     }
 
