@@ -14,14 +14,8 @@ jenkins:
         live.prefix: 'Push_LIVE_'
         notifications: 'Octopush_Notification'
 thirdparty:
-<<<<<<< Updated upstream
     pre-deploy: 'url_to_pre-deploy_service'
     member-permissions: 'url_to_repos-teams_service'
-=======
-    pre-deploy: 'http://elvira.olx.com.ar/tags/api/pre-deploy.php'
-    security: 'http://elvira.olx.com.ar/api/checkUsersRepos'
-    member-permissions: 'http://elvira.olx.com.ar/github/api/members/'
->>>>>>> Stashed changes
 modules:
     ok-project: 2
     fail-project: 2

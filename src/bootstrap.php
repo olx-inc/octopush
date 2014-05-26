@@ -10,9 +10,9 @@ if (!defined('APPLICATION_ENV')) {
     );
 }
 
-//if (APPLICATION_ENV == 'dev') {
+if (APPLICATION_ENV == 'dev') {
     $app['debug'] = true;
-//}
+}
 
 $configFile = 'config.yml';
 
