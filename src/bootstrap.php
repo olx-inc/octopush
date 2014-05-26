@@ -72,15 +72,15 @@ $app['services.ThirdParty'] = $app->share(
 }
 );
 
-$app['queue.controller'] = $app->share(
-        function () use ($app) {
-    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['services.jenkins'], $app['services.ThirdParty'], $app['monolog']);
-}
-);
-
 $app['jobs.controller'] = $app->share(
         function () use ($app) {
     return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['monolog']);
+}
+);
+
+$app['queue.controller'] = $app->share(
+        function () use ($app) {
+    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['services.jenkins'], $app['jobs.controller'], $app['monolog']);
 }
 );
 
