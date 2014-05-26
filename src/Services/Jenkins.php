@@ -46,8 +46,14 @@ class Jenkins
 
     public function getLastBuildStatus($job)
     {
-        $url = $this->_getUrlForJob($job);
-        $url .= "/" . $job->getDeploymentJobId(); // new
+        if ( ($job->getStatus() == JobStatus::QUEUED) || 
+                ($job->getStatus() == JobStatus::DEPLOYING)) {
+            $url = $this->_getUrlForJob($job);
+            $url .= "/" . $job->getDeploymentJobId();
+        } else {
+            $url = $this->_getLiveUrlForJob($job);
+            $url .= "/" . $job->getLiveJobId();
+        }
         $url .= "/api/json";
         $this->_httpRequest->setUrl($url);
         $rawResponse = $this->_send();
@@ -59,7 +65,8 @@ class Jenkins
     public function getLastBuildId($job)
     {
         $url = "";
-        if ( ($job->getStatus() == JobStatus::QUEUED) or ($job->getStatus() == JobStatus::DEPLOYING)) {
+        if ( ($job->getStatus() == JobStatus::QUEUED) || 
+                ($job->getStatus() == JobStatus::DEPLOYING)) {
             $url = $this->_getUrlForJob($job);
         } else {
             $url = $this->_getLiveUrlForJob($job);
