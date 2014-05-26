@@ -30,7 +30,7 @@ class ThirdParty {
         $urlParams = array(
             'repo' => $job->getTargetModule(),
             'version' => $job->getTargetVersion(),
-            'ticket' => $job->getTicket(),
+            'ticket' => urlencode($job->getTicket()),
             'action' => $action
         );
 
@@ -58,7 +58,9 @@ class ThirdParty {
 
     private function _callToPreDeploy($params = array()) {
         $url = $this->_preDeployUrl . '?' . http_build_query($params);
-        return json_decode(file_get_contents($url));
+        $response = json_decode(file_get_contents($url));
+        $response->ticket = urldecode($response->ticket); 
+        return $response;
     }
 
 }
