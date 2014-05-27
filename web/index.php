@@ -6,6 +6,7 @@ $loader->add('Providers', __DIR__ . '/../src/');
 $loader->add('Controllers', __DIR__ . '/../src/');
 $loader->add('Services', __DIR__ . '/../src/');
 $loader->add('Library', __DIR__ . '/../src/');
+$loader->add('Helpers', __DIR__ . '/../src/');
 require_once __DIR__ . '/../src/bootstrap.php';
 
 $app->get('/run', "queue.controller:processJob");
@@ -32,12 +33,28 @@ $app->get('/jobs/{jobId}/cancel', "jobs.controller:cancel");
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
     $token = $app['security']->getToken();
-    $app['user'] = null;
-    if ($token && !$app['security.trust_resolver']->isAnonymous($token)) {
-        $app['user'] = $token->getUser();
-        $app['is_admin_user'] = $app['services.GitHub']->IsUserAdmin($token);
-        $username = $app['services.GitHub']->getUserName($token);
-        $app['permissions'] = $app['services.ThirdParty']->getMemberPermissions($username);
+    
+    $userDataInSession = $app['session']->get('userData');
+    
+    if (is_null($userDataInSession)) {
+        
+        if ($token && ! $app['security.trust_resolver']->isAnonymous($token)) {
+            
+            $username = $app['services.GitHub']->getUserName($token);
+            $permissions = $app['services.ThirdParty']->
+                    getMemberPermissions($username);
+            
+            $userData = array(
+                'user' => $token->getUser(),
+                'permissions' => $permissions,
+                'is_admin_user' => in_array(
+                    $app['config']['teams']['admin'], 
+                    $permissions['teams']
+                ),
+            );
+            
+            $app['session']->set('userData', $userData);
+        }
     }
 });
 

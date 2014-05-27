@@ -125,15 +125,17 @@ class JobsController
         try {
             $job = $this->_jobMapper->get($jobId);
 
-            if (isset($this->_app["permissions"]) && 
-                    $this->canBePushedLive($job, $this->_app["permissions"]) && 
+            $helperSession = $this->_app['helpers.session'];
+            $permissions = $helperSession->getPermissions();
+            
+            if (isset($permissions) && 
+                    $this->canBePushedLive($job, $permissions) && 
                     $job->canGoLive()) {
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
+                $job->setUser($helperSession->getUser()->getEmail());
                 
-                $job->setUser($this->_app['user']->getEmail());
-                
-                if($ticket){
+                if ($ticket) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
@@ -173,9 +175,11 @@ class JobsController
     {   
         try {
             $oldJob = $this->_jobMapper->get($jobId);
+            $helperSession = $this->_app['helpers.session'];
+            $permissions = $helperSession->getPermissions();
             
-            if (! isset($this->_app["permissions"]) || 
-                ! $this->canBePushedLive($oldJob, $this->_app["permissions"]) || 
+            if (! isset($permissions) || 
+                ! $this->canBePushedLive($oldJob, $permissions) || 
                 ! $oldJob->wentLive()) {
                 
                 $result = array(
@@ -194,11 +198,10 @@ class JobsController
             $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
             $job->setRollbackedFrom($oldJob->getId());
             $job->setTicket($oldJob->getTicket());
-            $job->setUser($oldJob->getUser());
 
             $response = $this->_thirdParty->preDeploy($job, "rollback");
             $job->setTicket($response->ticket);
-            $job->setUser($this->_app['user']->getEmail());
+            $job->setUser($helperSession->getUser()->getEmail());
             
             $this->_jobMapper->save($job);
 
@@ -310,9 +313,11 @@ class JobsController
     
     public function canBePushedLive($job) 
     {
-        if (isset($this->_app["permissions"])) {
+        $permissions = $this->_app['helpers.session']->getPermissions();
+        
+        if (isset($permissions)) {
             if ($this->_thirdParty->canMemberGoLive(
-                $this->_app["permissions"], 
+                $permissions, 
                 $job->getTargetModule()
             )) {
                 return true;

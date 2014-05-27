@@ -288,6 +288,8 @@ class QueueController
             'liveProcessed' => $liveProcessed,
 
             'version' => Version::getShort(),
+            
+            'userdata' => $app['helpers.session']->getUserData(),
 
             'jenkins' => $this->_jenkins,
             'jobsController' => $this->_jobsController,
