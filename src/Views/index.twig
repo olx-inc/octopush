@@ -70,7 +70,7 @@
                                         <td><small></small></td>
                                     {% else %}
                                         <td><small><a href="{{ queued_job.getRequestorJenkins() }}" target="_blank"><span class="glyphicon glyphicon-log-in"></span></a></small></td>
-                                                {% endif %}
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -102,23 +102,25 @@
 
                                     <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
-                                    <td><small>
+                                    <td>
+                                        <small>
                                             {% if in_progress_job.getRequestorJenkins != "" %}
-                                            <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-in" />
                                                 </a>
                                             {% endif %}
                                             {% if in_progress_job.getDeploymentJobId() > 0 %}
-                                            <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
                                             {% if in_progress_job.getTestJobUrl != "" %}
-                                            <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
                                             {% endif %}
-                                        </small></td>
+                                        </small>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -150,24 +152,25 @@
 
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td><small>
+                                    <td>
+                                        <small>
                                             {% if processed_job.getRequestorJenkins != "" %}
-                                            <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-in" />
                                                 </a>
                                             {% endif %}
                                             {% if processed_job.getDeploymentJobId() > 0 %}
-                                            <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
                                             {% if processed_job.getTestJobUrl != "" %}
-                                            <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
                                             {% endif %}
                                             {% if processed_job.wentLive%}
-                                            <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-new-window" />
                                                 </a>
                                             {% endif %}
@@ -176,7 +179,8 @@
                                                     <i class="glyphicon glyphicon-new-window"></i>
                                                 </a>
                                             {% endif %}
-                                        </small></td>
+                                        </small>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -214,12 +218,14 @@
                                         </span></td>
                                     <td><small>{{ queued_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ queued_job.getUpdateDate() }}</small></td>
-                                    <td class="text-center"><small><a href="{{ queued_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
-                                            {% if queued_job.getRequestorJenkins() is empty %}
+                                    <td class="text-center">
+                                        <small><a href="{{ queued_job.getTicket() }}" target="__blank" title="{{ queued_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
+                                    </td>
+                                    {% if queued_job.getRequestorJenkins() is empty %}
                                         <td><small></small></td>
                                     {% else %}
                                         <td><small><a href="{{ queued_job.getRequestorJenkins() }}" target="_blank"><span class="glyphicon glyphicon-log-in"></span></a></small></td>
-                                                {% endif %}
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -253,24 +259,28 @@
 
                                     <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
-                                    <td class="text-center"><small><a href="{{ in_progress_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
-                                    <td><small>
+                                    <td class="text-center">
+                                        <small><a href="{{ in_progress_job.getTicket() }}" target="__blank" title="{{ in_progress_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
+                                    </td>
+                                    <td>
+                                        <small>
                                             {% if in_progress_job.getRequestorJenkins != "" %}
-                                            <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
-                                                    <span class="glyphicon glyphicon-log-in" />
+                                                <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
+                                                        <span class="glyphicon glyphicon-log-in" />
                                                 </a>
                                             {% endif %}
                                             {% if in_progress_job.getDeploymentJobId() > 0 %}
-                                            <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getBuildUrl(in_progress_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
                                             {% if in_progress_job.getTestJobUrl != "" %}
-                                            <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
+                                                <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
                                             {% endif %}
-                                        </small></td>
+                                        </small>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -303,35 +313,39 @@
 
                                     <td><small>{{ processed_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ processed_job.getUpdateDate() }}</small></td>
-                                    <td class="text-center"><small><a href="{{ processed_job.getTicket() }}" target="__blank"><i class="fa fa-ticket"></i></a></small></td>
-                                    <td><small>
-                                        {% if processed_job.getRequestorJenkins != "" %}
-                                            <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
-                                           <span class="glyphicon glyphicon-log-in" />
-                                        </a>
-                                        {% endif %}
-                                        {% if processed_job.getDeploymentJobId() > 0 %}
-                                            <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
-                                            <span class="glyphicon glyphicon-log-out" />
-                                        </a>
-                                        {% endif %}
-                                        {% if processed_job.getTestJobUrl != "" %}
-                                            <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
-                                           <span class="glyphicon glyphicon-ok" />
-                                        </a>
-                                        {% endif %}
-                                        {% if processed_job.wentLive%}
-                                            <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job" data-toggle="tooltip" data-placement="top">
-                                            <span class="glyphicon glyphicon-new-window" />
-                                        </a>
-                                        {% endif %}
+                                    <td class="text-center">
+                                        <small><a href="{{ processed_job.getTicket() }}" target="__blank" title="{{ processed_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
+                                    </td>
+                                    <td>
+                                        <small>
+                                            {% if processed_job.getRequestorJenkins != "" %}
+                                                <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
+                                                    <span class="glyphicon glyphicon-log-in" />
+                                                </a>
+                                            {% endif %}
+                                            {% if processed_job.getDeploymentJobId() > 0 %}
+                                                <a href="{{ jenkins.getBuildUrl(processed_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
+                                                    <span class="glyphicon glyphicon-log-out" />
+                                                </a>
+                                            {% endif %}
+                                            {% if processed_job.getTestJobUrl != "" %}
+                                                <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
+                                                    <span class="glyphicon glyphicon-ok" />
+                                                </a>
+                                            {% endif %}
+                                            {% if processed_job.wentLive%}
+                                                <a href="{{ jenkins.getLiveJobConsoleUrl(processed_job) }}" target="_blank" title="view live job" data-toggle="tooltip" data-placement="top">
+                                                <span class="glyphicon glyphicon-new-window" />
+                                                </a>
+                                            {% endif %}
 
-                                        {% if (userdata.user and processed_job.wentLive and jobsController.canBePushedLive(processed_job)) %}
-                                            <a data-job-rollback data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" href="#" title="re-deploy" data-toggle="tooltip" data-placement="top">
-                                                <i class="glyphicon glyphicon-repeat" ></i>
-                                            </a>
-                                        {% endif %}
-                                    </small></td>
+                                            {% if (userdata.user and processed_job.wentLive and jobsController.canBePushedLive(processed_job)) %}
+                                                <a data-job-rollback data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" href="#" title="re-deploy" data-toggle="tooltip" data-placement="top">
+                                                    <i class="glyphicon glyphicon-repeat" ></i>
+                                                </a>
+                                            {% endif %}
+                                        </small>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
