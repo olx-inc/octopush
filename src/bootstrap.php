@@ -1,12 +1,10 @@
 <?php
 
-use Silex\Provider\SessionServiceProvider;
-
 $app = new Silex\Application();
 
 if (!defined('APPLICATION_ENV')) {
     define(
-            'APPLICATION_ENV', getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'
+        'APPLICATION_ENV', getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'
     );
 }
 
@@ -38,15 +36,8 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
-$app->register(new SessionServiceProvider());
 
-/*
-  $app['models.JobsMapper'] = $app->share(
-  function ($app) {
-  return new Models\JobsMapper($app['db']);
-  }
-  );
- */
+$app['helpers.session'] = Helpers\Session::getInstance($app);
 
 $app['models.JobMapper'] = $app->share(
         function ($app) {
