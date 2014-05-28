@@ -242,6 +242,17 @@
                                     {% else %}
                                         <td><small><a href="{{ queued_job.getRequestorJenkins() }}" target="_blank"><span class="glyphicon glyphicon-log-in"></span></a></small></td>
                                     {% endif %}
+                                    {% if queued_job.getDeploymentJobId() > 0 %}
+                                        <a href="{{ jenkins.getBuildUrl(queued_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
+                                            <span class="glyphicon glyphicon-log-out" />
+                                        </a>
+                                    {% endif %}
+                                    {% if queued_job.getTestJobUrl != "" %}
+                                        <a href="{{ jenkins.getTestJobConsoleUrl(queued_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
+                                            <span class="glyphicon glyphicon-ok" />
+                                        </a>
+                                    {% endif %}
+
                                 </tr>
                             {% endfor %}
                         </tbody>
