@@ -235,7 +235,7 @@
                                     <td><small>{{ queued_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ queued_job.getUpdateDate() }}</small></td>
                                     <td class="text-center">
-                                        <small><a href="{{ queued_job.getTicket() }}" target="__blank" title="{{ queued_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
+                                        <small><a href="{{ queued_job.getTicket() }}" target="_blank" title="{{ queued_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
                                     </td>
                                     {% if queued_job.getRequestorJenkins() is empty %}
                                         <td><small></small></td>
@@ -243,14 +243,16 @@
                                         <td><small><a href="{{ queued_job.getRequestorJenkins() }}" target="_blank"><span class="glyphicon glyphicon-log-in"></span></a></small></td>
                                     {% endif %}
                                     {% if queued_job.getDeploymentJobId() > 0 %}
+                                        <td><small>
                                         <a href="{{ jenkins.getBuildUrl(queued_job) }}" target="_blank" title="view deployment job" data-toggle="tooltip" data-placement="top">
                                             <span class="glyphicon glyphicon-log-out" />
-                                        </a>
+                                        </span></a></small></td>
                                     {% endif %}
                                     {% if queued_job.getTestJobUrl != "" %}
+                                        <td><small>
                                         <a href="{{ jenkins.getTestJobConsoleUrl(queued_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                             <span class="glyphicon glyphicon-ok" />
-                                        </a>
+                                        </span></a></small></td>
                                     {% endif %}
 
                                 </tr>
@@ -287,7 +289,7 @@
                                     <td><small>{{ in_progress_job.getQueuedDate() }}</small></td>
                                     <td><small>{{ in_progress_job.getUpdateDate() }}</small></td>
                                     <td class="text-center">
-                                        <small><a href="{{ in_progress_job.getTicket() }}" target="__blank" title="{{ in_progress_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
+                                        <small><a href="{{ in_progress_job.getTicket() }}" target="_blank" title="{{ in_progress_job.getTicket() }}" data-toggle="tooltip"><i class="fa fa-ticket"></i></a></small>
                                     </td>
                                     <td>
                                         <small>
