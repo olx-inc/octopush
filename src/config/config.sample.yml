@@ -33,3 +33,6 @@ teams:
     admin: 'your_admin_team_id'
     pocs: 'your_pocs_team_id'
 control_file: 'path_to_a_file_where_octopush_can_read_write'
+syslog:
+    ident: 'octopush'
+    facility: 'local3'
