@@ -21,7 +21,7 @@ function goLive(element) {
                     location.reload();
                 })
                 .fail(function() {
-                    alert("error");
+                    alert("An error occurred, if you don't see the job deploying, please try again");
                 });
     }
 }
@@ -47,7 +47,7 @@ function rollback(element) {
                     location.reload();
                 })
                 .fail(function() {
-                    alert("error");
+                    alert("An error occurred, if you don't see the job rolling back, please try again");
                 });
     }
 }
