@@ -224,7 +224,13 @@ class QueueController
 
     private function _processLiveQueue($modules)
     {
+        $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
+        if (count($jobsGoingLive) > 0) {
+            $this->_log->addInfo("There are jobs going LIVE, exit!"); 
+            exit;
+        }        
         $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED_FOR_LIVE, 1);
+
         $this->_log->addInfo("About processing the live queue");
         if (count($jobsToProcess) == 0) {
             $this->_log->addInfo("The Live queue is empty");
