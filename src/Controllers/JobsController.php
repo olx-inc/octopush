@@ -267,7 +267,7 @@ class JobsController
 
             $result = array(
                 'status' => "success",
-                'message' => "Test result registerd"
+                'message' => "Test result registered"
             );
 
             return $this->_app->json($result);
