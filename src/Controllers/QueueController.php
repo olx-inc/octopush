@@ -75,6 +75,27 @@ class QueueController
         return $this->_app->json($result);
     }
 
+    public function deploying()
+    {
+        $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
+        if (count($jobsGoingLive) == 0) {
+            $result = array(
+                'status' => "Idle",
+                'module' => "-",
+                'version' => "-",
+            );
+            return $this->_app->json($result);
+        }        
+        foreach ($jobsGoingLive as $job) {
+            $result = array(
+                'status' => "Deploying",
+                'module' => $job->getTargetModule(),
+                'version' => $job->getTargetVersion(),                
+            );
+            return $this->_app->json($result);
+            
+        }
+    }
     public function pause()
     {
         $success = true;
