@@ -1,5 +1,5 @@
 <?php
-
+// Tue Jun 17 14:01:34 EST 2014
 echo "rpm version: ";
 $rpm = system('rpm -qa | grep octopush');
 ereg("([[:alnum:]]+)-([[:alnum:]]+)-([[:alnum:]]+)_([[:alnum:]]+)", $rpm, $regs);
