@@ -1,5 +1,5 @@
 <?php
-// Tue Jun 24 13:45:11 EDT 2014
+// Tue Jun 24 17:52:34 UTC 2014
 echo "rpm version: ";
 $rpm = system('rpm -qa | grep octopush');
 ereg("([[:alnum:]]+)-([[:alnum:]]+)-([[:alnum:]]+)_([[:alnum:]]+)", $rpm, $regs);
