@@ -18,9 +18,9 @@ class Session
 
     public function isMyComponentsOn()
     {
-        if ( isset(self::$_app['session']->get('componentsOn')) )
-            return self::$_app['session']->get('componentsOn');
-        else
+        //if ( isset(self::$_app['session']->get('componentsOn')) )
+          //  return self::$_app['session']->get('componentsOn');
+        //else
             return false;       
     }
 

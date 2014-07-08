@@ -209,7 +209,7 @@ class Job
         return $job;
     }
 
-    public static function createFromArray($data)
+    public static function createFromArray($data, $type='object')
     {
         $job = new Job();
         $job->_id = (int) $data['job_id'];
@@ -229,6 +229,9 @@ class Job
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
         $job->_rollbackFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
+
+        if ($type != 'object')
+            $job = get_object_vars($job);
 
         return $job;
     }
