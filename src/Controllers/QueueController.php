@@ -96,6 +96,20 @@ class QueueController
             
         }
     }
+
+
+    public function deployed($env)
+    {
+        $queueLenght = $config['jobs']['queue.lenght'] ? $config['jobs']['queue.lenght'] : null;
+
+        $result =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $queueLenght, 'json');
+
+//        $liveProcessed = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $queueLenght, 'json');
+
+        return $this->_app->json($result);
+    }
+
+
     public function pause()
     {
         $success = true;
@@ -103,6 +117,7 @@ class QueueController
 
         return $this->_jsonResult($success);
     }
+
 
     public function resume()
     {
@@ -293,11 +308,24 @@ class QueueController
         try {
             $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED));
             $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
-            $processedJobs =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $processedLenght);
+            $sessionHelper = $app['helpers.session'];
+            if ( $sessionHelper->isMyComponentsOn() ){
+                $processedJobs =  $this->_jobMapper->findAllByMultipleStatusAndModules(
+                    array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
+                    $sessionHelper->getPermissions(), $processedLenght);
+                    
+                $liveProcessed = $this->_jobMapper->findAllByMultipleStatusAndModules(
+                    array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), 
+                    $sessionHelper->getPermissions(), $processedLenght);
+
+            }else{
+                $processedJobs =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $processedLenght);
+
+                $liveProcessed = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $processedLenght);
+            }
 
             $liveQueue = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE));
             $liveInProgress = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE));
-            $liveProcessed = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $processedLenght);
         } catch (\Exception $exc) {
             $this->_app->abort(503, $exc->getMessage());
         }

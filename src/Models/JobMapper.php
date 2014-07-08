@@ -50,10 +50,30 @@ class JobMapper
         return $result;
     }
 
-    public function findAllByMultipleStatus($statusArray, $limit=null)
+    public function findAllByMultipleStatus($statusArray, $limit=null, $type='object')
     {
         $targetStatus = implode("','", $statusArray);
         $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY queue_date DESC";
+
+        if (!is_null($limit)) {
+            $sql .= " limit " . $limit;
+        }
+
+        $data = $this->_db->fetchAll($sql);
+        $result = array();
+        foreach ($data as $record) {
+            array_push($result, Job::createFromArray($record, $type));
+        }
+
+        return $result;
+    }
+
+    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
+    {
+        $targetStatus = implode("','", $statusArray);
+        $targetModules = implode("','", $modulesArray);
+        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') AND "
+                    . "module in ('" . $targetModules ."') ORDER BY queue_date DESC";
 
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;

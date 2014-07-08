@@ -16,6 +16,14 @@ class Session
       return self::$_instance;
     }
 
+    public function isMyComponentsOn()
+    {
+        if ( isset(self::$_app['session']->get('componentsOn')) )
+            return self::$_app['session']->get('componentsOn');
+        else
+            return false;       
+    }
+
     public function getUserData()
     {
         return self::$_app['session']->get('userData');

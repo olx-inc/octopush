@@ -294,7 +294,7 @@
                                     </td>
                                     <td>
                                         <small>
-                                            {% if in_progress_job.getRequestorJenkins != "" %}
+                                            {% if in_progress_job.getRequestorJenkins() != "" %}
                                                 <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                         <span class="glyphicon glyphicon-log-in" />
                                                 </a>
@@ -304,7 +304,7 @@
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
-                                            {% if in_progress_job.getTestJobUrl != "" %}
+                                            {% if in_progress_job.getTestJobUrl() != "" %}
                                                 <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
@@ -354,7 +354,7 @@
                                     </td>
                                     <td>
                                         <small>
-                                            {% if processed_job.getRequestorJenkins != "" %}
+                                            {% if processed_job.getRequestorJenkins() != "" %}
                                                 <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-in" />
                                                 </a>
@@ -364,7 +364,7 @@
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
-                                            {% if processed_job.getTestJobUrl != "" %}
+                                            {% if processed_job.getTestJobUrl() != "" %}
                                                 <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
