@@ -97,9 +97,9 @@ class QueueController
         }
     }
 
-    public function my_components($env)
+    public function my_components($state)
     {
-
+        return "";
     }
     
     public function deployed($env)

@@ -101,15 +101,27 @@
 }
 
 .btn-align {
+  background-color: #428bca;
+  border-color: #357ebd;
   float: right;
   margin-top: 10px;
-  color: #fff;
+  color: #d9edf7; 
 }
 
 .btn-on {
-  background-color: #2a6496;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #3a87ad
 }
 
-.btn-off .glyphicon-filter {
-  visibility: hidden;
+.btn-off:hover,
+.btn-off:focus {
+  border-color: #005298;
+  color: #fff
+}
+
+.btn-on:hover,
+.btn-on:focus {
+  border-color: #3a87ad;
+  color: #3a87ad
 }

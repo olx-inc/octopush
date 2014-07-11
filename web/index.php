@@ -19,7 +19,7 @@ $app->get('/deploying', "queue.controller:deploying");
 $app->get('/{env}/deployed', "queue.controller:deployed");
 $app->get('/{env}/queued', "queue.controller:deployed");
 $app->get('/{env}/inprogress', "queue.controller:deployed");
-$app->get('/my-components/{state}', "queue.controller:my_components");
+$app->get('/mycomponents/{state}', "queue.controller:my_components");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 $app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");

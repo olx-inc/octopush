@@ -62,7 +62,7 @@ function myComponents() {
         btnClass = 'btn-on';
     }
 
-    url = '/my_components/' + btnClass;
+    url = '/mycomponents/' + btnClass;
 
     $.get(url)
         .done(function() {
