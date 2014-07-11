@@ -93,9 +93,23 @@
 }
 
 .glyphicon {
-  padding: 5px;
+  padding: 2px 5px 5px;
 }
 
 .loginBox {
   float:right;
+}
+
+.btn-align {
+  float: right;
+  margin-top: 10px;
+  color: #fff;
+}
+
+.btn-on {
+  background-color: #2a6496;
+}
+
+.btn-off .glyphicon-filter {
+  visibility: hidden;
 }
