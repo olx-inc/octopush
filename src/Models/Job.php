@@ -13,6 +13,7 @@ class Job
     private $_updated_at;
     private $_statusId;
     private $_statusArray;
+    private $_status;
     private $_deploymentJobId;
     private $_testJobUrl;
     private $_liveJobId;
@@ -83,6 +84,7 @@ class Job
     public function setStatusId($statusId)
     {
         $this->_statusId = $statusId;
+        $this->_status = $_statusArray[$statusId];
     }
 
     public function moveStatusTo($newStatus)
@@ -164,6 +166,7 @@ class Job
     {
         $this->_id = 0;
         $this->_statusId = 0;
+        $this->_status = JobStatus::QUEUED;
         $this->_initStatusArray();
         $this->_deploymentJobId = 0;
     }
@@ -214,6 +217,7 @@ class Job
         $job = new Job();
         $job->_id = (int) $data['job_id'];
         $job->_statusId = array_search($data['status'], $job->_statusArray);
+        $job->_status = $data['status'];
         $job->_targetModule = $data['module'];
         $job->_targetVersion = $data['version'];
         $job->_targetEnvironment = $data['environment'];
