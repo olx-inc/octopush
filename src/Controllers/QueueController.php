@@ -17,7 +17,7 @@ class QueueController
     private $_app;
     private $_log;
     private $_controlFile;
-    private $_mycomponents;
+    private $_myComponents;
 
     public function __construct(Application $app, 
                                 JobMapper $jobMapper, 
@@ -100,7 +100,7 @@ class QueueController
 
     public function my_components($state)
     {
-        $this->my_components = $state;
+        $this->_myComponents = $state;
         return "";
     }
     
@@ -336,15 +336,19 @@ class QueueController
             $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
             $sessionHelper = $app['helpers.session'];
             if ( $sessionHelper->isMyComponentsOn() ){
+                $perm = $sessionHelper->getPermissions();
+
                 $processedJobs =  $this->_jobMapper->findAllByMultipleStatusAndModules(
                     array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
-                    $sessionHelper->getPermissions(), $processedLenght);
+                    $perm["repositories"], $processedLenght);
                     
                 $liveProcessed = $this->_jobMapper->findAllByMultipleStatusAndModules(
                     array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), 
-                    $sessionHelper->getPermissions(), $processedLenght);
+                    $perm["repositories"], $processedLenght);
 
             }else{
+                $this->_log->addInfo("Components OFF: ");
+
                 $processedJobs =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $processedLenght);
 
                 $liveProcessed = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $processedLenght);
@@ -367,7 +371,7 @@ class QueueController
             'liveQueue' => $liveQueue,
             'liveInProgress' => $liveInProgress,
             'liveProcessed' => $liveProcessed,
-            'my_components' => $this->my_components;
+            'my_components' => $this->_myComponents,
 
             'version' => Version::getShort(),
             
