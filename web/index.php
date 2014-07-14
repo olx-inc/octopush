@@ -16,6 +16,10 @@ $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");
 $app->get('/status', "queue.controller:status");
 $app->get('/deploying', "queue.controller:deploying");
+$app->get('/{env}/deployed', "queue.controller:deployed");
+$app->get('/{env}/queued', "queue.controller:deployed");
+$app->get('/{env}/inprogress', "queue.controller:deployed");
+$app->get('/mycomponents/{state}', "queue.controller:my_components");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 $app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");
@@ -48,6 +52,7 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($
             $userData = array(
                 'user' => $token->getUser(),
                 'permissions' => $permissions,
+                'my_components' => 'btn-on',
                 'is_admin_user' => in_array(
                     $app['config']['teams']['admin'], 
                     $permissions['teams']

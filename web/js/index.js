@@ -52,8 +52,42 @@ function rollback(element) {
     }
 }
 
+function myComponents() {
+    var url,
+        btnState = localStorage.getItem('btnState'),
+        btnClass = 'btn-off',
+        btn = $('#my-components');
+
+    if(btn.hasClass('btn-off')) {
+        btnClass = 'btn-on';
+    }
+
+    url = '/mycomponents/' + btnClass;
+
+    $.get(url)
+        .done(function() {
+            localStorage.setItem('btnState',btnClass);
+            location.reload();
+        })
+        .fail(function() {
+            alert("An error occurred, please try again");
+        });
+
+}
+
+function setBtnState() {
+    var btn = $('#my-components');
+       
+    if( btn.length > 0 ) {
+        if(localStorage.getItem('btnState') <= 0 ) {
+            localStorage.setItem('btnState','btn-on');
+        }      
+        $('#my-components').toggleClass( localStorage.getItem('btnState') );
+    }    
+}
 
 $(function() {
+    setBtnState();
     $('[data-toggle="tooltip"]').tooltip();
     $("[data-job-go-live]").on('click', function(e) {
         goLive(this);
@@ -62,5 +96,10 @@ $(function() {
     $("[data-job-rollback]").on('click', function(e) {
         rollback(this);
         return false;
+    });
+
+    $('#my-components').on('click', function (e) {
+        e.preventDefault();
+        myComponents();
     });
 });

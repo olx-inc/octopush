@@ -19,16 +19,23 @@
                 <img src="/images/logo.png" />
                 <small>v{{ version }}</small>
                 {% if userdata %}
-                    <span class="loginBox">Hello {{ userdata.user.username }}
-                        {% if userdata.is_admin_user %}
-                            (admin)
-                        {% endif %}
-                        | <a href="{{ logoutUrl }}">Logout</a></span>
-                    {% else %}
-                        <span class="loginBox" style="width: 180px;">
-                            <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
-                        </span>
-                    {% endif %}
+                    <div class="loginBox">
+                        <div class="userBox">
+                            Hello {{ userdata.user.username }}
+                            {% if userdata.is_admin_user %}
+                                (admin)
+                            {% endif %}
+                            | <a href="{{ logoutUrl }}">Logout</a>
+                        </div>
+                        <button type="button" class="btn-align btn" id="my-components">
+                          <span class="glyphicon glyphicon-filter"></span> My Components
+                        </button>
+                    </div>                   
+                {% else %}
+                    <span class="loginBox" style="width: 180px;">
+                        <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+                    </span>
+                {% endif %}
             </div>
             {% if isPaused %}
             <div class="bs-callout bs-callout-warning">
@@ -294,7 +301,7 @@
                                     </td>
                                     <td>
                                         <small>
-                                            {% if in_progress_job.getRequestorJenkins != "" %}
+                                            {% if in_progress_job.getRequestorJenkins() != "" %}
                                                 <a href="{{ jenkins.getRequestorJobConsoleUrl(in_progress_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                         <span class="glyphicon glyphicon-log-in" />
                                                 </a>
@@ -304,7 +311,7 @@
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
-                                            {% if in_progress_job.getTestJobUrl != "" %}
+                                            {% if in_progress_job.getTestJobUrl() != "" %}
                                                 <a href="{{ jenkins.getTestJobConsoleUrl(in_progress_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>
@@ -354,7 +361,7 @@
                                     </td>
                                     <td>
                                         <small>
-                                            {% if processed_job.getRequestorJenkins != "" %}
+                                            {% if processed_job.getRequestorJenkins() != "" %}
                                                 <a href="{{ jenkins.getRequestorJobConsoleUrl(processed_job) }}" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-log-in" />
                                                 </a>
@@ -364,7 +371,7 @@
                                                     <span class="glyphicon glyphicon-log-out" />
                                                 </a>
                                             {% endif %}
-                                            {% if processed_job.getTestJobUrl != "" %}
+                                            {% if processed_job.getTestJobUrl() != "" %}
                                                 <a href="{{ jenkins.getTestJobConsoleUrl(processed_job) }}" target="_blank" title="view test job" data-toggle="tooltip" data-placement="top">
                                                     <span class="glyphicon glyphicon-ok" />
                                                 </a>

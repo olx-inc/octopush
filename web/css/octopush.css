@@ -93,9 +93,35 @@
 }
 
 .glyphicon {
-  padding: 5px;
+  padding: 2px 5px 5px;
 }
 
 .loginBox {
   float:right;
+}
+
+.btn-align {
+  background-color: #428bca;
+  border-color: #357ebd;
+  float: right;
+  margin-top: 10px;
+  color: #d9edf7; 
+}
+
+.btn-on {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #3a87ad
+}
+
+.btn-off:hover,
+.btn-off:focus {
+  border-color: #005298;
+  color: #fff
+}
+
+.btn-on:hover,
+.btn-on:focus {
+  border-color: #3a87ad;
+  color: #3a87ad
 }
