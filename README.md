@@ -44,6 +44,7 @@ After intalling the base components mentioned above, you can follow the steps be
     </pre>
 * Browse the application at demo.octopush.com
 
+
 Apache configuration
 
     <VirtualHost *:80>
