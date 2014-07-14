@@ -18,13 +18,7 @@ class Session
 
     public function isMyComponentsOn()
     {
-        $userdata = $this->getUserData();
-
-        return $userdata['my_components']=='btn-on';
-        //if ( isset(self::$_app['session']->get('componentsOn')) )
-          //  return self::$_app['session']->get('componentsOn');
-        //else
-        //    return false;       
+        return self::$_app['session']->get('myComponents')=='btn-on';     
     }
 
     public function getUserData()

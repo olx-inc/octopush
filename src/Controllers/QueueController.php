@@ -31,6 +31,7 @@ class QueueController
         $this->_jobsController = $jobsController;
         $this->_log = $log;
         $this->_controlFile = $this->_config['control_file'];
+        $this->_myComponents = $app['session']->get('myComponents');
     }
 
     /**********************   API METHODS ***********************/
@@ -100,8 +101,8 @@ class QueueController
 
     public function my_components($state)
     {
-        $this->_myComponents = $state;
-        return "";
+        $this->_app['session']->set('myComponents', $state);
+        return $this->_app['session']->get('myComponents');
     }
     
     public function deployed($env)
