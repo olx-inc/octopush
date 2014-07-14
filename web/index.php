@@ -52,6 +52,7 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($
             $userData = array(
                 'user' => $token->getUser(),
                 'permissions' => $permissions,
+                'my_components' => 'btn-on',
                 'is_admin_user' => in_array(
                     $app['config']['teams']['admin'], 
                     $permissions['teams']

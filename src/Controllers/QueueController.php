@@ -17,6 +17,7 @@ class QueueController
     private $_app;
     private $_log;
     private $_controlFile;
+    private $_mycomponents;
 
     public function __construct(Application $app, 
                                 JobMapper $jobMapper, 
@@ -99,6 +100,7 @@ class QueueController
 
     public function my_components($state)
     {
+        $this->my_components = $state;
         return "";
     }
     
@@ -365,6 +367,7 @@ class QueueController
             'liveQueue' => $liveQueue,
             'liveInProgress' => $liveInProgress,
             'liveProcessed' => $liveProcessed,
+            'my_components' => $this->my_components;
 
             'version' => Version::getShort(),
             
