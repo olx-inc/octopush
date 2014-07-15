@@ -1,7 +1,6 @@
 Octopush
 ========
 
-
 Unit tests:
 [![Build Status](https://travis-ci.org/olx-inc/octopush.png?branch=master)](https://travis-ci.org/olx-inc/octopush)
 
