@@ -2,7 +2,8 @@
 
 namespace Models;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection,
+    Models\JobStatus;
 
 class JobMapper
 {
@@ -53,7 +54,13 @@ class JobMapper
     public function findAllByMultipleStatus($statusArray, $limit=null, $type='object')
     {
         $targetStatus = implode("','", $statusArray);
-        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY queue_date DESC";
+
+        $orderBy = 'updated_at';
+        if (in_array(JobStatus::QUEUED, $statusArray)) {
+            $orderBy = 'queue_date';
+        }
+
+        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY " .$orderBy. " DESC";
 
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;
