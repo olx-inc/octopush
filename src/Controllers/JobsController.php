@@ -134,8 +134,9 @@ class JobsController
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
                 
-                if (!empty($helperSession->getUser()->getEmail()))
-                    $job->setUser($helperSession->getUser()->getEmail());
+                $email = $helperSession->getUser()->getEmail();
+                if (!empty($email))
+                    $job->setUser($email);
                 else
                     $job->setUser($helperSession->getUser()->getUserName());
 
