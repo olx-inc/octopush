@@ -21,6 +21,17 @@ class Session
         return self::$_app['session']->get('myComponents')=='btn-on';     
     }
 
+    public function getMyComponentsValue()
+    {
+        return self::$_app['session']->get('myComponents');     
+    }
+
+    public function setMyComponents($state)
+    {
+        return self::$_app['session']->set('myComponents', $state);     
+    }
+
+
     public function getUserData()
     {
         return self::$_app['session']->get('userData');

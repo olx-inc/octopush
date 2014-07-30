@@ -133,8 +133,12 @@ class JobsController
                     $job->canGoLive()) {
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
-                $job->setUser($helperSession->getUser()->getEmail());
                 
+                if (!empty($helperSession->getUser()->getEmail()))
+                    $job->setUser($helperSession->getUser()->getEmail());
+                else
+                    $job->setUser($helperSession->getUser()->getUserName());
+
                 if ($ticket) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);

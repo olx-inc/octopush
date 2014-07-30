@@ -17,8 +17,8 @@ $app->get('/health', "queue.controller:health");
 $app->get('/status', "queue.controller:status");
 $app->get('/deploying', "queue.controller:deploying");
 $app->get('/{env}/deployed', "queue.controller:deployed");
-$app->get('/{env}/queued', "queue.controller:deployed");
-$app->get('/{env}/inprogress', "queue.controller:deployed");
+$app->get('/{env}/queued', "queue.controller:queued");
+$app->get('/{env}/inprogress', "queue.controller:inprogress");
 $app->get('/mycomponents/{state}', "queue.controller:my_components");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
