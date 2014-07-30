@@ -122,9 +122,9 @@ class QueueController
    public function queued($env)
     {
         if ($env == 'staging')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED));
+            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null, 'json');
         elseif ($env == 'prod')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE));
+            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null, 'json');
 
         return $this->_app->json($queuedJobs);
     }
@@ -132,9 +132,9 @@ class QueueController
    public function inprogress($env)
     {
         if ($env == 'staging')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
+            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null, 'json');
         elseif ($env == 'prod')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE));
+            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null, 'json');
 
         return $this->_app->json($inProgressJobs);
     }
