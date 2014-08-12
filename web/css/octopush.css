@@ -40,16 +40,19 @@
     color: #3A87AD;
 }
 
-.actions-column {
-  width: 200px;
-}
-
 .module-column {
   width: 150px;
 }
 
 .status-column {
   width: 120px;
+}
+.ticket-column {
+  text-align: center;
+  width: 82px
+}
+.actions-column {
+  min-width: 110px  
 }
 
 .label-DEPLOYING {
