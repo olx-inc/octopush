@@ -40,6 +40,8 @@ class Jenkins
         $url = $this->_getLiveUrlForJob($job);
         $url .= '/buildWithParameters';
         $data = array('tag' => $job->getTargetVersion());
+        if ($job->isARollback())
+            $data['wait'] = "0";            
         $toLive = true;
         return $this->_doPush($job, $url, $data, $toLive);
     }

@@ -192,6 +192,12 @@ class Job
         return ($this->getStatus() == JobStatus::TESTS_PASSED);
     }
 
+
+    public function isARollback()
+    {
+        return (!empty($this->_rollbackedFrom));
+    }
+
     public function wentLive()
     {
         return ($this->_statusId > 6);
