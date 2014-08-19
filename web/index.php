@@ -10,7 +10,7 @@ $loader->add('Helpers', __DIR__ . '/../src/');
 require_once __DIR__ . '/../src/bootstrap.php';
 
 $app->get('/run', "queue.controller:processJob");
-$app->get('/', "queue.controller:showJobs");
+$app->get('/', "queue.controller:index");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");

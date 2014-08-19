@@ -1,446 +1,201 @@
-var template = {
-    queuedPreprod: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
-            html;
+var tml = {
+    displayActions: function (data, selector) {
+        if((selector.attr('class') == "go-live" ||
+            selector.attr('class') == "rollback") && 
+            data != "" ) {
+            selector.data("job-id", data.id);
+            selector.data("job-targetModule", data.targetModule);
+            selector.data("job-targetVersion", data.targetVersion);
+            selector.show();
+        } else {
+            if(selector.attr('class') == "ticket"){
+                selector.attr("title", data);
+            }
+            if(data != "") {
+                selector.attr("href", data);
+                selector.show();
+            }
+        }
+    },
+    queued: function (job) {
+        var newJob = $("#resources .job").clone(),
+            ticket = "",
+            jenkins = "",
+            deployment = "",
+            testJob = "";
 
+        if (!$.isEmptyObject(job._ticket)){
+            ticket = job._ticket;
+        }
         if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
+            jenkins = job._requestorJenkins;
         }
         if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
+            deployment = "{{ jenkins.getBuildUrl(queued_job) }}";
         }
         if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip' data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
+            testJob = "{{ jenkins.getTestJobConsoleUrl(queued_job) }}";
         }
 
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><!-- Ticket column --><td><small>",
-            "</small></td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            "</small></td></tr>"
-        ].join('');
+        newJob.find("[data-id]").text(job._id);
+        newJob.find("[data-target-module]").text(job._targetModule);
+        newJob.find("[data-target-version]").text(job._targetVersion);
+        newJob.find("[data-status]").text(job._status);
+        newJob.find(".label").addClass("label-" + job._status);
+        newJob.find("[data-queued-date]").text(job._queued_at);
+        newJob.find("[data-updated-date]").text(job._updated_at);
+        tml.displayActions(ticket, newJob.find("[data-ticket]"));
+        tml.displayActions(jenkins, newJob.find("[data-jenkins]"));
+        tml.displayActions(deployment, newJob.find("[data-deployment]"));
+        tml.displayActions(testJob, newJob.find("[data-test-job]"));
 
-        return html;
+        return newJob;
     },
 
-    inProgressPreprod: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
+    inProgress: function (job) {
+        var newJob = $("#resources .job").clone(),
+            ticket = "",
+            jenkins = "",
+            deployment = "",
+            testJob = "",
+            liveJob = "";
+
+        if (!$.isEmptyObject(job._ticket)){
+            ticket = job._ticket;
+        }
+        if (job._requestorJenkins != ""){
+            jenkins = job._requestorJenkins;
+        }
+        if (job._deploymentJobId > 0){
+            deployment = "{{ jenkins.getBuildUrl(queued_job) }}";
+        }
+        if (job._testJobUrl != ""){
+            testJob = "{{ jenkins.getTestJobConsoleUrl(queued_job) }}";
+        }
+        if (job._liveJobId > 0){
+            liveJob = "{{ jenkins.getLiveJobConsoleUrl(in_progress_job) }}";
+        }
+
+        newJob.find("[data-id]").text(job._id);
+        newJob.find("[data-target-module]").text(job._targetModule);
+        newJob.find("[data-target-version]").text(job._targetVersion);
+        newJob.find("[data-status]").text(job._status);
+        newJob.find(".label").addClass("label-" + job._status);
+        newJob.find("[data-queued-date]").text(job._queued_at);
+        newJob.find("[data-updated-date]").text(job._updated_at);
+        tml.displayActions(ticket, newJob.find("[data-ticket]"));
+        tml.displayActions(jenkins, newJob.find("[data-jenkins]"));
+        tml.displayActions(deployment, newJob.find("[data-deployment]"));
+        tml.displayActions(testJob, newJob.find("[data-test-job]"));
+        tml.displayActions(liveJob, newJob.find("[data-live-job]"));
+
+        return newJob;
+    },
+
+    preprodProcessed: function (job) {
+        var newJob = $("#resources .job").clone(),
+            ticket = "",
+            jenkins = "",
+            deployment = "",
+            testJob = "",
             liveJob = "",
-            html;
+            goLive = "";
 
+        if (!$.isEmptyObject(job._ticket)){
+            ticket = job._ticket;
+        }
         if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
+            jenkins = job._requestorJenkins;
         }
         if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' ",
-                "data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
+            deployment = "{{ jenkins.getBuildUrl(job) }}";
         }
         if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
+            testJob = "{{ jenkins.getTestJobConsoleUrl(job) }}";
         }
-        /*if (job._liveJobId > 0){
-            liveJob = [
-                "<a href=",
-                "{{ jenkins.getLiveJobConsoleUrl(in_progress_job) }}",
-                " target='_blank' title='view live job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-new-window' /></a>"
-            ].join('');
-        }*/
+        if (job._liveJobId > 0){
+            liveJob = "{{ jenkins.getLiveJobConsoleUrl(job) }}";
+        }
+        /*if (userdata.user and job.canGoLive and job.canBePushedLive(job)){*/
+            goLive = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            };
+        /*}*/
 
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><!-- Ticket column --><td><small>",
-            "</small></td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            liveJob,
-            "</small></td></tr>"
-        ].join('');
-        
-        return html;
+        newJob.find("[data-id]").text(job._id);
+        newJob.find("[data-target-module]").text(job._targetModule);
+        newJob.find("[data-target-version]").text(job._targetVersion);
+        newJob.find("[data-status]").text(job._status);
+        newJob.find(".label").addClass("label-" + job._status);
+        newJob.find("[data-queued-date]").text(job._queued_at);
+        newJob.find("[data-updated-date]").text(job._updated_at);
+        tml.displayActions(ticket, newJob.find("[data-ticket]"));
+        tml.displayActions(jenkins, newJob.find("[data-jenkins]"));
+        tml.displayActions(deployment, newJob.find("[data-deployment]"));
+        tml.displayActions(testJob, newJob.find("[data-test-job]"));
+        tml.displayActions(liveJob, newJob.find("[data-live-job]"));
+        tml.displayActions(goLive, newJob.find("[data-go-live]"));
+
+        return newJob;
     },
 
-    processedPreprod: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
+    prodProcessed: function (job) {
+        var newJob = $("#resources .job").clone(),
+            ticket = "",
+            jenkins = "",
+            deployment = "",
+            testJob = "",
             liveJob = "",
-            goLive = "",
-            html;
+            wentLive = "",
+            rollback = "";
 
+        if (!$.isEmptyObject(job._ticket)){
+            ticket = job._ticket;
+        }
         if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
+            jenkins = job._requestorJenkins;
         }
         if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' ",
-                "data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
+            deployment = "{{ jenkins.getBuildUrl(job) }}";
         }
         if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
+            testJob = "{{ jenkins.getTestJobConsoleUrl(job) }}";
         }
-        /*if (job._wentLive){
-            liveJob = [
-                "<a href=",
-                "{{ jenkins.getLiveJobConsoleUrl(processed_job) }}",
-                " target='_blank' title='view live job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-new-window' /></a>"
-            ].join('');
+        if (job._liveJobId > 0){
+            liveJob = "{{ jenkins.getLiveJobConsoleUrl(job) }}";
         }
-        if (userdata.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)){
-            goLive = [
-                "<a data-job-go-live data-job-id=",
-                "{{ processed_job.id }}",
-                " data-job-targetModule=",
-                "{{ processed_job.targetModule }}",
-                " data-job-targetVersion=",
-                "{{ processed_job.targetVersion }}",
-                " href='#' title='go live' data-toggle='tooltip' data-placement='top'>",
-                "<i class='glyphicon glyphicon-new-window'></i></a>"
-            ].join('');
-        }*/
+        /*if (processed_job.wentLive){*/
+            wentLive = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            };
+        /*}*/
+        /*if (userdata.user and job.wentLive and job.canBePushedLive(job)){*/
+            rollback = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            };
+        /*}*/
 
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><!-- Ticket column --><td><small>",
-            "</small></td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            liveJob,
-            goLive,
-            "</small></td></tr>"
-        ].join('');
+        newJob.find("[data-id]").text(job._id);
+        newJob.find("[data-target-module]").text(job._targetModule);
+        newJob.find("[data-target-version]").text(job._targetVersion);
+        newJob.find("[data-status]").text(job._status);
+        newJob.find(".label").addClass("label-" + job._status);
+        newJob.find("[data-queued-date]").text(job._queued_at);
+        newJob.find("[data-updated-date]").text(job._updated_at);
+        tml.displayActions(ticket, newJob.find("[data-ticket]"));
+        tml.displayActions(jenkins, newJob.find("[data-jenkins]"));
+        tml.displayActions(deployment, newJob.find("[data-deployment]"));
+        tml.displayActions(testJob, newJob.find("[data-test-job]"));
+        tml.displayActions(liveJob, newJob.find("[data-live-job]"));
+        tml.displayActions(wentLive, newJob.find("[data-went-live]"));
+        tml.displayActions(rollback, newJob.find("[data-rollback]"));
 
-        return html;
-    },
-
-    queuedProd: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
-            html;
-
-        if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
-        }
-        if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
-        }
-        if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip' data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
-        }
-
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><td class='text-center'><small><a href=",
-            job._ticket,
-            " target='_blank' title='",
-            job._ticket,
-            "' data-toggle='tooltip'><i class='fa fa-ticket'></i></a></small>",
-            "</td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            "</small></td></tr>"
-        ].join('');
-
-        return html;
-    },
-
-    inProgressProd: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
-            liveJob = "",
-            html;
-
-        if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
-        }
-        if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' ",
-                "data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
-        }
-        if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
-        }
-        /*if (job._liveJobId > 0){
-            liveJob = [
-                "<a href=",
-                "{{ jenkins.getLiveJobConsoleUrl(in_progress_job) }}",
-                " target='_blank' title='view live job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-new-window' /></a>"
-            ].join('');
-        }*/
-
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><td class='text-center'><small><a href=",
-            job._ticket,
-            " target='_blank' title='",
-            job._ticket,
-            "' data-toggle='tooltip'><i class='fa fa-ticket'></i></a></small>",
-            "</td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            liveJob,
-            "</small></td></tr>"
-        ].join('');
-        
-        return html;
-    },
-
-    processedPreprod: function (job) {
-        var jenkinsAnchor = "",
-            deploymentJob = "",
-            testJobUrl = "",
-            liveJob = "",
-            goLive = "",
-            html;
-
-        if (job._requestorJenkins != ""){
-            jenkinsAnchor = [
-                "<a href=",
-                job._requestorJenkins,
-                " target='_blank'><span class='glyphicon glyphicon-log-in'></span></a>"
-            ].join('');
-        }
-        if (job._deploymentJobId > 0){
-            deploymentJob = [
-                "<a href=",
-                "{{ jenkins.getBuildUrl(queued_job) }}",
-                " target='_blank' title='view deployment job' data-toggle='tooltip' ",
-                "data-placement='top'><span class='glyphicon glyphicon-log-out' /></a>"
-            ].join('');
-        }
-        if (job._testJobUrl != ""){
-            testJobUrl = [
-                "<a href=",
-                "{{ jenkins.getTestJobConsoleUrl(queued_job) }}",
-                " target='_blank' title='view test job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-ok' /></a>"
-            ].join('');
-        }
-        /*if (job._wentLive){
-            liveJob = [
-                "<a href=",
-                "{{ jenkins.getLiveJobConsoleUrl(processed_job) }}",
-                " target='_blank' title='view live job' data-toggle='tooltip'",
-                "data-placement='top'><span class='glyphicon glyphicon-new-window' /></a>"
-            ].join('');
-        }
-        if (userdata.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)){
-            goLive = [
-                "<a data-job-go-live data-job-id=",
-                "{{ processed_job.id }}",
-                " data-job-targetModule=",
-                "{{ processed_job.targetModule }}",
-                " data-job-targetVersion=",
-                "{{ processed_job.targetVersion }}",
-                " href='#' title='go live' data-toggle='tooltip' data-placement='top'>",
-                "<i class='glyphicon glyphicon-new-window'></i></a>"
-            ].join('');
-        }*/
-
-        html = [
-            "<tr><td><small>",
-            job._id,
-            "</small></td><td><small>",
-            job._targetModule,
-            "</small></td><td><small>",
-            job._targetVersion,
-            "</small></td><td><span class='label label-",
-            job._status,
-            "'><small>",
-            job._status,
-            "</small></span></td><td><small>",
-            job._queued_at,
-            "</small></td><td><small>",
-            job._updated_at,
-            "</small></td><td class='text-center'><small><a href=",
-            job._ticket,
-            " target='_blank' title='",
-            job._ticket,
-            "' data-toggle='tooltip'><i class='fa fa-ticket'></i></a></small>",
-            "</td><td><small>",
-            jenkinsAnchor,
-            deploymentJob,
-            testJobUrl,
-            liveJob,
-            goLive,
-            "</small></td></tr>"
-        ].join('');
-
-        return html;
+        return newJob;
     }
 }
-
-/*"<tr>\
-    <td><small>" + job._id + "</small></td>\
-    <td><small>" + job._targetModule + "</small></td>\
-    <td><small>" + job._targetVersion + "</small></td>\
-    <td><span class='label label-'" + job._status + "'>\
-            <small>" + job._status + "</small>\
-        </span>\
-    </td>\
-    <td><small>" + job._queued_at + "</small></td>\
-    <td><small>" + job._updated_at + "</small></td>\
-    <!-- Ticket column -->\
-    <td><small></small></td>\
-    <td>\
-        <small>" +
-            if (job._requestorJenkins != ""){
-                "<a href=" + job._requestorJenkins + " target='_blank'>
-                    <span class='glyphicon glyphicon-log-in'></span>
-                </a>"
-            }
-            if (job._deploymentJobId > 0){
-                "<a href="{{ jenkins.getBuildUrl(queued_job) }}" target='_blank' title='view deployment job' data-toggle='tooltip' data-placement='top'>
-                    <span class='glyphicon glyphicon-log-out' />
-                </a>"
-            }
-            if (job._testJobUrl != ""){
-                "<a href="{{ jenkins.getTestJobConsoleUrl(queued_job) }}" target='_blank' title='view test job' data-toggle='tooltip' data-placement='top'>
-                    <span class='glyphicon glyphicon-ok' />
-                </a>"
-            }
-        + "</small>
-    </td>
-</tr>"*/

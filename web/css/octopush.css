@@ -128,3 +128,12 @@
   border-color: #3a87ad;
   color: #3a87ad
 }
+
+.job .actions a,
+.job .ticket a {
+  display: none
+}
+.job .actions a:hover,
+.job .ticket a:hover {
+  text-decoration: none
+}

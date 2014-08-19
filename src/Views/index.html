@@ -6,7 +6,7 @@
               href="/images/favicon.png" />
         <title>Octopush</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- Bootstrap -->
+        {# Bootstrap #}
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
         <link href="css/font-awesome.css" rel="stylesheet" media="screen" />
         <link href="css/bootstrap-social.css" rel="stylesheet" media="screen" />
@@ -16,22 +16,40 @@
         <div class="container">
             <div class="page-header">
                 <img src="/images/logo.png" />
-                <small id="version">v</small>
-                <!-- userdata -->
-                <div id="userdata" class="loginBox" style="display:none"></div>         
-                <!-- Login -->
-                <span id="login" class="loginBox" style="width: 180px; display:none"></span>
+                <small>v{{ version }}</small>
+                {% if userdata %}
+                    <div class="loginBox">
+                        <div class="userBox">
+                            Hello {{ userdata.user.username }}
+                            {% if userdata.is_admin_user %}
+                                (admin)
+                            {% endif %}
+                            | <a href="{{ logoutUrl }}">Logout</a>
+                        </div>
+                        <button type="button" class="btn-align btn {{ my_components }}" id="my-components">
+                          <span class="glyphicon glyphicon-filter"></span> My Components
+                        </button>
+                    </div>                   
+                {% else %}
+                    <span class="loginBox" style="width: 180px;">
+                        <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+                    </span>
+                {% endif %}
             </div>
-            <!-- if isPaused -->
-            <div id="paused" class="bs-callout bs-callout-warning" style="display:none"></div>
+            
+            {# if isPaused #}
+            <div id="paused" class="bs-callout bs-callout-warning" style="display:none">
+                <h4>Octopush service is Paused right now due to a current incident</h4>
+                <p>Please contact {{ contact }}.</p>
+            </div>
 
             <h3>Pre-Production</h3>
             <div id="preprod">
                 <div id="preprod-queued">
                     <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    <!--if queued_jobs is empty -->
+                    {#if queued_jobs is empty #}
                     <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                    <!--if queued_jobs -->
+                    {#if queued_jobs #}
                     <table class="queued table table-striped table-condensed table-hover" style="display:none">
                         <thead class="preprod-head"></thead>
                         <tbody class="pre-queue"></tbody>
@@ -39,9 +57,9 @@
                 </div>
 
                 <div id="preprod-inprogress" style="display:none">
-                    <!--{% if in_progress_jobs != false %}-->
+                    {#{% if in_progress_jobs != false %}#}
                     <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
-                    <!-- if in_progress_jobs -->
+                    {# if in_progress_jobs #}
                     <table class="inprogress table table-striped table-condensed table-hover">
                         <thead class="preprod-head"></thead>
                         <tbody class="pre-in-progress"></tbody>
@@ -50,9 +68,9 @@
 
                 <div id="preprod-processed">
                     <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
-                    <!-- if processed_jobs is empty -->
+                    {# if processed_jobs is empty #}
                     <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
-                    <!--if processed_jobs -->
+                    {#if processed_jobs #}
                     <table class="processed table table-striped table-condensed table-hover" style="display:none">
                         <thead class="preprod-head"></thead>
                         <tbody class="pre-deployed"></tbody>
@@ -64,9 +82,9 @@
             <div id="prod">
                 <div id="prod-queued">
                     <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    <!-- if liveQueue is empty -->
+                    {# if liveQueue is empty #}
                     <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                    <!--if liveQueue -->
+                    {#if liveQueue #}
                     <table class="queued table table-striped table-condensed table-hover" style="display:none">
                         <thead class="prod-head"></thead>
                         <tbody class="prod-queue"></tbody>
@@ -74,9 +92,9 @@
                 </div>
 
                 <div id="prod-inprogress" style="display:none">
-                    <!--{% if liveInProgress != false %}-->
+                    {#{% if liveInProgress != false %}#}
                     <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
-                    <!--if liveInProgress -->
+                    {#if liveInProgress #}
                     <table class="inprogress table table-striped table-condensed table-hover" style="display:none">
                         <thead class="prod-head"></thead>
                         <tbody class="prod-in-progress"></tbody>
@@ -85,9 +103,9 @@
 
                 <div id="prod-processed">
                     <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
-                    <!-- if liveProcessed is empty -->
+                    {# if liveProcessed is empty #}
                     <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
-                    <!--if liveProcessed -->
+                    {#if liveProcessed #}
                     <table class="processed table table-striped table-condensed table-hover" style="display:none">
                         <thead class="prod-head"></thead>
                         <tbody class="prod-deployed"></tbody>
