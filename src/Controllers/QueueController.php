@@ -105,38 +105,73 @@ class QueueController
 
         return $sessionHelper->isMyComponentsOn();
     }
-    
-    public function deployed($env)
+
+    public function all(){
+        $all = array('preprod-queue' => $this->_queued('staging'));
+        $all['preprod-inprogress'] = $this->_inprogress('staging');
+        $all['preprod-deployed'] = $this->_deployed('staging');
+        $all['prod-queue'] = $this->_queued('prod');
+        $all['prod-inprogress'] = $this->_inprogress('prod');
+        $all['prod-deployed'] = $this->_deployed('prod');
+
+        return $this->_app->json($all);
+    }
+
+    private function _deployed($env)
     {
         $queueLenght = $this->_config['jobs']['queue.lenght'] ? 
                             $this->_config['jobs']['queue.lenght'] : null;
 
-        if ($env == 'staging')
-            $result =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $queueLenght, 'json');
-        elseif ($env == 'prod')
-            $result = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $queueLenght, 'json');
+        $sessionHelper = $this->_app['helpers.session'];
+        $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
+            'prod' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
+        if ( $sessionHelper->isMyComponentsOn() ){
+            $perm = $sessionHelper->getPermissions();
+            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm, $queueLenght, 'json');
+        }else{
+            $this->_log->addInfo("Components OFF: ");
+            $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght, 'json');
+        }        
+        return $result;
+    }
 
-        return $this->_app->json($result);
+    
+    public function deployed($env)
+    {
+        $deployed = $this->_deployed($env);
+        return $this->_app->json($deployed);
     }
 
    public function queued($env)
+    {
+        $queued = $this->_queued($env);
+        return $this->_app->json($queued);
+    }
+
+   private function _queued($env)
     {
         if ($env == 'staging')
             $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null, 'json');
         elseif ($env == 'prod')
             $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null, 'json');
 
-        return $this->_app->json($queuedJobs);
+        return $queuedJobs;
     }
 
    public function inprogress($env)
+    {
+        $inprogress = $this->_inprogress($env);
+        return $this->_app->json($inprogress);
+    }
+
+   private function _inprogress($env)
     {
         if ($env == 'staging')
             $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null, 'json');
         elseif ($env == 'prod')
             $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null, 'json');
 
-        return $this->_app->json($inProgressJobs);
+        return $inProgressJobs;
     }
 
     public function pause()
@@ -328,18 +363,7 @@ class QueueController
         $app = $this->_app;
         $config = $this->_config;
 
-        try {
-            $sessionHelper = $app['helpers.session'];
-
-            if ( $sessionHelper->isMyComponentsOn() ){
-                $perm = $sessionHelper->getPermissions();
-            }else{
-                $this->_log->addInfo("Components OFF: ");
-            }
-
-        } catch (\Exception $exc) {
-            $this->_app->abort(503, $exc->getMessage());
-        }
+        $sessionHelper = $app['helpers.session'];
 
         return $app['twig']->render('index.html', array(
             'contact' => $config['contact_to'],

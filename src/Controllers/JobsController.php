@@ -131,8 +131,6 @@ class JobsController
             if (isset($permissions) && 
                     $this->canBePushedLive($job, $permissions) && 
                     $job->canGoLive()) {
-                $response = $this->_thirdParty->preDeploy($job);
-                $ticket = isset($response->ticket) ? $response->ticket : false;
                 
                 $email = $helperSession->getUser()->getEmail();
                 if (!empty($email))
@@ -140,6 +138,9 @@ class JobsController
                 else
                     $job->setUser($helperSession->getUser()->getUserName());
 
+                $response = $this->_thirdParty->preDeploy($job);
+                $ticket = isset($response->ticket) ? $response->ticket : false;
+                
                 if ($ticket) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
