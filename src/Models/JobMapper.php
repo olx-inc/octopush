@@ -75,7 +75,7 @@ class JobMapper
         return $result;
     }
 
-    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
+    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null, $type='object')
     {
         $targetStatus = implode("','", $statusArray);
         $targetModules = implode("','", $modulesArray);
@@ -89,7 +89,7 @@ class JobMapper
         $data = $this->_db->fetchAll($sql);
         $result = array();
         foreach ($data as $record) {
-            array_push($result, Job::createFromArray($record));
+            array_push($result, Job::createFromArray($record, $type));
         }
 
         return $result;
