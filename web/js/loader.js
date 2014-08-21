@@ -82,29 +82,14 @@ var prodProcessed = function (selector, jobs){
 
 
 var getJobs = function (){
-    $.get("/staging/queued", function (jobs){
-        queuedJobs("#preprod-queued", jobs);
+    $.get("/all", function (jobs){
+        queuedJobs("#preprod-queued", jobs.preprodQueue);
+        inProgressJobs("#preprod-inprogress", jobs.preprodInprogress);
+        preprodProcessed("#preprod-processed", jobs.preprodDeployed);
+        queuedJobs("#prod-queued", jobs.prodQueue);
+        inProgressJobs("#prod-inprogress", jobs.prodInprogress);
+        prodProcessed("#prod-processed", jobs.prodDeployed);
     });
-
-    $.get("/staging/inprogress", function (jobs){
-        inProgressJobs("#preprod-inprogress", jobs);
-    });
-
-    $.get("/staging/deployed", function (jobs){
-        preprodProcessed("#preprod-processed", jobs);
-    })
-
-    $.get("/prod/queued", function (jobs){
-        queuedJobs("#prod-queued", jobs);
-    });
-
-    $.get("/prod/inprogress", function (jobs){
-        inProgressJobs("#prod-inprogress", jobs);
-    });
-
-    $.get("/prod/deployed", function (jobs){
-        prodProcessed("#prod-processed", jobs);
-    })
 }
 
 

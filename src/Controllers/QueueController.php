@@ -107,12 +107,12 @@ class QueueController
     }
 
     public function all(){
-        $all = array('preprod-queue' => $this->_queued('staging'));
-        $all['preprod-inprogress'] = $this->_inprogress('staging');
-        $all['preprod-deployed'] = $this->_deployed('staging');
-        $all['prod-queue'] = $this->_queued('prod');
-        $all['prod-inprogress'] = $this->_inprogress('prod');
-        $all['prod-deployed'] = $this->_deployed('prod');
+        $all = array('preprodQueue' => $this->_queued('staging'));
+        $all['preprodInprogress'] = $this->_inprogress('staging');
+        $all['preprodDeployed'] = $this->_deployed('staging');
+        $all['prodQueue'] = $this->_queued('prod');
+        $all['prodInprogress'] = $this->_inprogress('prod');
+        $all['prodDeployed'] = $this->_deployed('prod');
 
         return $this->_app->json($all);
     }
@@ -127,7 +127,7 @@ class QueueController
             'prod' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
         if ( $sessionHelper->isMyComponentsOn() ){
             $perm = $sessionHelper->getPermissions();
-            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm, $queueLenght, 'json');
+            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm["repositories"], $queueLenght, 'json');
         }else{
             $this->_log->addInfo("Components OFF: ");
             $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght, 'json');
