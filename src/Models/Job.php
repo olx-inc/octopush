@@ -215,7 +215,7 @@ class Job
         return $job;
     }
 
-    public static function createFromArray($data, $type='object', $jenkins=null)
+    public static function createFromArray($data)
     {
         $job = new Job();
         $job->_id = (int) $data['job_id'];
@@ -236,15 +236,14 @@ class Job
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
         $job->_rollbackedFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
-        if ($jenkins!=null){
-            $job->_buildJobUrl = $jenkins->getRequestorJobConsoleUrl($job);
-            $job->_deployJobUrl = $jenkins->getBuildUrl($job);
-            $job->_deployLiveJobUrl = $jenkins->getLiveJobConsoleUrl($job);
-        }
-        if ($type != 'object')
-            $job = get_object_vars($job);
 
         return $job;
     }
+
+    public function serialize()
+    {
+        return get_object_vars($this);
+
+    }    
 
 }
