@@ -127,11 +127,21 @@ class QueueController
             'prod' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
         if ( $sessionHelper->isMyComponentsOn() ){
             $perm = $sessionHelper->getPermissions();
-            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm["repositories"], $queueLenght, 'json');
+            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm["repositories"], $queueLenght);
         }else{
             $this->_log->addInfo("Components OFF: ");
-            $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght, 'json');
+            $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght);
         }        
+        $result = $this->fillResults($result, 'json', $this->_jenkins);
+        return $result;
+    }
+
+    private function fillResults($data, $type, $jenkins){
+        $result = array();
+        foreach ($data as $record) {
+            array_push($result, Job::createFromArray($record, $type, $jenkins));
+        }
+
         return $result;
     }
 
@@ -151,11 +161,12 @@ class QueueController
    private function _queued($env)
     {
         if ($env == 'staging')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null, 'json');
+            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null);
         elseif ($env == 'prod')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null, 'json');
+            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null);
 
-        return $queuedJobs;
+        $result = $this->fillResults($queuedJobs, 'json', $this->_jenkins);
+        return $result;
     }
 
    public function inprogress($env)
@@ -167,11 +178,12 @@ class QueueController
    private function _inprogress($env)
     {
         if ($env == 'staging')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null, 'json');
+            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null);
         elseif ($env == 'prod')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null, 'json');
+            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null);
 
-        return $inProgressJobs;
+        $result = $this->fillResults($inProgressJobs, 'json', $this->_jenkins);
+        return $result;
     }
 
     public function pause()
