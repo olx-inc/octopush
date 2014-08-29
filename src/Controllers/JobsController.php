@@ -407,8 +407,8 @@ class JobsController
             $job_array = $job->serialize();
             
             $job_array['_buildJobUrl'] = $jenkins->getRequestorJobConsoleUrl($job);
-            $job_array['_deployJobUrl'] = $jenkins->getBuildUrl($job);
-            $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobConsoleUrl($job);
+            $job_array['_deployJobUrl'] = $jenkins->getPreProdJobDeployUrl($job);
+            $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobDeployUrl($job);
 
             $job_array['_canGoLive'] = ($job->canGoLive() && $this->canBePushedLive($job));
 

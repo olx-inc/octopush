@@ -20,9 +20,6 @@ class Job
     private $_user;
     private $_ticket;
     private $_rollbackedFrom;
-    private $_buildJobUrl;
-    private $_deployJobUrl;
-    private $_deployLiveJobUrl;    
 
     public function setId($id)
     {
