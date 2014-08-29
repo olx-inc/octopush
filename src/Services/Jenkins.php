@@ -136,14 +136,14 @@ class Jenkins
     {
         $url = $job->getRequestorJenkins();
 
-        return empty($url) ? "Not available" : $url . "/console";
+        return empty($url) ? "" : $url . "/console";
     }
 
     public function getTestJobConsoleUrl($job)
     {
         $url = $job->getTestJobUrl();
 
-        return empty($url) ? "Not available" : $url . "/console";
+        return empty($url) ? "" : $url . "/console";
     }
 
     public function getLiveJobDeployUrl($job)

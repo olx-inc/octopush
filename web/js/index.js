@@ -24,12 +24,12 @@ function goLive(element) {
     }
 }
 
-function rollback(element) {
+function redeploy(element) {
     var $el = $(element),
         moduleName = $el.data('jobTargetModule'),
         moduleVersion = $el.data('jobTargetVersion'),
         jobId = $el.data('jobId'),
-        message = 'Are you sure you want to rollback [' + moduleName + '] version ' + moduleVersion + '?',
+        message = 'Are you sure you want to re deploy [' + moduleName + '] version ' + moduleVersion + '?',
         answer = confirm(message);
 
     if (answer == true) {
@@ -44,7 +44,7 @@ function rollback(element) {
                     getJobs();
                 })
                 .fail(function() {
-                    alert("An error occurred, if you don't see the job rolling back, please try again");
+                    alert("An error occurred, if you don't see the job re deployed, please try again");
                 });
     }
 }
@@ -69,13 +69,12 @@ function myComponents() {
 }
 
 $(function() {
-    $('[data-toggle="tooltip"]').tooltip();
     $(".container").on('click', "[data-job-go-live]", function (e) {
         goLive(this);
         return false;
     });
-    $(".container").on('click', "[data-job-rollback]", function (e) {
-        rollback(this);
+    $(".container").on('click', "[data-job-redeploy]", function (e) {
+        redeploy(this);
         return false;
     });
 

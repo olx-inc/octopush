@@ -47,6 +47,10 @@
 .status-column {
   width: 120px;
 }
+.user-column {
+  text-align: center;
+  width: 70px
+}
 .ticket-column {
   text-align: center;
   width: 82px
@@ -115,14 +119,12 @@
 
 .btn-on {
   background-color: #428bca;
-  /*box-shadow: 1px 3px 6px 2px #507aa0 inset;*/
   box-shadow: 1px 1px 1px 1px #426d94 inset;
   color: #d9edf7;
 }
 
 .btn-off {
   background-color: #d9edf7;
-  /*box-shadow: 2px 2px 2px 1px #93c4ce;*/
   box-shadow: 1px 1px 1px 1px #93c4ce;
   color: #3a87ad
 }
@@ -134,7 +136,6 @@
 }
 
 .btn-on:active {
-  /*box-shadow: 1px 3px 8px 3px #53708a inset;*/
   box-shadow: 1px 2px 3px 2px #426d94 inset
 }
 
@@ -145,13 +146,22 @@
 }
 
 .btn-off:active {
-  /*box-shadow: 2px 2px 2px 0 #93c4ce;*/
   box-shadow: 1px 1px 1px 0 #93c4ce;
 }
 
+.job .user p {
+  color: #428bca;
+  cursor: pointer;
+  display: none
+}
+.job .user p:hover {
+  color: #2a6496
+}
 .job .actions a,
 .job .ticket a {
-  display: none
+  display: none;
+  outline: 0;
+  text-decoration: none
 }
 .job .actions a:hover,
 .job .ticket a:hover {

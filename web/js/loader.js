@@ -1,24 +1,26 @@
 
-var isPaused = function (status){
-    if( status == "ON" ){
-        $("#paused").hide();
-    } else {
-        $("#paused").show();
-    }
+var isPaused = function (){
+    $.get("/status", function (status){
+        if( status == "ON" ){
+            $("#paused").hide();
+        } else {
+            $("#paused").show();
+        }
+    });
 };
 
 
 /* -----------
    -- Jobs ---
    ----------- */
-var queuedJobs = function (selector, jobs){
+var queuedJobs = function (selector, jobs, tml){
     var empty = $(selector + " .queued-empty"),
         table = $(selector + " .queued");
 
     table.children('tbody').html('');
     if( !$.isEmptyObject(jobs) ){
         $.each(jobs, function(){
-            table.children('tbody').append(tml.queued(this));
+            table.children('tbody').append(tml(this));
         });
 
         empty.hide();
@@ -28,14 +30,14 @@ var queuedJobs = function (selector, jobs){
         table.hide();
     }
 };
-var inProgressJobs = function (selector, jobs){
+var inProgressJobs = function (selector, jobs, tml){
     var container = $(selector),
         table = $(selector + " .inprogress");
 
     table.children('tbody').html('');
     if( !$.isEmptyObject(jobs) ){
         $.each(jobs, function(){
-            table.children('tbody').append(tml.inProgress(this));
+            table.children('tbody').append(tml(this));
         });
 
         container.show();
@@ -45,31 +47,14 @@ var inProgressJobs = function (selector, jobs){
         table.hide();
     }
 };
-var preprodProcessed = function (selector, jobs){
+var deployedJobs = function (selector, jobs, tml){
     var empty = $(selector + " .processed-empty"),
         table = $(selector + " .processed");
 
     table.children('tbody').html('');
     if( !$.isEmptyObject(jobs) ){
         $.each(jobs, function(){
-            table.children('tbody').append(tml.preprodProcessed(this));
-        });
-
-        empty.hide();
-        table.show();
-    } else {
-        empty.show();
-        table.hide();
-    }
-};
-var prodProcessed = function (selector, jobs){
-    var empty = $(selector + " .processed-empty"),
-        table = $(selector + " .processed");
-
-    table.children('tbody').html('');
-    if( !$.isEmptyObject(jobs) ){
-        $.each(jobs, function(){
-            table.children('tbody').append(tml.prodProcessed(this));
+            table.children('tbody').append(tml(this));
         });
 
         empty.hide();
@@ -83,12 +68,12 @@ var prodProcessed = function (selector, jobs){
 
 var getJobs = function (){
     $.get("/all", function (jobs){
-        queuedJobs("#preprod-queued", jobs.preprodQueue);
-        inProgressJobs("#preprod-inprogress", jobs.preprodInprogress);
-        preprodProcessed("#preprod-processed", jobs.preprodDeployed);
-        queuedJobs("#prod-queued", jobs.prodQueue);
-        inProgressJobs("#prod-inprogress", jobs.prodInprogress);
-        prodProcessed("#prod-processed", jobs.prodDeployed);
+        queuedJobs("#preprod-queued", jobs.preprodQueue, tml.preprodQueue);
+        inProgressJobs("#preprod-inprogress", jobs.preprodInprogress, tml.preprodInProgress);
+        deployedJobs("#preprod-processed", jobs.preprodDeployed, tml.preprodDeployed);
+        queuedJobs("#prod-queued", jobs.prodQueue, tml.prodQueue);
+        inProgressJobs("#prod-inprogress", jobs.prodInprogress, tml.prodInProgress);
+        deployedJobs("#prod-processed", jobs.prodDeployed, tml.prodDeployed);
     });
 }
 
@@ -97,15 +82,12 @@ $(document).ready(function (){
     $('.preprod-head').load('../templates/preprodHead.html');
     $('.prod-head').load('../templates/prodHead.html');
     $('#resources').load('../templates/job.html');
-    
-    $.get("/status", function (status){
-        isPaused(status);
-    });
 
+    isPaused();
     getJobs();
 
-    /*setInterval(function(){
-        isPaused(status);
+    setInterval(function(){
+        isPaused();
         getJobs();
-    }, 15 * 1000);*/
+    }, 15 * 1000);
 });
