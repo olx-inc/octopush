@@ -101,15 +101,26 @@ class JobsController
     {
         try {
             $job = $this->_jobMapper->get($jobId);
-            $job->moveStatusTo(JobStatus::DEPLOY_FAILED);
-            $this->_jobMapper->save($job);
 
-            $result = array(
-                'job_status' => $job->getStatus(),
-                'job_id' => $jobId
-            );
+            $helperSession = $this->_app['helpers.session'];
+            $permissions = $helperSession->getPermissions();
+            
+            if (isset($permissions) && 
+                    $this->canBePushedLive($job, $permissions)) {
 
-            return $this->_app->json($result);
+                $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
+                                JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
+
+                $job->moveStatusTo($status[$job->getStatus()]);
+                $this->_jobMapper->save($job);
+
+                $result = array(
+                    'job_status' => $job->getStatus(),
+                    'job_id' => $jobId
+                );
+
+                return $this->_app->json($result);
+            }
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
