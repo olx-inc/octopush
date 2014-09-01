@@ -47,6 +47,10 @@
 .status-column {
   width: 120px;
 }
+.user-column {
+  text-align: center;
+  width: 70px
+}
 .ticket-column {
   text-align: center;
   width: 82px
@@ -103,35 +107,61 @@
   float:right;
 }
 
-.btn-align {
-  background-color: #428bca;
-  border-color: #357ebd;
+.userBox{
+  text-align: center
+}
+
+.btn {
   float: right;
   margin-top: 10px;
-  color: #d9edf7; 
+  outline: 0 
 }
 
 .btn-on {
-  background-color: #d9edf7;
-  border-color: #bce8f1;
-  color: #3a87ad
+  background-color: #428bca;
+  box-shadow: 1px 1px 1px 1px #426d94 inset;
+  color: #d9edf7;
 }
 
-.btn-off:hover,
-.btn-off:focus {
-  border-color: #005298;
-  color: #fff
+.btn-off {
+  background-color: #d9edf7;
+  box-shadow: 1px 1px 1px 1px #93c4ce;
+  color: #3a87ad
 }
 
 .btn-on:hover,
 .btn-on:focus {
-  border-color: #3a87ad;
-  color: #3a87ad
+  color: #d9edf7;
+  outline: 0 
 }
 
+.btn-on:active {
+  box-shadow: 1px 2px 3px 2px #426d94 inset
+}
+
+.btn-off:hover,
+.btn-off:focus {
+  color: #3a87ad;
+  outline: 0 
+}
+
+.btn-off:active {
+  box-shadow: 1px 1px 1px 0 #93c4ce;
+}
+
+.job .user p {
+  color: #428bca;
+  cursor: pointer;
+  display: none
+}
+.job .user p:hover {
+  color: #2a6496
+}
 .job .actions a,
 .job .ticket a {
-  display: none
+  display: none;
+  outline: 0;
+  text-decoration: none
 }
 .job .actions a:hover,
 .job .ticket a:hover {

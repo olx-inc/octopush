@@ -26,7 +26,7 @@
                             {% endif %}
                             | <a href="{{ logoutUrl }}">Logout</a>
                         </div>
-                        <button type="button" class="btn-align btn {{ my_components }}" id="my-components">
+                        <button type="button" class="btn {{ my_components ? my_components : 'btn-off' }}" id="my-components">
                           <span class="glyphicon glyphicon-filter"></span> My Components
                         </button>
                     </div>                   

@@ -192,6 +192,12 @@ class Job
         return ($this->getStatus() == JobStatus::TESTS_PASSED);
     }
 
+
+    public function isARollback()
+    {
+        return (!empty($this->_rollbackedFrom));
+    }
+
     public function wentLive()
     {
         return ($this->_statusId > 6);
@@ -212,7 +218,7 @@ class Job
         return $job;
     }
 
-    public static function createFromArray($data, $type='object')
+    public static function createFromArray($data)
     {
         $job = new Job();
         $job->_id = (int) $data['job_id'];
@@ -232,12 +238,15 @@ class Job
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
-        $job->_rollbackFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
-
-        if ($type != 'object')
-            $job = get_object_vars($job);
+        $job->_rollbackedFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
 
         return $job;
     }
+
+    public function serialize()
+    {
+        return get_object_vars($this);
+
+    }    
 
 }
