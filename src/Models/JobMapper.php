@@ -78,6 +78,8 @@ class JobMapper
         }
 
         $data = $this->_db->fetchAll($sql);
+
+        return $data;
     }
 
     public function findAllExceptStatus($statusArray, $limit=null)

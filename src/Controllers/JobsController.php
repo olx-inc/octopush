@@ -407,6 +407,7 @@ class JobsController
             $this->_log->addInfo("Components OFF: ");
             $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght);
         }        
+
         $result = $this->fillResults($result, 'json', $this->_jenkins);
         return $result;
     }
