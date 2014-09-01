@@ -64,7 +64,7 @@ $app['services.ThirdParty'] = $app->share(
 
 $app['jobs.controller'] = $app->share(
         function () use ($app) {
-    return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['monolog']);
+    return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['services.jenkins'], $app['monolog']);
 }
 );
 

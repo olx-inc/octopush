@@ -31,6 +31,7 @@ class ThirdParty {
             'repo' => $job->getTargetModule(),
             'version' => $job->getTargetVersion(),
             'ticket' => urlencode($job->getTicket()),
+            'user' => $job->getUser(),
             'action' => $action
         );
 

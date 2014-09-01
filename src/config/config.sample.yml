@@ -17,6 +17,16 @@ thirdparty:
     pre-deploy: 'url_to_pre-deploy_service'
     member-permissions: 'url_to_repos-teams_service'
 modules:
+  frontend:
+    frontend-brasil: 1
+    web-listing: 2
+  crm:
+    crm-india: 1
+    event-handler: 2
+    event-handler-daemon: 2
+  common:
+    sal: 1
+    abl: 1
     ok-project: 2
     fail-project: 2
 jobs:

@@ -10,16 +10,18 @@ $loader->add('Helpers', __DIR__ . '/../src/');
 require_once __DIR__ . '/../src/bootstrap.php';
 
 $app->get('/run', "queue.controller:processJob");
-$app->get('/', "queue.controller:showJobs");
+$app->get('/', "queue.controller:index");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");
 $app->get('/status', "queue.controller:status");
-$app->get('/deploying', "queue.controller:deploying");
-$app->get('/{env}/deployed', "queue.controller:deployed");
-$app->get('/{env}/queued', "queue.controller:deployed");
-$app->get('/{env}/inprogress', "queue.controller:deployed");
-$app->get('/mycomponents/{state}', "queue.controller:my_components");
+
+$app->get('/deploying', "jobs.controller:deploying");//DEPRECATED
+$app->get('/{env}/deployed', "jobs.controller:deployed");
+$app->get('/{env}/queued', "jobs.controller:queued");
+$app->get('/{env}/inprogress', "jobs.controller:inprogress");
+$app->get('/all', "jobs.controller:all");
+$app->get('/mycomponents/{state}', "jobs.controller:my_components");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 $app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");
