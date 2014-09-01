@@ -75,69 +75,6 @@ class QueueController
         return $this->_app->json($result);
     }
 
-    public function deploying()
-    {
-        $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
-        if (count($jobsGoingLive) == 0) {
-            $result = array(
-                'status' => "Idle",
-                'module' => "-",
-                'version' => "-",
-            );
-            return $this->_app->json($result);
-        }        
-        foreach ($jobsGoingLive as $job) {
-            $result = array(
-                'status' => "Deploying",
-                'module' => $job->getTargetModule(),
-                'version' => $job->getTargetVersion(),                
-            );
-            return $this->_app->json($result);
-            
-        }
-    }
-
-    public function my_components($state)
-    {
-        $sessionHelper = $app['helpers.session'];
-
-        $sessionHelper->setMyComponents($state);
-
-        return $sessionHelper->isMyComponentsOn();
-    }
-    
-    public function deployed($env)
-    {
-        $queueLenght = $this->_config['jobs']['queue.lenght'] ? 
-                            $this->_config['jobs']['queue.lenght'] : null;
-
-        if ($env == 'staging')
-            $result =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $queueLenght, 'json');
-        elseif ($env == 'prod')
-            $result = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $queueLenght, 'json');
-
-        return $this->_app->json($result);
-    }
-
-   public function queued($env)
-    {
-        if ($env == 'staging')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null, 'json');
-        elseif ($env == 'prod')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null, 'json');
-
-        return $this->_app->json($queuedJobs);
-    }
-
-   public function inprogress($env)
-    {
-        if ($env == 'staging')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null, 'json');
-        elseif ($env == 'prod')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null, 'json');
-
-        return $this->_app->json($inProgressJobs);
-    }
 
     public function pause()
     {
@@ -323,65 +260,18 @@ class QueueController
     }
 
     /**********************   UI HANDLER METHODS ***********************/
-    public function showJobs()
+    public function index()
     {
         $app = $this->_app;
         $config = $this->_config;
 
-        $queueLenght = $config['jobs']['queue.lenght'] ?
-                $config['jobs']['queue.lenght'] : null;
+        $sessionHelper = $app['helpers.session'];
 
-        $processedLenght = $config['jobs']['processed.lenght'] ?
-                $config['jobs']['processed.lenght'] : null;
-
-        try {
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED));
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
-            $sessionHelper = $app['helpers.session'];
-            if ( $sessionHelper->isMyComponentsOn() ){
-                $perm = $sessionHelper->getPermissions();
-
-                $processedJobs =  $this->_jobMapper->findAllByMultipleStatusAndModules(
-                    array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
-                    $perm["repositories"], $processedLenght);
-                    
-                $liveProcessed = $this->_jobMapper->findAllByMultipleStatusAndModules(
-                    array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), 
-                    $perm["repositories"], $processedLenght);
-
-            }else{
-                $this->_log->addInfo("Components OFF: ");
-
-                $processedJobs =  $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), $processedLenght);
-
-                $liveProcessed = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED), $processedLenght);
-            }
-
-            $liveQueue = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE));
-            $liveInProgress = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE));
-        } catch (\Exception $exc) {
-            $this->_app->abort(503, $exc->getMessage());
-        }
-
-        return $app['twig']->render('index.twig', array(
-            'isPaused' => $this->_isPaused(),
+        return $app['twig']->render('index.html', array(
             'contact' => $config['contact_to'],
-            
-            'queued_jobs' => $queuedJobs,
-            'in_progress_jobs' => $inProgressJobs,
-            'processed_jobs' => $processedJobs,
-
-            'liveQueue' => $liveQueue,
-            'liveInProgress' => $liveInProgress,
-            'liveProcessed' => $liveProcessed,
             'my_components' => $sessionHelper->getMyComponentsValue(),
-
             'version' => Version::getShort(),
-            
             'userdata' => $app['helpers.session']->getUserData(),
-
-            'jenkins' => $this->_jenkins,
-            'jobsController' => $this->_jobsController,
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
                 '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
         ));

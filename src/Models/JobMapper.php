@@ -10,11 +10,11 @@ class JobMapper
     private $_db;
 
     const GET_JOB_STATEMENT = "SELECT * FROM jobs WHERE job_id = ?";
-    const FIND_ALL_BY_STATUS_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY queue_date";
-    const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY queue_date limit ?";
-    const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC";
-    const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY queue_date DESC limit :limit";
-    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const FIND_ALL_BY_STATUS_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY updated_at";
+    const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY updated_at limit ?";
+    const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC";
+    const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC limit :limit";
+    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_id = ? WHERE job_id = ?";
 
     public function __construct(Connection $db)
@@ -51,28 +51,19 @@ class JobMapper
         return $result;
     }
 
-    public function findAllByMultipleStatus($statusArray, $limit=null, $type='object')
+    public function findAllByMultipleStatus($statusArray, $limit=null)
     {
         $targetStatus = implode("','", $statusArray);
 
-        $orderBy = 'updated_at';
-        if (in_array(JobStatus::QUEUED, $statusArray)) {
-            $orderBy = 'queue_date';
-        }
-
-        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY " .$orderBy. " DESC";
+        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY updated_at DESC";
 
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;
         }
 
         $data = $this->_db->fetchAll($sql);
-        $result = array();
-        foreach ($data as $record) {
-            array_push($result, Job::createFromArray($record, $type));
-        }
 
-        return $result;
+        return $data;
     }
 
     public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
@@ -87,12 +78,7 @@ class JobMapper
         }
 
         $data = $this->_db->fetchAll($sql);
-        $result = array();
-        foreach ($data as $record) {
-            array_push($result, Job::createFromArray($record));
-        }
-
-        return $result;
+        return $data;
     }
 
     public function findAllExceptStatus($statusArray, $limit=null)
@@ -144,6 +130,7 @@ class JobMapper
     private function _executeInsert($job)
     {
         $sql = JobMapper::INSERT_STATEMENT;
+        $insertedDate = date('Y-m-d H:i:s');
         $this->_db->executeUpdate(
             $sql,
             array(
@@ -156,6 +143,7 @@ class JobMapper
                 $job->getDeploymentJobId(),
                 $job->getUser(),
                 $job->getTicket(),
+                $insertedDate,
             )
         );
         $job->setId($this->_db->lastInsertId());

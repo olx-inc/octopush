@@ -127,9 +127,9 @@ class Jenkins
         return $response;
     }
 
-    public function getBuildUrl($job)
+    public function getPreProdJobDeployUrl($job)
     {
-        $url = $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId();
+        $url = $job->getDeploymentJobId() > 0 ? $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId(): "";
 
         return $url;
     }
@@ -138,19 +138,19 @@ class Jenkins
     {
         $url = $job->getRequestorJenkins();
 
-        return empty($url) ? "Not available" : $url . "/console";
+        return empty($url) ? "" : $url . "/console";
     }
 
     public function getTestJobConsoleUrl($job)
     {
         $url = $job->getTestJobUrl();
 
-        return empty($url) ? "Not available" : $url . "/console";
+        return empty($url) ? "" : $url . "/console";
     }
 
-    public function getLiveJobConsoleUrl($job)
+    public function getLiveJobDeployUrl($job)
     {
-        $url = $this->_getLiveUrlForJob($job) . "/" . $job->getLiveJobId();
+        $url = $job->getLiveJobId() > 0 ? $this->_getLiveUrlForJob($job) . "/" . $job->getLiveJobId(): "";
 
         return $url;
     }
