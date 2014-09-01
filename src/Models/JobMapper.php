@@ -66,7 +66,7 @@ class JobMapper
         return $data;
     }
 
-    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
+    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null, $type='object')
     {
         $targetStatus = implode("','", $statusArray);
         $targetModules = implode("','", $modulesArray);
@@ -78,7 +78,6 @@ class JobMapper
         }
 
         $data = $this->_db->fetchAll($sql);
-        return $data;
     }
 
     public function findAllExceptStatus($statusArray, $limit=null)

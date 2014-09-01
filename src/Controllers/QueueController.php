@@ -75,7 +75,6 @@ class QueueController
         return $this->_app->json($result);
     }
 
-
     public function pause()
     {
         $success = true;
