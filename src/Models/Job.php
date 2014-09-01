@@ -192,15 +192,14 @@ class Job
         return ($this->getStatus() == JobStatus::TESTS_PASSED);
     }
 
+    public function wentLive()
+    {
+        return ($this->_statusId > 6);
+    }
 
     public function isARollback()
     {
         return (!empty($this->_rollbackedFrom));
-    }
-
-    public function wentLive()
-    {
-        return ($this->_statusId > 6);
     }
 
     public static function createWith($module, $version, $env, $jenkins)
@@ -238,7 +237,7 @@ class Job
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
-        $job->_rollbackedFrom = isset($data['rollback_from']) ? $data['rollback_from'] : "";
+        $job->_rollbackedFrom = isset($data['rollback_id']) ? $data['rollback_id'] : "";
 
         return $job;
     }

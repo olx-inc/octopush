@@ -14,7 +14,7 @@ $app->get('/', "queue.controller:index");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");
-$app->get('/status', "queue.controller:status")
+$app->get('/status', "queue.controller:status");
 
 $app->get('/deploying', "jobs.controller:deploying");//DEPRECATED
 $app->get('/{env}/deployed', "jobs.controller:deployed");

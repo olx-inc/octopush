@@ -41,7 +41,7 @@ class Jenkins
         $url .= '/buildWithParameters';
         $data = array('tag' => $job->getTargetVersion());
         if ($job->isARollback())
-            $data['wait'] = "0";            
+            $data['wait'] = "0";
         $toLive = true;
         return $this->_doPush($job, $url, $data, $toLive);
     }
@@ -211,7 +211,7 @@ class Jenkins
             return true;
         } catch (\Exception $ex) {
             $this->_log->addError("Error while pushing Job to Jenkins RM:" . $ex->getMessage());
-
+            error_log($ex->getMessage());
             return false;
         }
 

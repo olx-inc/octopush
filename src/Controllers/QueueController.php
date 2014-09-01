@@ -228,7 +228,7 @@ class QueueController
         $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
         if (count($jobsGoingLive) > 0) {
             $this->_log->addInfo("There are jobs going LIVE, exit!"); 
-            exit;
+            return;
         }        
         $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED_FOR_LIVE, 1);
 
