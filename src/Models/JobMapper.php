@@ -51,27 +51,17 @@ class JobMapper
         return $result;
     }
 
-    public function findAllByMultipleStatus($statusArray, $limit=null)
+
+    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
     {
         $targetStatus = implode("','", $statusArray);
-
-        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') ORDER BY updated_at DESC";
-
-        if (!is_null($limit)) {
-            $sql .= " limit " . $limit;
+        $modulesSQL = "";
+        if (!empty($modulesArray)){
+            $targetModules = implode("','", $modulesArray);
+            $modulesSQL = " AND module in ('" . $targetModules ."')";
         }
-
-        $data = $this->_db->fetchAll($sql);
-
-        return $data;
-    }
-
-    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null, $type='object')
-    {
-        $targetStatus = implode("','", $statusArray);
-        $targetModules = implode("','", $modulesArray);
-        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') AND "
-                    . "module in ('" . $targetModules ."') ORDER BY queue_date DESC";
+        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') " 
+                . $modulesSQL . " ORDER BY queue_date DESC";
 
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;
