@@ -426,6 +426,8 @@ class JobsController
 
             $job_array['_canRollback'] = ($job->wentLive() && $this->canBePushedLive($job));
 
+            $job_array['_canCancel'] = ($this->canBePushedLive($job));
+
             array_push($result, $job_array);
         }
 
