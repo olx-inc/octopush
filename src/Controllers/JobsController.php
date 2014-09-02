@@ -382,37 +382,31 @@ class JobsController
     }
 
     public function all(){
+        $queueLenght = $this->getPageSize();    
+        $repos = $this->getRepoFilter();
+
         $all = array('preprodQueue' => $this->_queued('staging'));
         $all['preprodInprogress'] = $this->_inprogress('staging');
-        $all['preprodDeployed'] = $this->_deployed('staging');
+        $all['preprodDeployed'] = $this->_deployed('staging', $repos, $queueLenght);
         $all['prodQueue'] = $this->_queued('prod');
         $all['prodInprogress'] = $this->_inprogress('prod');
-        $all['prodDeployed'] = $this->_deployed('prod');
+        $all['prodDeployed'] = $this->_deployed('prod', $repos, $queueLenght);
 
         return $this->_app->json($all);
     }
 
-    private function _deployed($env)
+    private function _deployed($env, $repos, $queueLenght = 10)
     {
-        $queueLenght = $this->_config['jobs']['queue.lenght'] ? 
-                            $this->_config['jobs']['queue.lenght'] : null;
-
-        $sessionHelper = $this->_app['helpers.session'];
         $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
             'prod' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
-        if ( $sessionHelper->isMyComponentsOn() ){
-            $perm = $sessionHelper->getPermissions();
-            $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $perm["repositories"], $queueLenght);
-        }else{
-            $this->_log->addInfo("Components OFF: ");
-            $result =  $this->_jobMapper->findAllByMultipleStatus($statuses[$env], $queueLenght);
-        }        
 
-        $result = $this->fillResults($result, 'json', $this->_jenkins);
+        $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $repos, $queueLenght);
+
+        $result = $this->fillResults($result, $this->_jenkins);
         return $result;
     }
 
-    private function fillResults($data, $type, $jenkins){
+    private function fillResults($data, $jenkins){
         $result = array();
         foreach ($data as $record) {
             $job = Job::createFromArray($record);
@@ -426,6 +420,8 @@ class JobsController
 
             $job_array['_canRollback'] = ($job->wentLive() && $this->canBePushedLive($job));
 
+            $job_array['_canCancel'] = ($this->canBePushedLive($job));
+
             array_push($result, $job_array);
         }
 
@@ -435,7 +431,10 @@ class JobsController
     
     public function deployed($env)
     {
-        $deployed = $this->_deployed($env);
+        $queueLenght = $this->getPageSize();    
+        $repos = $this->getRepoFilter();
+
+        $deployed = $this->_deployed($env, $repos, $queueLenght);
         return $this->_app->json($deployed);
     }
 
@@ -447,12 +446,12 @@ class JobsController
 
    private function _queued($env)
     {
-        if ($env == 'staging')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED), null);
-        elseif ($env == 'prod')
-            $queuedJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::QUEUED_FOR_LIVE), null);
+        $statuses = array('staging' => array(JobStatus::QUEUED), 
+            'prod' => array(JobStatus::QUEUED_FOR_LIVE));
 
-        $result = $this->fillResults($queuedJobs, 'json', $this->_jenkins);
+        $queuedJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
+
+        $result = $this->fillResults($queuedJobs, $this->_jenkins);
         return $result;
     }
 
@@ -464,14 +463,40 @@ class JobsController
 
    private function _inprogress($env)
     {
-        if ($env == 'staging')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), null);
-        elseif ($env == 'prod')
-            $inProgressJobs = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::GOING_LIVE), null);
+        $statuses = array('staging' => array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), 
+            'prod' => array(JobStatus::GOING_LIVE));
 
-        $result = $this->fillResults($inProgressJobs, 'json', $this->_jenkins);
+        $inProgressJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
+
+        $result = $this->fillResults($inProgressJobs, $this->_jenkins);
         return $result;
     }
 
 
+    private function getPageSize()
+    {
+        if (isset($_REQUEST['pageSize']))
+            $queueLenght = $_REQUEST['pageSize'];    
+        else
+            $queueLenght = $this->_config['jobs']['queue.lenght'] ? 
+                $this->_config['jobs']['queue.lenght'] : null;
+   
+        return $queueLenght;
+    }
+
+    private function getRepoFilter()
+    {
+        $sessionHelper = $this->_app['helpers.session'];
+        if (isset($_REQUEST['repo']))
+            $repo = array($_REQUEST['repo']);    
+        else
+            if ( $sessionHelper->isMyComponentsOn() ){
+                $perm = $sessionHelper->getPermissions();
+                $repo = $perm["repositories"];
+            }
+            else
+                $repo = array();
+
+        return $repo;
+    }
 }

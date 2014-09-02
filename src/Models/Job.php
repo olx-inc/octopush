@@ -12,7 +12,6 @@ class Job
     private $_queued_at;
     private $_updated_at;
     private $_statusId;
-    private $_statusArray;
     private $_status;
     private $_deploymentJobId;
     private $_testJobUrl;
@@ -78,22 +77,22 @@ class Job
 
     public function getStatus()
     {
-        return $this->_statusArray[$this->_statusId];
+        return JobStatus::getJobStatus($this->_statusId);
     }
 
     public function setStatusId($statusId)
     {
         $this->_statusId = $statusId;
-        $this->_status = $_statusArray[$statusId];
+        $this->_status = JobStatus::getJobStatus($statusId);
     }
 
     public function moveStatusTo($newStatus)
     {
-        $newStatusId = array_search($newStatus, $this->_statusArray);
+        $newStatusId = JobStatus::getStatusId($newStatus);
         if ($newStatusId < $this->_statusId) {
             throw new InvalidOperationException();
         }
-        $this->_statusId = array_search($newStatus, $this->_statusArray);
+        $this->_statusId = $newStatusId;
     }
 
     public function setDeploymentJobId($id)
@@ -146,28 +145,12 @@ class Job
         $this->_rollbackedFrom = $id;
     }
 
-    private function _initStatusArray()
-    {
-        $this->_statusArray = array(
-            0 => JobStatus::QUEUED,
-            1 => JobStatus::DEPLOYING,
-            2 => JobStatus::DEPLOY_FAILED,
-            3 => JobStatus::PENDING_TESTS,
-            4 => JobStatus::TESTS_PASSED,
-            5 => JobStatus::TESTS_FAILED,
-            6 => JobStatus::QUEUED_FOR_LIVE,
-            7 => JobStatus::GOING_LIVE,
-            8 => JobStatus::GO_LIVE_DONE,
-            9 => JobStatus::GO_LIVE_FAILED
-        );
-    }
 
     public function __construct()
     {
         $this->_id = 0;
         $this->_statusId = 0;
         $this->_status = JobStatus::QUEUED;
-        $this->_initStatusArray();
         $this->_deploymentJobId = 0;
     }
 
@@ -221,7 +204,7 @@ class Job
     {
         $job = new Job();
         $job->_id = (int) $data['job_id'];
-        $job->_statusId = array_search($data['status'], $job->_statusArray);
+        $job->_statusId = JobStatus::getStatusId($data['status']);
         $job->_status = $data['status'];
         $job->_targetModule = $data['module'];
         $job->_targetVersion = $data['version'];
