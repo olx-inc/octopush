@@ -49,6 +49,31 @@ function redeploy(element) {
     }
 }
 
+function remove(element) {
+    var $el = $(element),
+        moduleName = $el.data('jobTargetModule'),
+        moduleVersion = $el.data('jobTargetVersion'),
+        jobId = $el.data('jobId'),
+        message = 'Are you sure you want to remove [' + moduleName + '] version ' + moduleVersion + '?',
+        answer = confirm(message);
+
+    if (answer == true) {
+        var url = '/jobs/' + jobId + '/cancel',
+            $icon = $el.find('i');
+        
+        $icon.removeAttr('class');
+        $icon.addClass('fa').addClass('fa-spinner').addClass('fa-spin');
+        
+        $.get(url)
+                .done(function() {
+                    getJobs();
+                })
+                .fail(function() {
+                    alert("An error occurred, if you don't see the job removed, please try again");
+                });
+    }
+}
+
 function myComponents() {
     var url,
         btnClass = $('#my-components').attr('class');
@@ -75,6 +100,10 @@ $(function() {
     });
     $(".container").on('click', "[data-job-redeploy]", function (e) {
         redeploy(this);
+        return false;
+    });
+    $(".container").on('click', "[data-remove]", function (e) {
+        remove(this);
         return false;
     });
 

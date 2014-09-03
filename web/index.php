@@ -25,6 +25,7 @@ $app->get('/mycomponents/{state}', "jobs.controller:my_components");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 $app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");
+$app->get('/jobs/{jobId}/cancel', "jobs.controller:cancel");
 
 // deprecated
 $app->get('/jobs/{jobId}/tests/{success}', "jobs.controller:registerTestResult");
