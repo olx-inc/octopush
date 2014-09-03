@@ -105,11 +105,15 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (isset($permissions) && 
-                    $this->canBePushedLive($job, $permissions)) {
 
                 $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
                                 JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
+
+                if (!isset($status[$job->getStatus()]))
+                    throw new \Exception('Unable to cancel a job on status: ' . $job->getStatus());
+
+                if (($job->getStatus() == JobStatus::QUEUED_FOR_LIVE) && (!$this->canBePushedLive($job)))
+                    throw new \Exception('No permissions to cancel: ' . $jobId);
 
                 $job->moveStatusTo($status[$job->getStatus()]);
                 $this->_jobMapper->save($job);
@@ -120,7 +124,6 @@ class JobsController
                 );
 
                 return $this->_app->json($result);
-            }
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -141,8 +144,7 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (isset($permissions) && 
-                    $this->canBePushedLive($job, $permissions) && 
+            if ($this->canBePushedLive($job) && 
                     $job->canGoLive()) {
                 
                 $email = $helperSession->getUser()->getEmail();
@@ -197,8 +199,7 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (! isset($permissions) || 
-                ! $this->canBePushedLive($oldJob, $permissions) || 
+            if (! $this->canBePushedLive($oldJob) || 
                 ! $oldJob->wentLive()) {
                 
                 $result = array(
