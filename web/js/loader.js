@@ -1,3 +1,8 @@
+var getParameters = function (){
+    var parameters = $(location).attr('search');
+
+    return parameters;
+};
 
 var isPaused = function (){
     $.get("/status", function (status){
@@ -67,7 +72,10 @@ var deployedJobs = function (selector, jobs, tml){
 
 
 var getJobs = function (){
-    $.get("/all", function (jobs){
+    var parameters = getParameters(),
+        url = "/all" + parameters;
+
+    $.get(url, function (jobs){
         queuedJobs("#preprod-queued", jobs.preprodQueue, tml.preprodQueue);
         inProgressJobs("#preprod-inprogress", jobs.preprodInprogress, tml.preprodInProgress);
         deployedJobs("#preprod-processed", jobs.preprodDeployed, tml.preprodDeployed);
@@ -83,6 +91,7 @@ $(document).ready(function (){
     $('.prod-head').load('../templates/prodHead.html');
     $('#resources').load('../templates/job.html');
 
+    getParameters();
     isPaused();
     getJobs();
 
