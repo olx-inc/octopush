@@ -176,10 +176,8 @@ class QueueController
         $result = array();
         foreach ($data as $record) {
             $job = Job::createFromArray($record);
-
             array_push($result, $job);
         }
-
         return $result;
     }
 

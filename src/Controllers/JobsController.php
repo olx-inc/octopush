@@ -157,7 +157,7 @@ class JobsController
                 
                 $email = $helperSession->getUser()->getEmail();
                 if (!empty($email))
-                    $job->setUser($helperSession->getUser()->getEmail());
+                    $job->setUser($email);
                 else
                     $job->setUser($helperSession->getUser()->getUserName());
 
