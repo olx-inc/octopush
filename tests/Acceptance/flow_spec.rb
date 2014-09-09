@@ -4,14 +4,17 @@ describe "Octopush end to end pipeline flow" do
 
   octopush_url = ENV['octopush_url'] || "http://octopush.com"
 
-  it "should enqueu, getStatus and report success tests" do
+  it "should enqueue, getStatus and report success tests" do
 
     # first ensure is not paused
     Octopush.get(octopush_url + "/resume");
 
-    url = octopush_url + "/jobs/create"
-    data = { :body => {:module => 'ok-project', :version => '1.1.1', :requestor => 'zzzzz'} }
-    json_response = Octopush.post(url, data)
+    #url = octopush_url + "/jobs/create"
+    url = octopush_url + "/environments/staging/modules/test/versions/1/push"
+    #data = { :body => {:module => 'abl', :version => '1.1.1', :requestor => 'zzzzz'} }
+    json_response = Octopush.get(url) #, data
+    puts url
+    puts json_response
     response = JSON.parse(json_response)
     job_id = response['job_id']
 
@@ -48,7 +51,7 @@ describe "Octopush end to end pipeline flow" do
 
   end
   
-  it "enqueu should return error when the job does not exist in configuration" do  
+  it "enqueue should return error when the job does not exist in configuration" do  
     url = octopush_url + "/jobs/create"
     data = { :body => {:module => 'yerba', :version => '1.1.1', :requestor => 'zzzzz'} }
     json_response = Octopush.post(url, data)

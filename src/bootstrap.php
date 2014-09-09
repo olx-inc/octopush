@@ -104,3 +104,5 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         )
     )
 ));
+
+//$app['session']->set('userData', null);

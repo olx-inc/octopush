@@ -6,6 +6,7 @@ use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
     Silex\Application,
+    Helpers\Session,
     Controllers\JenkinsController,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
@@ -136,10 +137,17 @@ class JobsController
         }
     }
 
+    private function getKeyAndSession(){
+        if (isset($_REQUEST['access_token'])){
+            Session::buildBackendSession($this->_app, $_REQUEST['access_token']);
+        }
+    }
+
     public function goLive($jobId)
     {
         try {
             $job = $this->_jobMapper->get($jobId);
+            $this->getKeyAndSession();
 
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
@@ -149,7 +157,7 @@ class JobsController
                 
                 $email = $helperSession->getUser()->getEmail();
                 if (!empty($email))
-                    $job->setUser($email);
+                    $job->setUser($helperSession->getUser()->getEmail());
                 else
                     $job->setUser($helperSession->getUser()->getUserName());
 
@@ -196,6 +204,8 @@ class JobsController
     {   
         try {
             $oldJob = $this->_jobMapper->get($jobId);
+            $this->getKeyAndSession();
+
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
@@ -417,11 +427,12 @@ class JobsController
             $job_array['_deployJobUrl'] = $jenkins->getPreProdJobDeployUrl($job);
             $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobDeployUrl($job);
 
-            $job_array['_canGoLive'] = ($job->canGoLive() && $this->canBePushedLive($job));
+            $canBePushedLive = $this->canBePushedLive($job);
+            $job_array['_canGoLive'] = ($job->canGoLive() && $canBePushedLive);
 
-            $job_array['_canRollback'] = ($job->wentLive() && $this->canBePushedLive($job));
+            $job_array['_canRollback'] = ($job->wentLive() && $canBePushedLive);
 
-            $job_array['_canCancel'] = ($this->canBePushedLive($job));
+            $job_array['_canCancel'] = ($canBePushedLive);
 
             array_push($result, $job_array);
         }

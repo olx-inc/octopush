@@ -37,32 +37,16 @@ $app->post('/jobs/create', "jobs.controller:createJob");
 $app->post('/jobs/{jobId}/register_test_job_result', "jobs.controller:registerTestJobResult");
 $app->post('/jobs/{jobId}/register_test_job_url', "jobs.controller:registerTestJobUrl");
 $app->get('/jobs/{jobId}/status', "jobs.controller:getJobStatus");
-$app->get('/jobs/{jobId}/cancel', "jobs.controller:cancel");
+
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
     $token = $app['security']->getToken();
-    
     $userDataInSession = $app['session']->get('userData');
-    
+
     if (is_null($userDataInSession)) {
         
         if ($token && ! $app['security.trust_resolver']->isAnonymous($token)) {
-            
-            $username = $app['services.GitHub']->getUserName($token);
-            $permissions = $app['services.ThirdParty']->
-                    getMemberPermissions($username);
-            
-            $userData = array(
-                'user' => $token->getUser(),
-                'permissions' => $permissions,
-                'my_components' => 'btn-on',
-                'is_admin_user' => in_array(
-                    $app['config']['teams']['admin'], 
-                    $permissions['teams']
-                ),
-            );
-            
-            $app['session']->set('userData', $userData);
+            Helpers\Session::buildSession($app, $token);
         }
     }
 });
