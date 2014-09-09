@@ -6,6 +6,7 @@ use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
     Silex\Application,
+    Helpers\Session,
     Controllers\JenkinsController,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
@@ -105,11 +106,15 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (isset($permissions) && 
-                    $this->canBePushedLive($job, $permissions)) {
 
                 $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
                                 JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
+
+                if (!isset($status[$job->getStatus()]))
+                    throw new \Exception('Unable to cancel a job on status: ' . $job->getStatus());
+
+                if (($job->getStatus() == JobStatus::QUEUED_FOR_LIVE) && (!$this->canBePushedLive($job)))
+                    throw new \Exception('No permissions to cancel: ' . $jobId);
 
                 $job->moveStatusTo($status[$job->getStatus()]);
                 $this->_jobMapper->save($job);
@@ -120,7 +125,6 @@ class JobsController
                 );
 
                 return $this->_app->json($result);
-            }
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -133,16 +137,22 @@ class JobsController
         }
     }
 
+    private function getKeyAndSession(){
+        if (isset($_REQUEST['access_token'])){
+            Session::buildBackendSession($this->_app, $_REQUEST['access_token']);
+        }
+    }
+
     public function goLive($jobId)
     {
         try {
             $job = $this->_jobMapper->get($jobId);
+            $this->getKeyAndSession();
 
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (isset($permissions) && 
-                    $this->canBePushedLive($job, $permissions) && 
+            if ($this->canBePushedLive($job) && 
                     $job->canGoLive()) {
                 
                 $email = $helperSession->getUser()->getEmail();
@@ -194,11 +204,12 @@ class JobsController
     {   
         try {
             $oldJob = $this->_jobMapper->get($jobId);
+            $this->getKeyAndSession();
+
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
-            if (! isset($permissions) || 
-                ! $this->canBePushedLive($oldJob, $permissions) || 
+            if (! $this->canBePushedLive($oldJob) || 
                 ! $oldJob->wentLive()) {
                 
                 $result = array(
@@ -416,11 +427,12 @@ class JobsController
             $job_array['_deployJobUrl'] = $jenkins->getPreProdJobDeployUrl($job);
             $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobDeployUrl($job);
 
-            $job_array['_canGoLive'] = ($job->canGoLive() && $this->canBePushedLive($job));
+            $canBePushedLive = $this->canBePushedLive($job);
+            $job_array['_canGoLive'] = ($job->canGoLive() && $canBePushedLive);
 
-            $job_array['_canRollback'] = ($job->wentLive() && $this->canBePushedLive($job));
+            $job_array['_canRollback'] = ($job->wentLive() && $canBePushedLive);
 
-            $job_array['_canCancel'] = ($this->canBePushedLive($job));
+            $job_array['_canCancel'] = ($canBePushedLive);
 
             array_push($result, $job_array);
         }

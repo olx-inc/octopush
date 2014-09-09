@@ -54,4 +54,45 @@ class Session
         $userdata = $this->getUserData();
         return $userdata['is_admin_user'];
     }
+
+    public static function buildBackendSession($app, $token)
+    {
+        $user = $app['services.GitHub']->getUser($token);
+        $permissions = $app['services.ThirdParty']->
+                getMemberPermissions($user->getUserName());
+
+        $userData = array(
+            'user' => $user,
+            'permissions' => $permissions,
+            'my_components' => 'btn-on',
+            'is_admin_user' => in_array(
+                $app['config']['teams']['admin'], 
+                $permissions['teams']
+            ),
+        );
+        
+        $app['session']->set('userData', $userData);
+
+    }
+
+    public static function buildSession($app, $token)
+    {
+        $username = $app['services.GitHub']->getUserName($token);
+        $permissions = $app['services.ThirdParty']->
+                getMemberPermissions($username);
+        
+        $userData = array(
+            'user' => $token->getUser(),
+            'permissions' => $permissions,
+            'my_components' => 'btn-on',
+            'is_admin_user' => in_array(
+                $app['config']['teams']['admin'], 
+                $permissions['teams']
+            ),
+        );
+        
+        $app['session']->set('userData', $userData);
+
+    }
+
 }

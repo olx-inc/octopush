@@ -53,11 +53,13 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with("$jobId")
             ->will($this->returnValue($this->_job));
+        $appMock = new ApplicationMock();
+        $appMock['services.ThirdParty'] = "";
 
-        $jobsController = new JobsController($this->_config, $this->_jobMapperMock, $this->_logMock);
+        $jobsController = new JobsController($appMock, $this->_config, $this->_jobMapperMock, null, $this->_logMock);
 
         $result = $jobsController->getJobStatus($jobId);
 
-        $this->assertEquals('{"job_status":"PENDING_TESTS","job_id":1}', $result);
+        $this->assertEquals('{"job_status":"PENDING_TESTS","job_id":1}', $result->getContent());
     }
 }

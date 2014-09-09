@@ -54,9 +54,19 @@ var tml = {
     },
 
     preprodQueue: function (job) {
-        var newJob = $("#resources .job").clone();
+        var newJob = $("#resources .job").clone(),
+            remove = "";
+
+        if(job._canCancel) {
+            remove = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            };
+        }
 
         tml.fillCommonFields(newJob, job);
+        tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
         return newJob;
     },
@@ -89,9 +99,19 @@ var tml = {
     },
 
     prodQueue: function (job) {
-        var newJob = $("#resources .job").clone();
+        var newJob = $("#resources .job").clone(),
+            remove = "";
+
+        if(job._canCancel) {
+            remove = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            };
+        }
 
         tml.fillCommonFields(newJob, job);
+        tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
         return newJob;
     },

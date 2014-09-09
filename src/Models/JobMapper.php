@@ -52,7 +52,7 @@ class JobMapper
     }
 
 
-    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray, $limit=null)
+    public function findAllByMultipleStatusAndModules($statusArray, $modulesArray=null, $limit=null)
     {
         $targetStatus = implode("','", $statusArray);
         $modulesSQL = "";
@@ -61,7 +61,7 @@ class JobMapper
             $modulesSQL = " AND module in ('" . $targetModules ."')";
         }
         $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') " 
-                . $modulesSQL . " ORDER BY queue_date DESC";
+                . $modulesSQL . " ORDER BY updated_at DESC";
 
         if (!is_null($limit)) {
             $sql .= " limit " . $limit;

@@ -183,7 +183,6 @@ class Jenkins
             $req->setOptions(array('httpauthtype'=>HTTP_AUTH_BASIC, 'httpauth' => $httpAuth));
             $req->addPostFields($data);
             $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);
-            $this->_log->addInfo("options:" . $req->getOptions());
             $req->send();
             $this->_log->addInfo("Response:" . $req->getResponseCode());
             $this->_log->addInfo("Response:" . $req->getResponseBody());

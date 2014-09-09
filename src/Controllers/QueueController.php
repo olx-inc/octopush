@@ -145,7 +145,10 @@ class QueueController
         }
 
         foreach ($jobsToProcess as $job) {
-            $jobsInProgress = $this->_jobMapper->findAllByMultipleStatus(array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
+            $jobsInProgress = $this->_jobMapper->findAllByMultipleStatusAndModules(
+                array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
+            $jobsInProgress = $this->fillResults($jobsInProgress);
+
             if ($job->canRun($jobsInProgress, $modules)) {
                 $job->moveStatusTo(JobStatus::DEPLOYING);
                 $this->_jobMapper->save($job);
@@ -168,6 +171,16 @@ class QueueController
             }
         }
     }
+
+       private function fillResults($data){
+        $result = array();
+        foreach ($data as $record) {
+            $job = Job::createFromArray($record);
+            array_push($result, $job);
+        }
+        return $result;
+    }
+
 
     private function _processJobs()
     {

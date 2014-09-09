@@ -43,6 +43,16 @@ class GitHub {
         $jsonResponse = json_decode($rawResponse['body'], true);
         return $jsonResponse['login'];
     }
+
+    public function getUser($token) {
+        
+        $req = new \Library\HttpRequest();
+        $url = "https://api.github.com/user?access_token=" . $token;
+        $req->setUrl($url);
+        $rawResponse = $req->send();
+        $jsonResponse = json_decode($rawResponse['body'], true);
+        return new User($jsonResponse['login'], $jsonResponse['email']);
+    }
     
     public function IsUserInAdminTeam($username) {
         $result = false;
@@ -55,6 +65,29 @@ class GitHub {
         }
 
         return $result;
+    }
+
+}
+
+class User 
+{
+    private $name;
+    private $mail;
+
+    public function __construct($_name, $_mail)
+    {
+        $this->name = $_name;
+        $this->mail = $_mail;
+    }
+
+    public function getUserName()
+    {
+        return $this->name;
+    }
+
+    public function getEmail()
+    {
+        return $this->mail;
     }
 
 }
