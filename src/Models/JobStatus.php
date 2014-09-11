@@ -14,4 +14,28 @@ class JobStatus
     const GOING_LIVE = "GOING_LIVE";
     const GO_LIVE_DONE = "GO_LIVE_DONE";
     const GO_LIVE_FAILED = "GO_LIVE_FAILED";
+    private static $status_array = array(
+            0 => JobStatus::QUEUED,
+            1 => JobStatus::DEPLOYING,
+            2 => JobStatus::DEPLOY_FAILED,
+            3 => JobStatus::PENDING_TESTS,
+            4 => JobStatus::TESTS_PASSED,
+            5 => JobStatus::TESTS_FAILED,
+            6 => JobStatus::QUEUED_FOR_LIVE,
+            7 => JobStatus::GOING_LIVE,
+            8 => JobStatus::GO_LIVE_DONE,
+            9 => JobStatus::GO_LIVE_FAILED
+        );
+
+
+    public static function getJobStatus($statusId)
+    {
+         return self::$status_array[$statusId];
+    }
+
+    public static function getStatusId($status)
+    {
+        return array_search($status, self::$status_array);
+    }    
+
 }
