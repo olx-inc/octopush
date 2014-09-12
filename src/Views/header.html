@@ -13,13 +13,14 @@
             {# Filters #}
             <div class="input-group filters">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="text"><span class="glyphicon glyphicon-filter"></span>Filter...</span>
+                    <span class="glyphicon glyphicon-filter"></span>
+                    <span class="text">Filter...</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="/">None</a></li>
                     <li class="divider"></li>
-                    <li><a href="/mycomponents" name-="my-components">My Components</a></li>
+                    <li><a href="/" id="my-components" name="{{ my_components ? my_components : 'btn-off' }}">My Components</a></li>
                     <li class="divider"></li>
                     <li><a href="/?repo=abl" name="abl">abl</a></li>
                     <li><a href="/?repo=billing" name="billing">billing</a></li>
@@ -51,42 +52,7 @@
                 </ul>
             </div>
 
-            {#<select class="filter">
-                <option value="none">Filter...</option>
-                <optgroup label="by user">
-                    <option value="my-components">My Components</option>
-                </optgroup>
-                <optgroup label="by repository">
-                    <option value="abl">abl</option>
-                    <option value="billing">billing</option>
-                    <option value="crm-brazil">crm-brazil</option>
-                    <option value="crm-default">crm-default</option>
-                    <option value="crm-emerging">crm-emerging</option>
-                    <option value="crm-india">crm-india</option>
-                    <option value="crm-localized-renderer">crm-localized-renderer</option>
-                    <option value="crm-southafrica">crm-southafrica</option>
-                    <option value="frontend-brasil">frontend-brasil</option>
-                    <option value="frontend-default">frontend-default</option>
-                    <option value="frontend-emerging">frontend-emerging</option>
-                    <option value="frontend-india">frontend-india</option>
-                    <option value="frontend-olx">frontend-olx</option>
-                    <option value="frontend-southafrica">frontend-southafrica</option>
-                    <option value="mobile-web-dynamic">mobile-web-dynamic</option>
-                    <option value="mobile-web-static">mobile-web-static</option>
-                    <option value="pannello">pannello</option>
-                    <option value="sal">sal</option>
-                    <option value="smaug">smaug</option>
-                    <option value="web-generic">web-generic</option>
-                    <option value="web-home">web-home</option>
-                    <option value="web-item">web-item</option>
-                    <option value="web-listing">web-listing</option>
-                    <option value="web-myolx">web-myolx</option>
-                    <option value="web-posting">web-posting</option>
-                    <option value="web-sitemap">web-sitemap</option>
-                    <option value="web-statics">web-statics</option>
-                </optgroup>
-            </select>
-            <button type="button" class="btn {{ my_components ? my_components : 'btn-off' }}" id="my-components">
+            {#<button type="button" class="btn {{ my_components ? my_components : 'btn-off' }}" id="my-components">
               <span class="glyphicon glyphicon-filter"></span> My Components
             </button>#}
         </div>                   

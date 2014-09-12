@@ -18,7 +18,7 @@ var filterHandler = function (){
     var parameters = getParameters();
     parameters = parameters.split("=");
     parameters = parameters[1];
-
+    
     $('.filters .text').text(parameters);
 };
 

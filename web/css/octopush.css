@@ -45,12 +45,12 @@
   float:right
 }
 .userBox{
-  text-align: center
+  text-align: right
 }
 
 /* filters */
 .filters button {
-  width: 184px
+  width: 205px
 }
 .filters button,
 .btn-default:hover, 
@@ -65,16 +65,6 @@
   border-top-color: #3a87ad;
   margin-left: 6px 
 }
-
-/*.filter {
-  background-color: #d9edf7;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  color: #3a87ad;
-  height: 35px;
-  margin-top: 6px;
-  width: 184px
-}*/
 
 
 .btn {
