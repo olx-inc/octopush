@@ -1,0 +1,98 @@
+<div class="page-header">
+    <img src="/images/logo.png" />
+    <small>v{{ version }}</small>
+    {% if userdata %}
+        <div class="loginBox">
+            <div class="userBox">
+                Hello {{ userdata.user.username }}
+                {% if userdata.is_admin_user %}
+                    (admin)
+                {% endif %}
+                | <a href="{{ logoutUrl }}">Logout</a>
+            </div>
+            {# Filters #}
+            <div class="input-group filters">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="text"><span class="glyphicon glyphicon-filter"></span>Filter...</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="/">None</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/mycomponents" name-="my-components">My Components</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/?repo=abl" name="abl">abl</a></li>
+                    <li><a href="/?repo=billing" name="billing">billing</a></li>
+                    <li><a href="/?repo=crm-brazil" name="crm-brazil">crm-brazil</a></li>
+                    <li><a href="/?repo=crm-default" name="crm-default">crm-default</a></li>
+                    <li><a href="/?repo=crm-emerging" name="crm-emerging">crm-emerging</a></li>
+                    <li><a href="/?repo=crm-india" name="crm-india">crm-india</a></li>
+                    <li><a href="/?repo=crm-localized-renderer" name="crm-localized-renderer">crm-localized-renderer</a></li>
+                    <li><a href="/?repo=crm-southafrica" name="crm-southafrica">crm-southafrica</a></li>
+                    <li><a href="/?repo=frontend-brasil" name="frontend-brasil">frontend-brasil</a></li>
+                    <li><a href="/?repo=frontend-default" name="frontend-default">frontend-default</a></li>
+                    <li><a href="/?repo=frontend-emerging" name="frontend-emerging">frontend-emerging</a></li>
+                    <li><a href="/?repo=frontend-india" name="frontend-india">frontend-india</a></li>
+                    <li><a href="/?repo=frontend-olx" name="frontend-olx">frontend-olx</a></li>
+                    <li><a href="/?repo=frontend-southafrica" name="frontend-southafrica">frontend-southafrica</a></li>
+                    <li><a href="/?repo=mobile-web-dynamic" name="mobile-web-dynamic">mobile-web-dynamic</a></li>
+                    <li><a href="/?repo=mobile-web-static" name="mobile-web-static">mobile-web-static</a></li>
+                    <li><a href="/?repo=pannello" name="pannello">pannello</a></li>
+                    <li><a href="/?repo=sal" name="sal">sal</a></li>
+                    <li><a href="/?repo=smaug" name="smaug">smaug</a></li>
+                    <li><a href="/?repo=web-generic" name="web-generic">web-generic</a></li>
+                    <li><a href="/?repo=web-home" name="web-home">web-home</a></li>
+                    <li><a href="/?repo=web-item" name="web-item">web-item</a></li>
+                    <li><a href="/?repo=web-listing" name="web-listing">web-listing</a></li>
+                    <li><a href="/?repo=web-myolx" name="web-myolx">web-myolx</a></li>
+                    <li><a href="/?repo=web-posting" name="web-posting">web-posting</a></li>
+                    <li><a href="/?repo=web-sitemap" name="web-sitemap">web-sitemap</a></li>
+                    <li><a href="/?repo=web-statics" name="web-statics">web-statics</a></li>
+                </ul>
+            </div>
+
+            {#<select class="filter">
+                <option value="none">Filter...</option>
+                <optgroup label="by user">
+                    <option value="my-components">My Components</option>
+                </optgroup>
+                <optgroup label="by repository">
+                    <option value="abl">abl</option>
+                    <option value="billing">billing</option>
+                    <option value="crm-brazil">crm-brazil</option>
+                    <option value="crm-default">crm-default</option>
+                    <option value="crm-emerging">crm-emerging</option>
+                    <option value="crm-india">crm-india</option>
+                    <option value="crm-localized-renderer">crm-localized-renderer</option>
+                    <option value="crm-southafrica">crm-southafrica</option>
+                    <option value="frontend-brasil">frontend-brasil</option>
+                    <option value="frontend-default">frontend-default</option>
+                    <option value="frontend-emerging">frontend-emerging</option>
+                    <option value="frontend-india">frontend-india</option>
+                    <option value="frontend-olx">frontend-olx</option>
+                    <option value="frontend-southafrica">frontend-southafrica</option>
+                    <option value="mobile-web-dynamic">mobile-web-dynamic</option>
+                    <option value="mobile-web-static">mobile-web-static</option>
+                    <option value="pannello">pannello</option>
+                    <option value="sal">sal</option>
+                    <option value="smaug">smaug</option>
+                    <option value="web-generic">web-generic</option>
+                    <option value="web-home">web-home</option>
+                    <option value="web-item">web-item</option>
+                    <option value="web-listing">web-listing</option>
+                    <option value="web-myolx">web-myolx</option>
+                    <option value="web-posting">web-posting</option>
+                    <option value="web-sitemap">web-sitemap</option>
+                    <option value="web-statics">web-statics</option>
+                </optgroup>
+            </select>
+            <button type="button" class="btn {{ my_components ? my_components : 'btn-off' }}" id="my-components">
+              <span class="glyphicon glyphicon-filter"></span> My Components
+            </button>#}
+        </div>                   
+    {% else %}
+        <span class="loginBox" style="width: 180px;">
+            <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+        </span>
+    {% endif %}
+</div>
