@@ -14,29 +14,7 @@
     </head>
     <body>
         <div class="container">
-            <div class="page-header">
-                <img src="/images/logo.png" />
-                <small>v{{ version }}</small>
-                {% if userdata %}
-                    <div class="loginBox">
-                        <div class="userBox">
-                            Hello {{ userdata.user.username }}
-                            {% if userdata.is_admin_user %}
-                                (admin)
-                            {% endif %}
-                            | <a href="{{ logoutUrl }}">Logout</a>
-                        </div>
-                        <button type="button" class="btn {{ my_components ? my_components : 'btn-off' }}" id="my-components">
-                          <span class="glyphicon glyphicon-filter"></span> My Components
-                        </button>
-                    </div>                   
-                {% else %}
-                    <span class="loginBox" style="width: 180px;">
-                        <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
-                    </span>
-                {% endif %}
-            </div>
-            
+            {% include "header.html" %}
             {# if isPaused #}
             <div id="paused" class="bs-callout bs-callout-warning" style="display:none">
                 <h4>Octopush service is Paused right now due to a current incident</h4>

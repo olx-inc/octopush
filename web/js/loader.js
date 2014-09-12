@@ -14,6 +14,14 @@ var isPaused = function (){
     });
 };
 
+var filterHandler = function (){
+    var parameters = getParameters();
+    parameters = parameters.split("=");
+    parameters = parameters[1];
+    
+    $('.filters .text').text(parameters);
+};
+
 
 /* -----------
    -- Jobs ---
@@ -91,8 +99,8 @@ $(document).ready(function (){
     $('.prod-head').load('../templates/prodHead.html');
     $('#resources').load('../templates/job.html');
 
-    getParameters();
     isPaused();
+    filterHandler();
     getJobs();
 
     setInterval(function(){
