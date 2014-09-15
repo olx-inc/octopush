@@ -487,10 +487,22 @@ class JobsController
    public function getComponentList()
    {
         $result = array();
-        $result["None"] = '/';        
-        $result["My Components"] = '?my_components=on';        
+
+        $record = array();
+        $record["Value"] = 'None';        
+        $record["URI"] = '/';
+        array_push($result, $record);
+
+        $record = array();
+        $record["Value"] = 'My Components';        
+        $record["URI"] = '?my_components=on';
+        array_push($result, $record);
+
         foreach ($this->_config['modules'] as $module => $value) {
-            $result[$module] = '?repo=' . $module;        
+            $record = array();
+            $record["Value"] = $module;        
+            $record["URI"] = '?repo=' . $module;
+            array_push($result, $record);
         }
 
         return $this->_app->json($result);
