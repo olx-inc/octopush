@@ -490,7 +490,7 @@ class JobsController
 
         $record = array();
         $record["Value"] = 'None';        
-        $record["URI"] = '/';
+        $record["URI"] = '&#47';
         array_push($result, $record);
 
         $record = array();

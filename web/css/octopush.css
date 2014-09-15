@@ -50,6 +50,7 @@
 
 /* filters */
 .filters button {
+  margin-top: 10px;
   width: 205px
 }
 .filters button,
@@ -65,38 +66,8 @@
   border-top-color: #3a87ad;
   margin-left: 6px 
 }
-
-
-.btn {
-  float: right;
-  margin-top: 10px;
-  outline: 0 
-}
-.btn-on {
-  background-color: #428bca;
-  box-shadow: 1px 1px 1px 1px #426d94 inset;
-  color: #d9edf7;
-}
-.btn-off {
-  background-color: #d9edf7;
-  box-shadow: 1px 1px 1px 1px #93c4ce;
-  color: #3a87ad
-}
-.btn-on:hover,
-.btn-on:focus {
-  color: #d9edf7;
-  outline: 0 
-}
-.btn-on:active {
-  box-shadow: 1px 2px 3px 2px #426d94 inset
-}
-.btn-off:hover,
-.btn-off:focus {
-  color: #3a87ad;
-  outline: 0 
-}
-.btn-off:active {
-  box-shadow: 1px 1px 1px 0 #93c4ce;
+.dropdown-menu {
+  width: 205px
 }
 
 /* content */

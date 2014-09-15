@@ -15,11 +15,20 @@ var isPaused = function (){
 };
 
 var filterHandler = function (){
-    var parameters = getParameters();
-    parameters = parameters.split("=");
-    parameters = parameters[1];
-    
-    $('.filters .text').text(parameters);
+    $.get("/components", function (component){
+        var filter = $(".filters .dropdown-menu"),
+            parameters = getParameters();
+
+        $(component).each(function(){
+            if(this.URI == parameters){
+                $('.filters .text').text(this.Value);
+            }
+            
+            filter.append(
+                "<li><a href=" + this.URI + ">" + this.Value + "</a></li>"
+            );
+        });
+    });
 };
 
 
