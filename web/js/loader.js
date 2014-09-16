@@ -27,6 +27,12 @@ var filterHandler = function (){
             filter.append(
                 "<li><a href=" + this.URI + ">" + this.Value + "</a></li>"
             );
+
+            if (this.Value == "None" || this.Value == "My Components") {
+                filter.append(
+                    "<li class='divider'></li>"
+                );                
+            }
         });
     });
 };

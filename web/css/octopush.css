@@ -49,6 +49,9 @@
 }
 
 /* filters */
+.filters {
+  float: right
+}
 .filters button {
   margin-top: 10px;
   width: 205px
