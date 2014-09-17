@@ -20,7 +20,7 @@ class JobsController
     private $_app;
     private $_thirdParty;
 
-    public function __construct(Application $app, 
+    public function __construct(\OctopushApplication $app, 
                                 $config,
                                 JobMapper $jobMapper,
                                 $jenkins, 
@@ -343,6 +343,7 @@ class JobsController
     
     public function canBePushedLive($job) 
     {
+
         $permissions = $this->_app['helpers.session']->getPermissions();
         
         if (isset($permissions)) {
@@ -498,6 +499,7 @@ class JobsController
         $record["URI"] = '?my_components=on';
         array_push($result, $record);
 
+        ksort($this->_config['modules']);
         foreach ($this->_config['modules'] as $module => $value) {
             $record = array();
             $record["Value"] = $module;        
@@ -522,12 +524,16 @@ class JobsController
     private function getRepoFilter()
     {
         $sessionHelper = $this->_app['helpers.session'];
+
         if (isset($_REQUEST['my_components']))
             if ($_REQUEST['my_components']='on')
                 $sessionHelper->setMyComponents('btn-on');
 
         if (isset($_REQUEST['repo']))
-            $repo = array($_REQUEST['repo']);    
+        {
+            $sessionHelper->setMyComponents('btn-off');
+            $repo = array($_REQUEST['repo']);
+        }    
         else
             if ( $sessionHelper->isMyComponentsOn() ){
                 $perm = $sessionHelper->getPermissions();

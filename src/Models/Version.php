@@ -4,8 +4,8 @@ namespace Models;
 
 class Version
 {
-    const MAJOR ="0";
-    const MINOR ="9";
+    const MAJOR ="1";
+    const MINOR ="0";
     const BUILD ="[build]";
     const REVISION ="[revision]";
 
