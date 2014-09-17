@@ -14,6 +14,29 @@ var isPaused = function (){
     });
 };
 
+var filterHandler = function (){
+    $.get("/components", function (component){
+        var filter = $(".filters .dropdown-menu"),
+            parameters = getParameters();
+
+        $(component).each(function(){
+            if(this.URI == parameters){
+                $('.filters .text').text(this.Value);
+            }
+            
+            filter.append(
+                "<li><a href=" + this.URI + ">" + this.Value + "</a></li>"
+            );
+
+            if (this.Value == "None" || this.Value == "My Components") {
+                filter.append(
+                    "<li class='divider'></li>"
+                );                
+            }
+        });
+    });
+};
+
 
 /* -----------
    -- Jobs ---
@@ -91,8 +114,8 @@ $(document).ready(function (){
     $('.prod-head').load('../templates/prodHead.html');
     $('#resources').load('../templates/job.html');
 
-    getParameters();
     isPaused();
+    filterHandler();
     getJobs();
 
     setInterval(function(){

@@ -16,9 +16,8 @@ class QueueController
     private $_jobsController;
     private $_app;
     private $_log;
-    private $_controlFile;
 
-    public function __construct(Application $app, 
+    public function __construct(\OctopushApplication $app, 
                                 JobMapper $jobMapper, 
                                 $jenkins, 
                                 $jobsController, 
@@ -29,7 +28,6 @@ class QueueController
         $this->_jenkins = $jenkins;
         $this->_jobsController = $jobsController;
         $this->_log = $log;
-        $this->_controlFile = $this->_config['control_file'];
     }
 
     /**********************   API METHODS ***********************/
@@ -74,11 +72,12 @@ class QueueController
 
         return $this->_app->json($result);
     }
+    
 
     public function pause()
     {
         $success = true;
-        $success = file_put_contents($this->_controlFile, 'pause');
+        $success = $this->_app->pause();
 
         return $this->_jsonResult($success);
     }
@@ -86,19 +85,20 @@ class QueueController
 
     public function resume()
     {
-        $success = true;
-        if ($this->_isPaused()) {
-            $success = unlink($this->_controlFile);
-        }
-
-        return $this->_jsonResult($success);
+        return $this->_app->resume();
     }
 
     public function status()
     {
         $status = 'ON';
         if ($this->_isPaused()) $status = 'OFF';
+//        $status = $this->_app['paused'];
         return $status;
+    }
+
+    private function _isPaused()
+    {
+        return $this->_app->isPaused();
     }
 
     public function health()
@@ -136,6 +136,7 @@ class QueueController
         return $this->_jsonResult($resultOk);
     }
 
+
     private function _processQueue($modules)
     {
         $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED);
@@ -172,7 +173,8 @@ class QueueController
         }
     }
 
-       private function fillResults($data){
+
+    private function fillResults($data){
         $result = array();
         foreach ($data as $record) {
             $job = Job::createFromArray($record);
@@ -290,10 +292,6 @@ class QueueController
     }
 
     /**********************   PRIVATE METHODS ***********************/
-    private function _isPaused()
-    {
-        return file_exists($this->_controlFile);
-    }
 
     private function _jsonResult($success, $message="")
     {

@@ -20,7 +20,7 @@ class JobsController
     private $_app;
     private $_thirdParty;
 
-    public function __construct(Application $app, 
+    public function __construct(\OctopushApplication $app, 
                                 $config,
                                 JobMapper $jobMapper,
                                 $jenkins, 
@@ -106,25 +106,25 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
             
+            $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
+                            JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
 
-                $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
-                                JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
+            if (!isset($status[$job->getStatus()]))
+                throw new \Exception('Unable to cancel a job on status: ' . $job->getStatus());
 
-                if (!isset($status[$job->getStatus()]))
-                    throw new \Exception('Unable to cancel a job on status: ' . $job->getStatus());
+            if (($job->getStatus() == JobStatus::QUEUED_FOR_LIVE) && (!$this->canBePushedLive($job)))
+                throw new \Exception('No permissions to cancel: ' . $jobId);
 
-                if (($job->getStatus() == JobStatus::QUEUED_FOR_LIVE) && (!$this->canBePushedLive($job)))
-                    throw new \Exception('No permissions to cancel: ' . $jobId);
+            $job->moveStatusTo($status[$job->getStatus()]);
+            $this->_jobMapper->save($job);
 
-                $job->moveStatusTo($status[$job->getStatus()]);
-                $this->_jobMapper->save($job);
+            $result = array(
+                'job_status' => $job->getStatus(),
+                'job_id' => $jobId
+            );
 
-                $result = array(
-                    'job_status' => $job->getStatus(),
-                    'job_id' => $jobId
-                );
+            return $this->_app->json($result);
 
-                return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(
                 'status' => "error",
@@ -343,6 +343,7 @@ class JobsController
     
     public function canBePushedLive($job) 
     {
+
         $permissions = $this->_app['helpers.session']->getPermissions();
         
         if (isset($permissions)) {
@@ -484,6 +485,30 @@ class JobsController
         return $result;
     }
 
+   public function getComponentList()
+   {
+        $result = array();
+
+        $record = array();
+        $record["Value"] = 'None';        
+        $record["URI"] = '&#47';
+        array_push($result, $record);
+
+        $record = array();
+        $record["Value"] = 'My Components';        
+        $record["URI"] = '?my_components=on';
+        array_push($result, $record);
+
+        ksort($this->_config['modules']);
+        foreach ($this->_config['modules'] as $module => $value) {
+            $record = array();
+            $record["Value"] = $module;        
+            $record["URI"] = '?repo=' . $module;
+            array_push($result, $record);
+        }
+
+        return $this->_app->json($result);
+   }
 
     private function getPageSize()
     {
@@ -499,8 +524,16 @@ class JobsController
     private function getRepoFilter()
     {
         $sessionHelper = $this->_app['helpers.session'];
+        $sessionHelper->setMyComponents('btn-off');
+
+        if (isset($_REQUEST['my_components']))
+            if ($_REQUEST['my_components']='on')
+                $sessionHelper->setMyComponents('btn-on');
+
         if (isset($_REQUEST['repo']))
-            $repo = array($_REQUEST['repo']);    
+        {
+            $repo = array($_REQUEST['repo']);
+        }    
         else
             if ( $sessionHelper->isMyComponentsOn() ){
                 $perm = $sessionHelper->getPermissions();

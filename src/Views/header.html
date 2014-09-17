@@ -1,0 +1,28 @@
+<div class="page-header">
+    <img src="/images/logo.png" />
+    <small>v{{ version }}</small>
+    {% if userdata %}
+        <div class="loginBox">
+            <div class="userBox">
+                Hello {{ userdata.user.username }}
+                {% if userdata.is_admin_user %}
+                    (admin)
+                {% endif %}
+                | <a href="{{ logoutUrl }}">Logout</a>
+            </div>
+            {# Filters #}
+            <div class="input-group filters">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-filter"></span>
+                    <span class="text">Filter...</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+            </div>
+        </div>                   
+    {% else %}
+        <span class="loginBox" style="width: 180px;">
+            <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
+        </span>
+    {% endif %}
+</div>

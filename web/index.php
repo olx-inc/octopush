@@ -22,6 +22,7 @@ $app->get('/{env}/queued', "jobs.controller:queued");
 $app->get('/{env}/inprogress', "jobs.controller:inprogress");
 $app->get('/all', "jobs.controller:all");
 $app->get('/mycomponents/{state}', "jobs.controller:my_components");
+$app->get('/components', "jobs.controller:getComponentList");
 
 $app->get('/jobs/{jobId}/golive', "jobs.controller:goLive");
 $app->get('/jobs/{jobId}/rollback', "jobs.controller:rollback");

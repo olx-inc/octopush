@@ -1,6 +1,7 @@
 <?php
+require_once 'OctopushApplication.php';
 
-$app = new Silex\Application();
+$app = new OctopushApplication();
 
 if (!defined('APPLICATION_ENV')) {
     define(
