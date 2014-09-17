@@ -524,6 +524,7 @@ class JobsController
     private function getRepoFilter()
     {
         $sessionHelper = $this->_app['helpers.session'];
+        $sessionHelper->setMyComponents('btn-off');
 
         if (isset($_REQUEST['my_components']))
             if ($_REQUEST['my_components']='on')
@@ -531,7 +532,6 @@ class JobsController
 
         if (isset($_REQUEST['repo']))
         {
-            $sessionHelper->setMyComponents('btn-off');
             $repo = array($_REQUEST['repo']);
         }    
         else
