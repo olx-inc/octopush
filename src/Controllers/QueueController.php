@@ -274,14 +274,14 @@ class QueueController
     }
 
     /**********************   UI HANDLER METHODS ***********************/
-    public function index()
+    private function _index($page)
     {
         $app = $this->_app;
         $config = $this->_config;
 
         $sessionHelper = $app['helpers.session'];
 
-        return $app['twig']->render('index.html', array(
+        return $app['twig']->render($page . '.html', array(
             'contact' => $config['contact_to'],
             'my_components' => $sessionHelper->getMyComponentsValue(),
             'version' => Version::getShort(),
@@ -289,6 +289,16 @@ class QueueController
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
                 '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
         ));
+    }
+
+    public function index()
+    {
+        return $this->_index("index");
+    }
+
+    public function versions()
+    {
+        return $this->_index("versions");
     }
 
     /**********************   PRIVATE METHODS ***********************/

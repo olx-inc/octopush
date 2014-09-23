@@ -6,6 +6,8 @@ var tml = {
             deployJobUrl = job._deployJobUrl,
             viewTestJob = job._testJobUrl;
 
+        html.find(".id").addClass("row-" + job._status);
+
         html.find("[data-id]").text(job._id);
         html.find("[data-target-module]").text(job._targetModule);
         html.find("[data-target-version]").text(job._targetVersion);
@@ -23,6 +25,32 @@ var tml = {
         tml.displayActions(viewTestJob, html.find("[data-test-job]"));
         // ---- Start tooltip
         html.find("[data-toggle='tooltip']").tooltip();
+    },
+    handleDate: function (jobDate, currentDate){
+        var current = currentDate,
+            job = new Date(jobDate),
+            days,
+            hours,
+            minutes;
+
+        minutes = (Math.abs(current - job) / 1000) / 60;
+        hours = minutes / 60;
+        days = hours / 24;
+
+        minutes = parseInt(minutes);
+        hours = parseInt(hours);
+        days = parseInt(days);
+
+        if (minutes < 60) {
+            return minutes + " min ago";
+        } else if (hours < 24) {
+            return hours + " hours ago";
+        } else if (!isNaN(days)) {
+            console.log(days)
+            return days + " days ago";
+        } else {
+            return "-";
+        }
     },
     displayUser: function (data, selector){
         if (data != "") {
@@ -55,7 +83,8 @@ var tml = {
 
     preprodQueue: function (job) {
         var newJob = $("#resources .job").clone(),
-            remove = "";
+            remove = "",
+            date = new Date();
 
         if(job._canCancel) {
             remove = {
@@ -65,6 +94,10 @@ var tml = {
             };
         }
 
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
+
         tml.fillCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
@@ -72,7 +105,12 @@ var tml = {
     },
 
     preprodInProgress: function (job) {
-        var newJob = $("#resources .job").clone();
+        var newJob = $("#resources .job").clone(),
+            date = new Date();
+
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
 
         tml.fillCommonFields(newJob, job);
 
@@ -82,7 +120,8 @@ var tml = {
     preprodDeployed: function (job) {
         var newJob = $("#resources .job").clone(),
             canGoLive = job._canGoLive,
-            goLive = "";
+            goLive = "",
+            date = new Date();
 
         if (canGoLive){
             goLive = {
@@ -92,6 +131,10 @@ var tml = {
             };
         }
 
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
+
         tml.fillCommonFields(newJob, job);
         tml.displayActions(goLive, newJob.find("[data-go-live]"), true);
 
@@ -100,7 +143,8 @@ var tml = {
 
     prodQueue: function (job) {
         var newJob = $("#resources .job").clone(),
-            remove = "";
+            remove = "",
+            date = new Date();
 
         if(job._canCancel) {
             remove = {
@@ -110,6 +154,10 @@ var tml = {
             };
         }
 
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
+
         tml.fillCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
@@ -118,7 +166,12 @@ var tml = {
 
     prodInProgress: function (job) {
         var newJob = $("#resources .job").clone(),
-            viewLiveJob = job._deployLiveJobUrl;
+            viewLiveJob = job._deployLiveJobUrl,
+            date = new Date();
+
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
 
         tml.fillCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
@@ -130,7 +183,8 @@ var tml = {
         var newJob = $("#resources .job").clone(),
             viewLiveJob = job._deployLiveJobUrl,
             wentLive = job._canRollback,
-            redeploy = "";
+            redeploy = "",
+            date = new Date();
 
         if (wentLive){
             redeploy = {
@@ -139,6 +193,10 @@ var tml = {
                 "targetVersion": job._targetVersion
             };
         }
+
+        // convert date to time
+        job._queued_at = tml.handleDate(job._queued_at, date);
+        job._updated_at = tml.handleDate(job._updated_at, date);
 
         tml.fillCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
