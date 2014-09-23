@@ -116,8 +116,8 @@ $(document).ready(function (){
     filterHandler();
     getJobs();
 
-    /*setInterval(function(){
+    setInterval(function(){
         isPaused();
         getJobs();
-    }, 15 * 1000);*/
+    }, 15 * 1000);
 });
