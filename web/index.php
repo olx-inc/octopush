@@ -40,6 +40,8 @@ $app->post('/jobs/{jobId}/register_test_job_result', "jobs.controller:registerTe
 $app->post('/jobs/{jobId}/register_test_job_url', "jobs.controller:registerTestJobUrl");
 $app->get('/jobs/{jobId}/status', "jobs.controller:getJobStatus");
 
+$app->get('/versions/all', "version.controller:getAllVersions");
+
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
     $token = $app['security']->getToken();
