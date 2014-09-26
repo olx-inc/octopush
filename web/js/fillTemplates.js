@@ -1,10 +1,5 @@
 var tml = {
-    fillCommonFields: function (html, job){
-        var user = job._user,
-            ticket = job._ticket,
-            jenkins = job._buildJobUrl,
-            deployJobUrl = job._deployJobUrl,
-            viewTestJob = job._testJobUrl;
+    fillJobCommonFields: function (html, job){
 
         html.find(".id").addClass("row-" + job._status);
 
@@ -16,16 +11,28 @@ var tml = {
         html.find("[data-queued-date]").text(job._queued_at);
         html.find("[data-updated-date]").text(job._updated_at);
         // ---- User
-        tml.displayUser(user, html.find("[data-user]"));
+        tml.displayUser(job._user, html.find("[data-user]"));
         // ---- Ticket
-        tml.displayTicket(ticket, html.find("[data-ticket]"));
+        tml.displayTicket(job._ticket, html.find("[data-ticket]"));
         // ---- Common actions
-        tml.displayActions(jenkins, html.find("[data-jenkins]"));
-        tml.displayActions(deployJobUrl, html.find("[data-deployment]"));
-        tml.displayActions(viewTestJob, html.find("[data-test-job]"));
+        tml.displayActions(job._buildJobUrl, html.find("[data-jenkins]"));
+        tml.displayActions(job._deployJobUrl, html.find("[data-deployment]"));
+        tml.displayActions(job._testJobUrl, html.find("[data-test-job]"));
         // ---- Start tooltip
         html.find("[data-toggle='tooltip']").tooltip();
     },
+
+    fillRepoFields: function (html, repo){
+        html.find("[data-repo]").text(repo._module);
+        //html.find("[data-testing]").text(repo._testing);
+        html.find("[data-staging]").text(repo._staging);
+        html.find("[data-production]").text(repo._prod);
+        // ---- Ticket
+        tml.displayTicket(repo._ticket, html.find("[data-ticket]"));
+        // ---- Start tooltip
+        html.find("[data-toggle='tooltip']").tooltip();
+    },
+
     handleDate: function (jobDate, currentDate){
         var current = currentDate,
             job = new Date(jobDate),
@@ -52,12 +59,14 @@ var tml = {
             return "-";
         }
     },
+
     displayUser: function (data, selector){
         if (data != "") {
             selector.attr("title", data);
             selector.show();
         }
     },
+
     displayTicket: function (data, selector){
         if (data != "") {
             selector.attr("title", data);
@@ -66,6 +75,7 @@ var tml = {
         }
 
     },
+
     displayActions: function (data, selector, toJson) {
         var toJson = toJson || false;
         if(toJson && data != "") {
@@ -81,6 +91,9 @@ var tml = {
         }
     },
 
+    /* -------------------------
+       -- Fill job template ---
+       ------------------------- */
     preprodQueue: function (job) {
         var newJob = $("#resources .job").clone(),
             remove = "",
@@ -98,7 +111,7 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
         return newJob;
@@ -112,7 +125,7 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
 
         return newJob;
     },
@@ -135,7 +148,7 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
         tml.displayActions(goLive, newJob.find("[data-go-live]"), true);
 
         return newJob;
@@ -158,7 +171,7 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
 
         return newJob;
@@ -173,7 +186,7 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
 
         return newJob;
@@ -198,10 +211,33 @@ var tml = {
         job._queued_at = tml.handleDate(job._queued_at, date);
         job._updated_at = tml.handleDate(job._updated_at, date);
 
-        tml.fillCommonFields(newJob, job);
+        tml.fillJobCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
         tml.displayActions(redeploy, newJob.find("[data-redeploy]"), true);
 
         return newJob;
+    },
+
+    /* -------------------------
+       -- Fill repo template ---
+       ------------------------- */
+    repo: function (repo) {
+        var newRepo = $("#resources .repo").clone(),
+            canRollback = false, //repo._canRollback
+            rollback = "";
+
+        if (canRollback){
+            rollback = {
+                "id": job._id,
+                "targetModule": job._targetModule,
+                "targetVersion": job._targetVersion
+            }
+        }
+
+        tml.fillRepoFields(newRepo, repo);
+
+        tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);
+
+        return newRepo;
     }
 }

@@ -112,7 +112,7 @@
   background-color: #c5c5c5
 }
 
-/* content */
+/* content jobs */
 .module-column {
   width: 150px;
 }
@@ -163,6 +163,21 @@
   text-decoration: none
 }
 
+/* content repos */
+.table-responsive {
+  display: inline-table;
+  margin-top: 25px;
+  width: 99%
+}
+.repo {
+  height: 40px
+}
+.repo td {
+  vertical-align: middle
+}
+.repo .ticket a {
+  display: none;
+}
 
 /* responsive */
 @media (max-width: 1040px) {

@@ -74,25 +74,6 @@ function remove(element) {
     }
 }
 
-function myComponents() {
-    var url,
-        btnClass = $('#my-components').attr('class');
-
-    if(btnClass.indexOf('btn-on') >= 0){
-        url = '/mycomponents/btn-off';
-    }else{
-        url = '/mycomponents/btn-on';
-    }
-    
-    $.get(url)
-        .done(function() {
-            location.reload();
-        })
-        .fail(function() {
-            alert("An error occurred, please try again");
-        });
-}
-
 $(function() {
     $(".container").on('click', "[data-job-go-live]", function (e) {
         goLive(this);
@@ -105,10 +86,5 @@ $(function() {
     $(".container").on('click', "[data-remove]", function (e) {
         remove(this);
         return false;
-    });
-
-    $('.container').on('click', "#my-components", function (e) {
-        e.preventDefault();
-        myComponents();
     });
 });
