@@ -5,7 +5,7 @@ namespace Controllers;
 use Models\JobMapper,
     Models\Job,
     Models\JobStatus,
-    Models\Version,
+    Models\OctopushVersion,
     Silex\Application;
 
 class QueueController
@@ -13,20 +13,17 @@ class QueueController
     private $_jobMapper;
     private $_config;
     private $_jenkins;
-    private $_jobsController;
     private $_app;
     private $_log;
 
     public function __construct(\OctopushApplication $app, 
                                 JobMapper $jobMapper, 
                                 $jenkins, 
-                                $jobsController, 
                                 $log) {
         $this->_jobMapper = $jobMapper;
         $this->_config = $app['config'];
         $this->_app = $app;
         $this->_jenkins = $jenkins;
-        $this->_jobsController = $jobsController;
         $this->_log = $log;
     }
 
@@ -108,7 +105,7 @@ class QueueController
 
         $status = 'Ok';
         if ($this->_isPaused()) $status = 'Paused';
-        return "Status: " . $status . "\nVersion: " . Version::getFull();
+        return "Status: " . $status . "\nVersion: " . OctopushVersion::getFull();
     }
 
     public function processJob()
@@ -274,21 +271,31 @@ class QueueController
     }
 
     /**********************   UI HANDLER METHODS ***********************/
-    public function index()
+    private function _index($page)
     {
         $app = $this->_app;
         $config = $this->_config;
 
         $sessionHelper = $app['helpers.session'];
 
-        return $app['twig']->render('index.html', array(
+        return $app['twig']->render($page . '.html', array(
             'contact' => $config['contact_to'],
             'my_components' => $sessionHelper->getMyComponentsValue(),
-            'version' => Version::getShort(),
+            'version' => OctopushVersion::getShort(),
             'userdata' => $app['helpers.session']->getUserData(),
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
                 '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))
         ));
+    }
+
+    public function index()
+    {
+        return $this->_index("index");
+    }
+
+    public function versions()
+    {
+        return $this->_index("versions");
     }
 
     /**********************   PRIVATE METHODS ***********************/
