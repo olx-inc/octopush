@@ -11,6 +11,7 @@ require_once __DIR__ . '/../src/bootstrap.php';
 
 $app->get('/run', "queue.controller:processJob");
 $app->get('/', "queue.controller:index");
+$app->get('/versions', "queue.controller:versions");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");
 $app->get('/health', "queue.controller:health");
@@ -38,6 +39,8 @@ $app->post('/jobs/create', "jobs.controller:createJob");
 $app->post('/jobs/{jobId}/register_test_job_result', "jobs.controller:registerTestJobResult");
 $app->post('/jobs/{jobId}/register_test_job_url', "jobs.controller:registerTestJobUrl");
 $app->get('/jobs/{jobId}/status', "jobs.controller:getJobStatus");
+
+$app->get('/versions/all', "version.controller:getAllVersions");
 
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
