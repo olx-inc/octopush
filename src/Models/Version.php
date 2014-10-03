@@ -11,6 +11,16 @@ class Version
     private $_updated_at;
     private $_ticket;
 
+
+    public function __construct($job)
+    {
+        $this->_module = $job->getTargetModule();
+        $this->_version = $job->getTargetVersion();
+        $this->_environment = $job->getTargetEnvironment();
+        $this->_ticket = $job->getTicket();
+    }
+
+
     public function setId($id)
     {
         $this->_id = (int) $id;
@@ -86,6 +96,7 @@ class Version
 
         return $version;
     }
+
 
     public function serialize()
     {

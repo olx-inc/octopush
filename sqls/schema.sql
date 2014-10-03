@@ -27,7 +27,7 @@ CREATE TABLE versions (
   environment varchar(15) DEFAULT NULL,
   version varchar(30) DEFAULT NULL,
   updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  ticket varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  ticket varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY idx_module_environment_version (module, environment , version)
 ) ENGINE=InnoDB AUTO_INCREMENT=1155 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

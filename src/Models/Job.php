@@ -45,6 +45,11 @@ class Job
         return $this->_targetEnvironment;
     }
 
+    public function setTargetEnvironment($env)
+    {
+        $this->_targetEnvironment = $env;
+    }
+
     public function getRequestorJenkins()
     {
         return $this->_requestorJenkins;

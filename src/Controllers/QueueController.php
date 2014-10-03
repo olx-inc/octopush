@@ -3,7 +3,9 @@
 namespace Controllers;
 
 use Models\JobMapper,
+    Models\VersionMapper,
     Models\Job,
+    Models\Version,
     Models\JobStatus,
     Models\OctopushVersion,
     Silex\Application;
@@ -11,6 +13,7 @@ use Models\JobMapper,
 class QueueController
 {
     private $_jobMapper;
+    private $_versionMapper;
     private $_config;
     private $_jenkins;
     private $_app;
@@ -18,9 +21,11 @@ class QueueController
 
     public function __construct(\OctopushApplication $app, 
                                 JobMapper $jobMapper, 
+                                VersionMapper $versionMapper, 
                                 $jenkins, 
                                 $log) {
         $this->_jobMapper = $jobMapper;
+        $this->_versionMapper = $versionMapper;
         $this->_config = $app['config'];
         $this->_app = $app;
         $this->_jenkins = $jenkins;
@@ -191,6 +196,8 @@ class QueueController
                 case "SUCCESS":
                     $runningJob->moveStatusTo(JobStatus::PENDING_TESTS);
                     $this->_jobMapper->save($runningJob);
+                    $version = new Version($runningJob);
+                    $this->_versionMapper->save($version);
                     $message = "Job successfully processed.JobId:" . $runningJob->getId();
                     $this->_log->addInfo($message);
                     break;
@@ -218,6 +225,9 @@ class QueueController
                 case "SUCCESS":
                     $runningJob->moveStatusTo(JobStatus::GO_LIVE_DONE);
                     $this->_jobMapper->save($runningJob);
+                    $version = new Version($runningJob);
+                    $this->_versionMapper->save($version);
+
                     $message = "Job successfully processed.JobId:" . $runningJob->getId();
                     $this->_log->addInfo($message);
                     break;
@@ -250,6 +260,7 @@ class QueueController
         }
         foreach ($jobsToProcess as $job) {
             $job->moveStatusTo(JobStatus::GOING_LIVE);
+            $job->setTargetEnvironment("live");
             $this->_jobMapper->save($job);
             if ($this->_jenkins->pushLive($job)) {
                 $this->_jobMapper->save($job);

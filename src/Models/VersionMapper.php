@@ -9,8 +9,9 @@ class VersionMapper
     private $_db;
 
     const FIND_ALL_STATEMENT = "SELECT * FROM versions ORDER BY module";
-    const INSERT_STATEMENT = "INSERT INTO versions (module, version, environment, ticket, updated_at) VALUES (?, ?, ?, ?, ?, ?);";
-    const UPDATE_STATEMENT = "UPDATE versions SET version = ?, updated_at = ?, ticket = ? WHERE module = ? AND environment = ?";
+    const FIND_VERSION_STATEMENT = "SELECT * FROM versions WHERE module = ? AND environment = ?";
+    const INSERT_STATEMENT = "INSERT INTO versions (module, version, environment, ticket, updated) VALUES (?, ?, ?, ?, ?);";
+    const UPDATE_STATEMENT = "UPDATE versions SET version = ?, ticket = ?, updated = ? WHERE module = ? AND environment = ?";
 
     public function __construct(Connection $db)
     {
@@ -28,58 +29,59 @@ class VersionMapper
         return $data;
     }
 
-    public function save($job)
+
+    public function save($version)
     {
-        if ($job->getId() == 0) {
-            $this->_executeInsert($job);
-        } else {
-            $this->_executeUpdate($job);
+        $params = array($version->getModule(), $version->getEnvironment());
+        try
+        {
+            $data = $this->_db->fetchAll(VersionMapper::FIND_VERSION_STATEMENT, $params);
+
+            if (empty($data)) {
+                $this->_executeInsert($version);
+            } else {
+                $this->_executeUpdate($version);
+            }
+
+        } catch (\Exception $exc) {
+            error_log($exc);            
         }
+
     }
 
     /****** REVISAR *****/
 
-    private function _executeInsert($job)
+    private function _executeInsert($version)
     {
         $sql = VersionMapper::INSERT_STATEMENT;
         $insertedDate = date('Y-m-d H:i:s');
         $this->_db->executeUpdate(
             $sql,
             array(
-                $job->getTargetModule(),
-                $job->getTargetVersion(),
-                $job->getTargetEnvironment(),
-                $job->getRequestorJenkins(),
-                $job->getStatus(),
-                $job->getTestJobUrl(),
-                $job->getDeploymentJobId(),
-                $job->getUser(),
-                $job->getTicket(),
-                $job->getRollbackedFrom(),                
+                $version->getModule(),
+                $version->getVersion(),
+                $version->getEnvironment(),
+                $version->getTicket(),
                 $insertedDate,
             )
         );
-        $job->setId($this->_db->lastInsertId());
+        $version->setId($this->_db->lastInsertId());
     }
 
-    private function _executeUpdate($job)
+    private function _executeUpdate($version)
     {
         $sql = VersionMapper::UPDATE_STATEMENT;
         $updatedDate = date('Y-m-d H:i:s');
         $this->_db->executeUpdate(
             $sql,
             array(
-                $job->getStatus(),
+                $version->getVersion(),
+                $version->getTicket(),
                 $updatedDate,
-                $job->getTestJobUrl(),
-                $job->getDeploymentJobId(),
-                $job->getLiveJobId(),
-                $job->getUser(),
-                $job->getTicket(),
-                $job->getRollbackedFrom(),
-                $job->getId(),
+                $version->getModule(),
+                $version->getEnvironment(),
           )
         );
-        $job->setUpdateDate($updatedDate);
+        $version->setUpdateDate($updatedDate);
     }
 }

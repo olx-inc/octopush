@@ -41,6 +41,7 @@ $app->post('/jobs/{jobId}/register_test_job_url', "jobs.controller:registerTestJ
 $app->get('/jobs/{jobId}/status', "jobs.controller:getJobStatus");
 
 $app->get('/versions/all', "version.controller:getAllVersions");
+$app->get('/environments/{env}/modules/{module}/versions/{version}/update', "version.controller:update");
 
 
 $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($app) {

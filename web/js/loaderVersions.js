@@ -5,7 +5,7 @@ var getVersions = function (){
         table.children('tbody').html('');
         if( !$.isEmptyObject(versions) ){
             $.each(versions, function(){
-                table.children('tbody').append(tml.repo(this));
+                table.children('tbody').append(tml.version(this));
             });
         }
     });

@@ -26,7 +26,7 @@ var tml = {
         html.find("[data-repo]").text(repo._module);
         //html.find("[data-testing]").text(repo._testing);
         html.find("[data-staging]").text(repo._staging);
-        html.find("[data-production]").text(repo._prod);
+        html.find("[data-production]").text(repo._live);
         // ---- Ticket
         tml.displayTicket(repo._ticket, html.find("[data-ticket]"));
         // ---- Start tooltip
@@ -221,22 +221,21 @@ var tml = {
     /* -------------------------
        -- Fill repo template ---
        ------------------------- */
-    repo: function (repo) {
+    version: function (version) {
         var newRepo = $("#resources .repo").clone(),
             canRollback = false, //repo._canRollback
             rollback = "";
 
         if (canRollback){
             rollback = {
-                "id": job._id,
-                "targetModule": job._targetModule,
-                "targetVersion": job._targetVersion
+                "id": version._id,
+                "targetModule": version._module,
             }
         }
 
-        tml.fillRepoFields(newRepo, repo);
+        tml.fillRepoFields(newRepo, version);
 
-        tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);
+        //tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);
 
         return newRepo;
     }

@@ -23,6 +23,34 @@ class VersionController
     }
 
 
+    public function update($environment, $module, $version)
+    {
+        try {
+            $version = Version::createFromArray(array('environment' => $environment, 'module' => $module, 'version' => $version ) );
+            if (isset($_REQUEST['ticket']))
+                $version['ticket'] = $_REQUEST['ticket'];
+
+            $this->versionMapper->save($version);
+            $result = array(
+                'status' => "success",
+                'message' => "Version registered succesfully",
+            );
+            
+            return $this->_app->json($result);
+        } catch (\Exception $exc) {
+            $error = array(
+                'status' => "error",
+                'message' => "Problems trying to register Version",
+                'detail' => $exc->getMessage(),
+            );
+            $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
+            return $this->_app->json($error);
+        }
+
+
+    }
+
     public function getAllVersions()
     {
         $result = array();
@@ -38,9 +66,10 @@ class VersionController
 
                 $version_array = array();
                 $module = $version['module'];
+                if ( isset($version['ticket']) )
+                    $version_array['_ticket'] = $version['ticket'];
             }
             $version_array['_module'] = $version['module'] ;
-            $version_array['_ticket'] = isset($version['ticket']) ? $version['ticket'] : "";
             $version_array['_' . $version['environment']] = $version['version'];
 
         }
@@ -48,4 +77,5 @@ class VersionController
 
         return $this->_app->json($result);
     }
+
 }

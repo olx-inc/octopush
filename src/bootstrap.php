@@ -77,7 +77,7 @@ $app['jobs.controller'] = $app->share(
 
 $app['queue.controller'] = $app->share(
         function () use ($app) {
-    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['services.jenkins'], $app['monolog']);
+    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['models.VersionMapper'], $app['services.jenkins'], $app['monolog']);
 }
 );
 
