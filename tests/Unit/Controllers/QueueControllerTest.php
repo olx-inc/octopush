@@ -4,6 +4,8 @@ use Controllers\QueueController,
     Models\JobMapper,
     Models\Job;
 
+require_once '../../../src/OctopushApplication.php';
+
 class QueueControllerTest extends \PHPUnit_Framework_TestCase
 {
     private $_jenkinsMock;
@@ -142,7 +144,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
 
 }
 
-class ApplicationMock extends Silex\Application
+class ApplicationMock extends OctopushApplication
 {
     protected $values;
 

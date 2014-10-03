@@ -4,6 +4,7 @@ use Controllers\JobsController,
     Models\Job,
     Models\JobStatus;
 
+
 class JobsControllerTest extends \PHPUnit_Framework_TestCase
 {
     private $_config;

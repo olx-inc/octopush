@@ -4,10 +4,11 @@
     {% if userdata %}
         <div class="loginBox">
             <div class="userBox">
-                Hello {{ userdata.user.username }}
+                <span>Hello {{ userdata.user.username }}
                 {% if userdata.is_admin_user %}
                     (admin)
                 {% endif %}
+                </span>
                 | <a href="{{ logoutUrl }}">Logout</a>
             </div>
             {# Filters #}

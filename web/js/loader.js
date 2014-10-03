@@ -110,8 +110,6 @@ var getJobs = function (){
 
 
 $(document).ready(function (){
-    $('.preprod-head').load('../templates/preprodHead.html');
-    $('.prod-head').load('../templates/prodHead.html');
     $('#resources').load('../templates/job.html');
 
     isPaused();
