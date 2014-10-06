@@ -362,7 +362,7 @@ class JobsController
 
     /*************************/
 
-    public function deploying() //DEPRECATE and use inprogress(prod)
+    public function deploying() //DEPRECATE and use inprogress(live)
     {
         $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
         if (count($jobsGoingLive) == 0) {
@@ -400,9 +400,9 @@ class JobsController
         $all = array('preprodQueue' => $this->_queued('staging'));
         $all['preprodInprogress'] = $this->_inprogress('staging');
         $all['preprodDeployed'] = $this->_deployed('staging', $repos, $queueLenght);
-        $all['prodQueue'] = $this->_queued('prod');
-        $all['prodInprogress'] = $this->_inprogress('prod');
-        $all['prodDeployed'] = $this->_deployed('prod', $repos, $queueLenght);
+        $all['prodQueue'] = $this->_queued('live');
+        $all['prodInprogress'] = $this->_inprogress('live');
+        $all['prodDeployed'] = $this->_deployed('live', $repos, $queueLenght);
 
         return $this->_app->json($all);
     }
@@ -410,7 +410,7 @@ class JobsController
     private function _deployed($env, $repos, $queueLenght = 10)
     {
         $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
-            'prod' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
+            'live' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
 
         $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $repos, $queueLenght);
 
@@ -434,6 +434,8 @@ class JobsController
             $job_array['_canRollback'] = ($job->wentLive() && $canBePushedLive);
 
             $job_array['_canCancel'] = ($canBePushedLive);
+
+            $job_array['_serverTime'] = date('Y-m-d H:i:s');
 
             array_push($result, $job_array);
         }
@@ -460,7 +462,7 @@ class JobsController
    private function _queued($env)
     {
         $statuses = array('staging' => array(JobStatus::QUEUED), 
-            'prod' => array(JobStatus::QUEUED_FOR_LIVE));
+            'live' => array(JobStatus::QUEUED_FOR_LIVE));
 
         $queuedJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
 
@@ -477,7 +479,7 @@ class JobsController
    private function _inprogress($env)
     {
         $statuses = array('staging' => array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), 
-            'prod' => array(JobStatus::GOING_LIVE));
+            'live' => array(JobStatus::GOING_LIVE));
 
         $inProgressJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
 
