@@ -15,7 +15,7 @@ class JobMapper
     const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC";
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC limit :limit";
     const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket, rollback_id, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_id = ? WHERE job_id = ?";
+    const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_id = ?, environment = ? WHERE job_id = ?";
 
     public function __construct(Connection $db)
     {
@@ -156,6 +156,7 @@ class JobMapper
                 $job->getUser(),
                 $job->getTicket(),
                 $job->getRollbackedFrom(),
+                $job->getTargetEnvironment(),
                 $job->getId(),
           )
         );

@@ -45,6 +45,12 @@ $app['models.JobMapper'] = $app->share(
 }
 );
 
+$app['models.VersionMapper'] = $app->share(
+        function ($app) {
+    return new Models\VersionMapper($app['db']);
+}
+);
+
 $app['services.jenkins'] = $app->share(
         function ($app) {
     return new Services\Jenkins($app['config'], new \Library\HttpRequest(), $app['monolog']);
@@ -71,7 +77,13 @@ $app['jobs.controller'] = $app->share(
 
 $app['queue.controller'] = $app->share(
         function () use ($app) {
-    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['services.jenkins'], $app['jobs.controller'], $app['monolog']);
+    return new Controllers\QueueController($app, $app['models.JobMapper'], $app['models.VersionMapper'], $app['services.jenkins'], $app['monolog']);
+}
+);
+
+$app['version.controller'] = $app->share(
+        function () use ($app) {
+    return new Controllers\VersionController($app, $app['models.VersionMapper'], $app['monolog']);
 }
 );
 

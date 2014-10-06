@@ -19,3 +19,24 @@ CREATE TABLE jobs (
   rollback_id int(11) DEFAULT 0,
   PRIMARY KEY (job_id)
 );
+
+
+CREATE TABLE versions (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT,
+  module varchar(100) NOT NULL,
+  environment varchar(15) DEFAULT NULL,
+  version varchar(30) DEFAULT NULL,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ticket varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_module_environment_version (module, environment , version)
+) ENGINE=InnoDB AUTO_INCREMENT=1155 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE modules (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT,
+  module varchar(100) NOT NULL,
+  track varchar(25) NOT NULL,
+  layer int DEFAULT 0,
+  PRIMARY KEY (id)
+);

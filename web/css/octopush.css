@@ -70,11 +70,53 @@
   margin-left: 6px 
 }
 .dropdown-menu {
+  max-height: 335px;
+  overflow-x: hidden;
   width: 205px
 }
 
-/* content */
+/* container */
+.container {
+  box-shadow: -8px 0px 15px -6px #c5c5c5
+}
+
+
+/* tabs */
+.tabs {
+  float: left;
+  padding: 141px 0 0 0px;
+  margin: 12px 4px -115px -205px;
+  transform: rotate(-90deg)
+}
+.tabs a {
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #c5c5c5;
+  border-bottom: 0 none;
+  color: #888;
+  display: inline-block;
+  margin-bottom: -1px;
+  padding: 6px 0;
+  text-align: center;
+  text-decoration: none;
+  width: 100px
+}
+.tabs a:hover {
+  color: #888;
+  outline: none
+}
+.tabs .tab-on {
+  background-color: #fff;
+  border-bottom: 1px solid #fff
+}
+.tab-off {
+  background-color: #c5c5c5
+}
+
+/* content jobs */
 .module-column {
+  width: 150px;
+}
+.version-column {
   width: 150px;
 }
 .status-column {
@@ -119,4 +161,122 @@
 .job .actions a:hover,
 .job .ticket a:hover {
   text-decoration: none
+}
+
+/* content repos */
+.table-responsive {
+  display: inline-table;
+  margin-top: 25px;
+  width: 99%
+}
+.repo {
+  height: 40px
+}
+.repo td {
+  vertical-align: middle
+}
+.repo .ticket a {
+  display: none;
+}
+
+/* responsive */
+@media (max-width: 1040px) {
+  .page-header {
+    border-bottom: 0 none
+  }
+  .tabs {
+    border-bottom: 1px solid #eee;
+    float: none;
+    padding: 0;
+    margin: 0;
+    transform: none
+  }
+  .container {
+    box-shadow: none
+  }
+  .table-responsive {
+    border: 0 none;
+    z-index: -1
+  }
+  .table-responsive > .table {
+    margin-bottom: 10px
+  }
+}
+
+@media (max-width: 600px) {
+  .userBox span {
+    display: inline-block;
+    max-width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top
+  }
+  /* row hover */
+  .table-hover > tbody > tr:hover > td {
+    background-color: #eee
+  }
+}
+
+@media (max-width: 450px) {
+  /* header */
+  .page-header img {
+    width: 150px
+  }
+  .page-header small {
+    display: none
+  }
+  .userBox span {
+    max-width: 125px
+  }
+  .dropdown-menu {
+    max-height: 205px;
+  }
+
+  /* content */
+  .queue-date {
+    display: none
+  }
+
+  /* jobs */
+  .row-DEPLOYING        { background-color: orange !important }
+  .row-PENDING_TESTS    { background-color: orange !important }
+  .row-TESTS_PASSED     { background-color: #5cb85c !important }
+  .row-DEPLOY_FAILED    { background-color: red !important }
+  .row-TESTS_FAILED     { background-color: red !important }
+  .row-QUEUED           { background-color: silver !important }
+  .row-QUEUED_FOR_LIVE  { background-color: orange !important }
+  .row-GOING_LIVE       { background-color: orange !important }
+  .row-GO_LIVE_FAILED   { background-color: red !important }
+  .row-GO_LIVE_DONE     { background-color: #5cb85c !important }
+
+  .table-responsive .table .job > td { white-space: normal }
+  .table-responsive .table .job .actions { white-space: nowrap }
+  .status-column,
+  .job .status {
+    display: none
+  }
+  /*.job .status { text-align: center }*/
+  .job .label { padding: .2em .9em .3em }
+  .job .label small { display: none }
+
+  .job .user p {
+    font-size: 18px;
+    font-weight: bold
+  }
+  .job .ticket a,
+  .job .actions a {
+    font-size: 18px
+  }
+}
+
+@media (max-width: 400px) {
+  /* header */
+  .page-header img {
+    width: 100px
+  }
+  .filters button,
+  .filters ul {
+    width: 180px
+  }
 }
