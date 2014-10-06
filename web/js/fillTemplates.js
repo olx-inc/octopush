@@ -97,7 +97,7 @@ var tml = {
     preprodQueue: function (job) {
         var newJob = $("#resources .job").clone(),
             remove = "",
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         if(job._canCancel) {
             remove = {
@@ -119,7 +119,7 @@ var tml = {
 
     preprodInProgress: function (job) {
         var newJob = $("#resources .job").clone(),
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         // convert date to time
         job._queued_at = tml.handleDate(job._queued_at, date);
@@ -134,7 +134,7 @@ var tml = {
         var newJob = $("#resources .job").clone(),
             canGoLive = job._canGoLive,
             goLive = "",
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         if (canGoLive){
             goLive = {
@@ -157,7 +157,7 @@ var tml = {
     prodQueue: function (job) {
         var newJob = $("#resources .job").clone(),
             remove = "",
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         if(job._canCancel) {
             remove = {
@@ -180,7 +180,7 @@ var tml = {
     prodInProgress: function (job) {
         var newJob = $("#resources .job").clone(),
             viewLiveJob = job._deployLiveJobUrl,
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         // convert date to time
         job._queued_at = tml.handleDate(job._queued_at, date);
@@ -197,7 +197,7 @@ var tml = {
             viewLiveJob = job._deployLiveJobUrl,
             wentLive = job._canRollback,
             redeploy = "",
-            date = job._serverTime;//new Date();
+            date = new Date(job._serverTime);
 
         if (wentLive){
             redeploy = {
