@@ -8,7 +8,7 @@ use Models\JobMapper,
     Models\Version,
     Models\JobStatus,
     Models\OctopushVersion,
-    Silex\Application;
+    Library\OctopushApplication;
 
 class QueueController
 {
@@ -19,7 +19,7 @@ class QueueController
     private $_app;
     private $_log;
 
-    public function __construct(\OctopushApplication $app, 
+    public function __construct(OctopushApplication $app, 
                                 JobMapper $jobMapper, 
                                 VersionMapper $versionMapper, 
                                 $jenkins, 
@@ -87,7 +87,8 @@ class QueueController
 
     public function resume()
     {
-        return $this->_app->resume();
+        $success = $this->_app->resume();
+        return $this->_jsonResult($success);
     }
 
     public function status()

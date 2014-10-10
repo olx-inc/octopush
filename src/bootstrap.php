@@ -1,7 +1,7 @@
 <?php
-require_once 'OctopushApplication.php';
+// require_once 'Library/OctopushApplication.php';
 
-$app = new OctopushApplication();
+$app = new Library\OctopushApplication();
 
 if (!defined('APPLICATION_ENV')) {
     define(

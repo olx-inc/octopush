@@ -5,6 +5,7 @@ describe "Octopush control functions" do
   describe 'pause' do
     it "should return result SUCCESS" do
       url = octopush_url + "/pause"
+      puts url
       response = Octopush.get(url)
       response.body.should include 'SUCCESS'
     end

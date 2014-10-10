@@ -1,6 +1,8 @@
 <?php
 
-class OctopushApplication extends Silex\Application
+namespace Library;
+
+class OctopushApplication extends \Silex\Application
 {
 
     public function isPaused()
@@ -24,7 +26,7 @@ class OctopushApplication extends Silex\Application
             $success = unlink($this['config']['control_file']);
         }
 
-        return $this->_jsonResult($success);
+        return $success;
     }
 
 }
