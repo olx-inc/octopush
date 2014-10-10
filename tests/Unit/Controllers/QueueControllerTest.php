@@ -2,18 +2,24 @@
 
 use Controllers\QueueController,
     Models\JobMapper,
-    Models\Job;
+    Models\Job,
+    Library\OctopushApplication;
 
-require_once '../../../src/OctopushApplication.php';
+//require_once  __DIR__ .'/../src/OctopushApplication.php';
 
 class QueueControllerTest extends \PHPUnit_Framework_TestCase
 {
     private $_jenkinsMock;
+    private $_versionMapperMock;
     private $_logMock;
 
     public function setUp()
     {
         $this->_jenkinsMock = $this->getMockBuilder('Services\Jenkins')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->_versionMapperMock = $this->getMockBuilder('Models\VersionMapper')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -35,7 +41,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
         $jobMapperMock->expects($this->once())
             ->method('save');
 
-        $queueController = new QueueController($appMock, $jobMapperMock, $this->_jenkinsMock, null, $this->_logMock);
+        $queueController = new QueueController($appMock, $jobMapperMock, $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
 
         $result = $queueController->queueJob("qa1", "billing", "3.3.3");
         $this->assertEquals('{"status":"success","message":"Job inserted in queue","job_id":0}', $result->getContent());
@@ -49,7 +55,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $queueController = new QueueController($appMock, $jobsMapperMock, $this->_jenkinsMock, null, $this->_logMock);
+        $queueController = new QueueController($appMock, $jobsMapperMock, $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
         $result = $queueController->queueJob("qa1", "xxx", "3.3.3");
         $this->assertEquals('{"status":"error","message":"xxx is not a valid module to push."}', $result->getContent());
     }
@@ -66,7 +72,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->will($this->throwException(new Exception("Error")));
 
-        $queueController = new QueueController($appMock, $jobsMapperMock, $this->_jenkinsMock, null, $this->_logMock);
+        $queueController = new QueueController($appMock, $jobsMapperMock,  $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
         $result = $queueController->queueJob("qa1", "billing", "3.3.3");
         $this->assertEquals('{"status":"error","message":"Job not inserted in queue","detail":"Error"}', $result->getContent());
     }

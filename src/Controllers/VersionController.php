@@ -4,7 +4,7 @@ namespace Controllers;
 
 use Models\VersionMapper,
     Models\Version,
-    Silex\Application;
+    Library\OctopushApplication;
 
 /* Handle requests related to specific jobs, all request expects a job_id parameter */
 class VersionController
@@ -13,7 +13,7 @@ class VersionController
     private $_log;
     private $_app;
 
-    public function __construct(\OctopushApplication $app, 
+    public function __construct(OctopushApplication $app, 
                                 VersionMapper $versionMapper,
                                 $log)
     {
@@ -66,9 +66,9 @@ class VersionController
 
                 $version_array = array();
                 $module = $version['module'];
-                if ( isset($version['ticket']) )
-                    $version_array['_ticket'] = $version['ticket'];
             }
+            if ( isset($version['ticket']) )
+                $version_array['_ticket'] = $version['ticket'];
             $version_array['_module'] = $version['module'] ;
             $version_array['_' . $version['environment']] = $version['version'];
 
