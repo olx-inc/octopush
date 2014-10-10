@@ -4,3 +4,4 @@ $loader->add('Models', __DIR__ .'/../src/');
 $loader->add('Providers', __DIR__ .'/../src/');
 $loader->add('Controllers', __DIR__ .'/../src/');
 $loader->add('Services', __DIR__ .'/../src/');
+$loader->add('Library', __DIR__ .'/../src/');

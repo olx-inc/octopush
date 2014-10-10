@@ -5,7 +5,7 @@ namespace Controllers;
 use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
-    Silex\Application,
+    Library\OctopushApplication,
     Helpers\Session,
     Controllers\JenkinsController,
     Symfony\Component\HttpFoundation\Request,
@@ -20,7 +20,7 @@ class JobsController
     private $_app;
     private $_thirdParty;
 
-    public function __construct(\OctopushApplication $app, 
+    public function __construct(OctopushApplication $app, 
                                 $config,
                                 JobMapper $jobMapper,
                                 $jenkins, 
@@ -345,7 +345,7 @@ class JobsController
     {
 
         $permissions = $this->_app['helpers.session']->getPermissions();
-        
+
         if (isset($permissions)) {
             if ($this->_thirdParty->canMemberGoLive(
                 $permissions, 
