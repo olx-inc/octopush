@@ -7,16 +7,23 @@ use Library\HttpRequest;
 class ThirdParty {
 
     private $_preDeployUrl;
+    private $_postDeployUrl;
     private $_permissionsUrl;
     private $_adminTeamId;
     private $_pocsTeamId;
     private $_httpRequest;
     private $_log;
+    const DEPLOY_SUCCESS = "success";
+    const DEPLOY_FAILED = "failure";
+    const NOT_AVAILABLE = "none";
 
     public function __construct($config, 
                                 HttpRequest $httpRequest, 
                                 $log) {
-        $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
+        if (isset($config['thirdparty']['pre-deploy']))
+            $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
+        if (isset($config['thirdparty']['post-deploy']))
+            $this->_postDeployUrl = $config['thirdparty']['post-deploy'];
         $this->_permissionsUrl = $config['thirdparty']['member-permissions'];
         $this->_adminTeamId = $config['teams']['admin'];
         $this->_pocsTeamId = $config['teams']['pocs'];
@@ -27,15 +34,16 @@ class ThirdParty {
 
     public function preDeploy($job, $action = 'deploy')
     {
-        $urlParams = array(
-            'repo' => $job->getTargetModule(),
-            'version' => $job->getTargetVersion(),
-            'ticket' => urlencode($job->getTicket()),
-            'user' => $job->getUser(),
-            'action' => $action
-        );
+        if (isset($this->_preDeployUrl))
+            return $this->_externalCall($this->_preDeployUrl, $action);
+        return NOT_AVAILABLE;
+    }
 
-        return $this->_callToPreDeploy($urlParams);
+    public function postDeploy($job, $action = 'success')
+    {
+        if (isset($this->_postDeployUrl))
+            return $this->_externalCall($this->_postDeployUrl, $action);
+        return NOT_AVAILABLE;
     }
 
     public function getMemberPermissions($username) 
@@ -57,8 +65,16 @@ class ThirdParty {
         return false;
     }
 
-    private function _callToPreDeploy($params = array()) {
-        $url = $this->_preDeployUrl . '?' . http_build_query($params);
+    private function _externalCall($external_url, $action) {
+        $params = array(
+            'repo' => $job->getTargetModule(),
+            'version' => $job->getTargetVersion(),
+            'ticket' => urlencode($job->getTicket()),
+            'user' => $job->getUser(),
+            'action' => $action
+        );
+
+        $url = $external_url . '?' . http_build_query($params);
         $response = json_decode(file_get_contents($url));
         $response->ticket = urldecode($response->ticket); 
         return $response;
