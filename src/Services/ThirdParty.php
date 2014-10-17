@@ -35,14 +35,14 @@ class ThirdParty {
     public function preDeploy($job, $action = 'deploy')
     {
         if (isset($this->_preDeployUrl))
-            return $this->_externalCall($this->_preDeployUrl, $action);
+            return $this->_externalCall($job, $this->_preDeployUrl, $action);
         return NOT_AVAILABLE;
     }
 
     public function postDeploy($job, $action = 'success')
     {
         if (isset($this->_postDeployUrl))
-            return $this->_externalCall($this->_postDeployUrl, $action);
+            return $this->_externalCall($job, $this->_postDeployUrl, $action);
         return NOT_AVAILABLE;
     }
 
@@ -65,7 +65,7 @@ class ThirdParty {
         return false;
     }
 
-    private function _externalCall($external_url, $action) {
+    private function _externalCall($job, $external_url, $action) {
         $params = array(
             'repo' => $job->getTargetModule(),
             'version' => $job->getTargetVersion(),
@@ -75,6 +75,7 @@ class ThirdParty {
         );
 
         $url = $external_url . '?' . http_build_query($params);
+        error_log($url);
         $response = json_decode(file_get_contents($url));
         $response->ticket = urldecode($response->ticket); 
         return $response;
