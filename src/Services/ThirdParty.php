@@ -75,7 +75,6 @@ class ThirdParty {
         );
 
         $url = $external_url . '?' . http_build_query($params);
-        error_log($url);
         $response = json_decode(file_get_contents($url));
         $response->ticket = urldecode($response->ticket); 
         return $response;
