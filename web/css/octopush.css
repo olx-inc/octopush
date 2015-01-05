@@ -208,8 +208,8 @@
 
 .job .panel-body{
     position:relative;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .job .panel-footer{
@@ -218,12 +218,8 @@
 
 .job .panel-heading{
     padding:0 15px;
-    font-size: 12px
 }
 
-.job [class*="col-"] > span{
-  font-size:12px;
-}
 
 .job .email{
   color:#428bca;
