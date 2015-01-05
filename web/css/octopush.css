@@ -143,6 +143,7 @@
 .label-GOING_LIVE       { background-color: orange }
 .label-GO_LIVE_FAILED   { background-color: red }
 .label-GO_LIVE_DONE     { background-color: #5cb85c }
+.label-DEPLOYED         { background-color: #5cb85c }
 
 .job .user p {
   color: #428bca;

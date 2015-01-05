@@ -29,6 +29,8 @@ modules:
     abl: 1
     ok-project: 2
     fail-project: 2
+direct-to-live: []
+only-staging: []
 jobs:
     queue.lenght: 5       #amount of jobs listed in the queue
     processed.lenght: 15  #amount of jobs listed as processed

@@ -56,6 +56,9 @@ class JobsController
 
         try {
             $job = Job::createWith($module, $version, $env, $jenkins);
+            if (in_array($module, $config['direct-to-live'])) {
+                $job->setStatusId(6);
+            }
             $this->_jobMapper->save($job);
 
             $result = array(
@@ -409,8 +412,18 @@ class JobsController
 
     private function _deployed($env, $repos, $queueLenght = 10)
     {
-        $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
-            'live' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
+        $statuses = array(
+            'staging' => array(
+                JobStatus::TESTS_PASSED,
+                JobStatus::TESTS_FAILED,
+                JobStatus::DEPLOY_FAILED,
+                JobStatus::DEPLOYED
+            ), 
+            'live' => array(
+                JobStatus::GO_LIVE_DONE,
+                JobStatus::GO_LIVE_FAILED
+            )
+        );
 
         $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $repos, $queueLenght);
 
