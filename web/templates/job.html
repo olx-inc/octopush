@@ -1,24 +1,44 @@
 <!-- web/templates/job.html start -->
-<tr class="job">
-    <td class="id"><small data-id ></small></td>
-    <td class="module"><small data-target-module ></small></td>
-    <td class="version"><small data-target-version ></small></td>
-    <td class="status"><span class="label">
-        <small data-status ></small>
-    </span></td>
-    <td class="queue-date"><small data-queued-date ></small></td>
-    <td><small data-updated-date ></small></td>
-    <td class="text-center user">
-        <small>
-            <p data-user data-toggle="tooltip">@</p>
-        </small>
-    </td>
-    <td class="text-center ticket">
-        <small>
-            <a data-ticket class="ticket" href="" target="_blank" title="" data-toggle="tooltip"><i class="fa fa-ticket"></i></a>
-        </small>
-    </td>
-    <td class="actions">
+<div class="panel panel-default job">
+    <div class="panel-heading">
+        <span class="id">Id: <span data-id ></span></span>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <span class="module">Module: <span data-target-module ></span></span>
+            </div>
+            <div class="col-xs-6">
+                <span class="version">Version: <span data-target-version ></span></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <span class="status">Status: <span data-status ></span></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <span class="queue-date">Queued Date: <span data-queued-date ></span></span>
+            </div>
+            <div class="col-md-6">
+                <span>Last Date: <span data-updated-date ></span></span>
+            </div>
+        </div>       
+        <div class="row">
+            <div class="col-md-6 user">
+                <span>
+                    <p data-user data-toggle="tooltip">@</p>
+                </span>
+            </div>
+            <div class="col-md-6 ticket">
+                <span>
+                    <a data-ticket class="ticket" href="" target="_blank" title="" data-toggle="tooltip"><i class="fa fa-ticket"></i></a>
+                </span>
+            </div>
+        </div>       
+    </div>
+    <div class="panel-footer actions">
         <small>
             <a data-jenkins href="" target="_blank" title="view trigger job" data-toggle="tooltip" data-placement="top">
                 <span class="glyphicon glyphicon-log-in"></span>
@@ -42,6 +62,6 @@
                 <i class="glyphicon glyphicon-remove" ></i>
             </a>
         </small>
-    </td>
-</tr>
+    </div>
+</div>
 <!-- web/templates/job.html end -->

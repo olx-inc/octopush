@@ -14,95 +14,98 @@
         <!--  src/Views/index.html -->
     </head>
     <body>
-        <div class="container">
+        <div class="container">          
             {% include "templates/header.html" %}
             {# if isPaused #}
             <div id="paused" class="bs-callout bs-callout-warning" style="display:none">
                 <h4>Octopush service is Paused right now due to a current incident</h4>
                 <p>Please contact {{ contact }}.</p>
             </div>
-
             {% include "templates/tabs.html" with {"page":"deploys"} %}
-
-            <h3>Pre-Production</h3>
-            <div id="preprod">
-                <div id="preprod-queued" class="table-responsive">
-                    <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    {#if queued_jobs is empty #}
-                    <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                    {#if queued_jobs #}
-                    <table class="queued table table-striped table-condensed table-hover" style="display:none">
-                        <thead class="preprod-head">
-                            {% include "templates/preprodHead.html" %}
-                        </thead>
-                        <tbody class="pre-queue"></tbody>
-                    </table>
+            
+           <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    <h3>Pre-Production</h3>
                 </div>
-
-                <div id="preprod-inprogress" style="display:none" class="table-responsive">
-                    {#{% if in_progress_jobs != false %}#}
-                    <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
-                    {# if in_progress_jobs #}
-                    <table class="inprogress table table-striped table-condensed table-hover">
-                        <thead class="preprod-head">
-                            {% include "templates/preprodHead.html" %}
-                        </thead>
-                        <tbody class="pre-in-progress"></tbody>
-                    </table>
-                </div>
-
-                <div id="preprod-processed" class="table-responsive">
-                    <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
-                    {# if processed_jobs is empty #}
-                    <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
-                    {#if processed_jobs #}
-                    <table class="processed table table-striped table-condensed table-hover" style="display:none">
-                        <thead class="preprod-head">
-                            {% include "templates/preprodHead.html" %}
-                        </thead>
-                        <tbody class="pre-deployed"></tbody>
-                    </table>
+                <div class="panel panel-body">
+                    <div id="preprod" class="row">
+                        <div id="preprod-queued" class="col-md-4">
+                            <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
+                            <div>
+                                {#if queued_jobs is empty #}
+                                <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
+                                {#if queued_jobs #}
+                                <div class="queued" style="display:none">
+                                    <div class="pre-queue"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="preprod-inprogress" style="display:none" class="col-md-4">
+                            {#{% if in_progress_jobs != false %}#}
+                            <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
+                            {# if in_progress_jobs #}
+                            <div>
+                                <div class="inprogress">
+                                    <div class="pre-in-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="preprod-processed" class="col-md-4">
+                            <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
+                            <div>
+                                {# if processed_jobs is empty #}
+                                <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
+                                {#if processed_jobs #}
+                                <div class="processed" style="display:none">
+                                    <div class="pre-deployed"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <h3>Production</h3>
-            <div id="prod">
-                <div id="prod-queued" class="table-responsive">
-                    <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
-                    {# if liveQueue is empty #}
-                    <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                    {#if liveQueue #}
-                    <table class="queued table table-striped table-condensed table-hover" style="display:none">
-                        <thead class="prod-head">
-                            {% include "templates/prodHead.html" %}
-                        </thead>
-                        <tbody class="prod-queue"></tbody>
-                    </table>
+            <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    <h3>Production</h3>
                 </div>
-
-                <div id="prod-inprogress" style="display:none" class="table-responsive">
-                    {#{% if liveInProgress != false %}#}
-                    <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
-                    {#if liveInProgress #}
-                    <table class="inprogress table table-striped table-condensed table-hover" style="display:none">
-                        <thead class="prod-head">
-                            {% include "templates/prodHead.html" %}
-                        </thead>
-                        <tbody class="prod-in-progress"></tbody>
-                    </table>
-                </div>
-
-                <div id="prod-processed" class="table-responsive">
-                    <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
-                    {# if liveProcessed is empty #}
-                    <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
-                    {#if liveProcessed #}
-                    <table class="processed table table-striped table-condensed table-hover" style="display:none">
-                        <thead class="prod-head">
-                            {% include "templates/prodHead.html" %}
-                        </thead>
-                        <tbody class="prod-deployed"></tbody>
-                    </table>
+                <div class="panel panel-body">
+                    <div id="prod" class="row">
+                        <div id="prod-queued" class="col-md-4">
+                            <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
+                            <div>
+                                {# if liveQueue is empty #}
+                                <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
+                                {#if liveQueue #}
+                                <div class="queued" style="display:none">
+                                    <div class="prod-head">
+                                        {% include "templates/prodHead.html" %}
+                                    </div>
+                                    <div class="prod-queue"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prod-inprogress" style="display:none" class="col-md-4">
+                            {#{% if liveInProgress != false %}#}
+                            <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
+                            {#if liveInProgress #}
+                            <div>
+                                <div class="inprogress" style="display:none">
+                                    <div class="prod-in-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prod-processed" class="col-md-4">
+                            <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
+                            <div>
+                                {# if liveProcessed is empty #}
+                                <div class="processed-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No processed jobs</div>
+                                {#if liveProcessed #}
+                                <div class="processed" style="display:none">
+                                    <div class="prod-deployed"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

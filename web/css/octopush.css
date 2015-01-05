@@ -1,3 +1,10 @@
+.page-header{
+    margin: 0 auto;
+    padding: 15px;
+}
+.page-header > *{
+    vertical-align: middle
+}
 .bs-callout {
     margin: 20px 0;
     padding: 15px 30px 15px 15px;
@@ -77,28 +84,24 @@
 
 /* container */
 .container {
-  box-shadow: -8px 0px 15px -6px #c5c5c5
+  box-shadow: -8px 0px 15px -6px #c5c5c5;
+  max-width: 100%;
 }
 
 
 /* tabs */
 .tabs {
-  float: left;
-  padding: 141px 0 0 0px;
-  margin: 12px 4px -115px -205px;
-  transform: rotate(-90deg)
+  display:block;
+  clear:both;
+  position:relative;
+  overflow:hidden;
+  padding: 15px 0;
+  margin: 0;
 }
 .tabs a {
-  border-radius: 4px 4px 0 0;
-  border: 1px solid #c5c5c5;
-  border-bottom: 0 none;
-  color: #888;
   display: inline-block;
-  margin-bottom: -1px;
-  padding: 6px 0;
-  text-align: center;
-  text-decoration: none;
-  width: 100px
+  float:left;
+  margin:0 auto;
 }
 .tabs a:hover {
   color: #888;
@@ -164,11 +167,6 @@
 }
 
 /* content repos */
-.table-responsive {
-  display: inline-table;
-  margin-top: 25px;
-  width: 99%
-}
 .repo {
   height: 40px
 }
@@ -177,6 +175,54 @@
 }
 .repo .ticket a {
   display: none;
+}
+
+.panel-heading h3{
+    margin:0;
+    text-indent:15px;
+}
+
+.containter > .panel > .panel-body > div{
+    display: table;
+    width:100%;
+    margin:0 auto;
+}
+
+.containter > .panel > .panel-body > div > div{
+    padding:0 15px;
+    display: table-cell;
+    vertical-align: top;
+}
+
+.containter > .panel > .panel-body > div > div > div{
+    display: block;
+    width:100%;
+    margin:0;
+}
+
+.job{
+    display:block;
+    clear:both;
+    width: 100%
+}
+
+.job .panel-body{
+    position:relative;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.job .panel-footer{
+    padding:0 10px;
+}
+
+.job .panel-heading{
+    padding:0 15px;
+    font-size: 12px
+}
+
+.job [class*="col-"] > span{
+  font-size:12px;
 }
 
 /* responsive */
