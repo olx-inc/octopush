@@ -1,9 +1,10 @@
+.page-header > img {
+    width:62px
+}
+
 .page-header{
     margin: 0 auto;
     padding: 15px;
-}
-.page-header > *{
-    vertical-align: middle
 }
 .bs-callout {
     margin: 20px 0;
@@ -182,22 +183,21 @@
     text-indent:15px;
 }
 
-.containter > .panel > .panel-body > div{
-    display: table;
-    width:100%;
-    margin:0 auto;
+/*jobs*/
+
+.container > .panel{
+  display: inline-block;
+  float:left;
+  width:49%;
+  padding:15px;
 }
 
-.containter > .panel > .panel-body > div > div{
-    padding:0 15px;
-    display: table-cell;
-    vertical-align: top;
+.container > .panel:last-child{
+    margin-left: 1%;
 }
 
-.containter > .panel > .panel-body > div > div > div{
-    display: block;
-    width:100%;
-    margin:0;
+.container > .panel > .panel-body{
+    padding:0; 
 }
 
 .job{
@@ -223,6 +223,13 @@
 
 .job [class*="col-"] > span{
   font-size:12px;
+}
+
+.job .email{
+  color:#428bca;
+  font-weight: bold;
+  cursor:default;
+  margin-right: 5px
 }
 
 /* responsive */

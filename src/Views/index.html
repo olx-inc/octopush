@@ -21,26 +21,22 @@
                 <h4>Octopush service is Paused right now due to a current incident</h4>
                 <p>Please contact {{ contact }}.</p>
             </div>
-            {% include "templates/tabs.html" with {"page":"deploys"} %}
-            
+            {% include "templates/tabs.html" with {"page":"deploys"} %}            
            <div class="panel panel-default">
                 <div class="panel panel-heading">
                     <h3>Pre-Production</h3>
                 </div>
                 <div class="panel panel-body">
-                    <div id="preprod" class="row">
-                        <div id="preprod-queued" class="col-md-4">
+                    <div id="preprod">
+                        <div id="preprod-queued" class="queued" style="display:none">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
                             <div>
-                                {#if queued_jobs is empty #}
-                                <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                                {#if queued_jobs #}
-                                <div class="queued" style="display:none">
+                                <div>
                                     <div class="pre-queue"></div>
                                 </div>
                             </div>
                         </div>
-                        <div id="preprod-inprogress" style="display:none" class="col-md-4">
+                        <div id="preprod-inprogress" style="display:none">
                             {#{% if in_progress_jobs != false %}#}
                             <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
                             {# if in_progress_jobs #}
@@ -50,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="preprod-processed" class="col-md-4">
+                        <div id="preprod-processed">
                             <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
                             <div>
                                 {# if processed_jobs is empty #}
@@ -69,14 +65,11 @@
                     <h3>Production</h3>
                 </div>
                 <div class="panel panel-body">
-                    <div id="prod" class="row">
-                        <div id="prod-queued" class="col-md-4">
+                    <div id="prod">
+                        <div id="prod-queued" class="queued" style="display:none">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
                             <div>
-                                {# if liveQueue is empty #}
-                                <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
-                                {#if liveQueue #}
-                                <div class="queued" style="display:none">
+                                <div>
                                     <div class="prod-head">
                                         {% include "templates/prodHead.html" %}
                                     </div>
@@ -84,7 +77,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="prod-inprogress" style="display:none" class="col-md-4">
+                        <div id="prod-inprogress" style="display:none">
                             {#{% if liveInProgress != false %}#}
                             <h4>In Progress <span class="glyphicon glyphicon-cloud-upload"></span></h4>
                             {#if liveInProgress #}
@@ -94,7 +87,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="prod-processed" class="col-md-4">
+                        <div id="prod-processed">
                             <h4>Deployed <span class="glyphicon glyphicon-sort-by-attributes-alt"></h4>
                             <div>
                                 {# if liveProcessed is empty #}
