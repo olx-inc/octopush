@@ -195,7 +195,13 @@ class QueueController
             $buildStatus = $this->_jenkins->getLastBuildStatus($runningJob);
             switch ($buildStatus) {
                 case "SUCCESS":
-                    $runningJob->moveStatusTo(JobStatus::PENDING_TESTS);
+                    $deployed = in_array(
+                        $runningJob->getTargetModule(),
+                        $this->_config['only-staging']
+                    );
+                    $runningJob->moveStatusTo(
+                        $deployed ? JobStatus::DEPLOYED : JobStatus::TESTS_PASSED
+                    );
                     $this->_jobMapper->save($runningJob);
                     $version = new Version($runningJob);
                     $this->_versionMapper->save($version);
