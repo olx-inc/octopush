@@ -46,3 +46,4 @@ control_file: 'path_to_a_file_where_octopush_can_read_write'
 syslog:
     ident: 'octopush'
     facility: 'local3'
+timezone: ''

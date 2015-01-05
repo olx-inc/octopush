@@ -9,6 +9,10 @@ $loader->add('Library', __DIR__ . '/../src/');
 $loader->add('Helpers', __DIR__ . '/../src/');
 require_once __DIR__ . '/../src/bootstrap.php';
 
+if (isset($app['config']['timezone']) && $app['config']['timezone'] != '') {
+    date_default_timezone_set($app['config']['timezone']);
+}
+
 $app->get('/run', "queue.controller:processJob");
 $app->get('/', "queue.controller:index");
 $app->get('/versions', "queue.controller:versions");
