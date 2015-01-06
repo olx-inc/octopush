@@ -18,7 +18,12 @@
         <div class="page-header">
             {% include "templates/header.html" %}
             <div class="versions">
-                <div class="repos"></div>
+                <table class="repos">
+                    <thead>
+                        {% include "templates/versionsHead.html" %}
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
             <div id="versions-resources" style="display:none"></div>
         </div>
