@@ -14,14 +14,21 @@
         <!--  src/Views/index.html -->
     </head>
     <body>
-        <div class="container">          
+        
+        <div class="page-header">
             {% include "templates/header.html" %}
+            <div class="versions">
+                <div class="repos"></div>
+            </div>
+            <div id="versions-resources" style="display:none"></div>
+        </div>
+        
+        <div class="container">          
             {# if isPaused #}
             <div id="paused" class="bs-callout bs-callout-warning" style="display:none">
                 <h4>Octopush service is Paused right now due to a current incident</h4>
                 <p>Please contact {{ contact }}.</p>
             </div>
-            {% include "templates/tabs.html" with {"page":"deploys"} %}            
            <div class="panel panel-default">
                 <div class="panel panel-heading">
                     <h3>Pre-Production</h3>
@@ -106,6 +113,7 @@
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/fillTemplates.js"></script>
+        <script src="js/loaderVersions.js"></script>
         <script src="js/loader.js"></script>
         <script src="js/index.js"></script>
     </body>

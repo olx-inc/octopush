@@ -1,18 +1,19 @@
 var getVersions = function (){
     $.get("/versions/all", function (versions){
-        var table = $(".repos");
+        var repos = $(".repos");
 
-        table.children('tbody').html('');
+
+        repos.html('');
         if( !$.isEmptyObject(versions) ){
             $.each(versions, function(){
-                table.children('tbody').append(tml.version(this));
+                repos.append(tml.version(this));
             });
         }
     });
 }
 
 $(document).ready(function (){
-    $('#resources').load('../templates/repo.html');
+    $('#versions-resources').load('../templates/repo.html');
 
     getVersions();
 

@@ -13,6 +13,7 @@
         <link href="css/octopush.css" rel="stylesheet" media="screen" />
     </head>
     <body>
+
         <div class="container versions">
             {% include "templates/header.html" %}
             {# if isPaused #}
@@ -24,12 +25,8 @@
             {% include "templates/tabs.html" with {"page":"versions"} %}
 
             <div class="table-responsive">
-                <table class="repos table table-striped table-condensed table-hover">
-                    <thead>
-                        {% include "templates/versionsHead.html" %}
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="repos">
+                </div>
             </div>
         </div>
         <div id="resources" style="display:none"></div>

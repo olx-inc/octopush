@@ -1,20 +1,20 @@
 <!-- web/templates/repo.html start -->
-<div class="repo">
-    <div class="repo-name"><small data-repo ></small></div>
-    <div class="repo-testing"><small data-testing ></small></div>
-    <div class="repo-staging"><small data-staging ></small></div>
-    <div class="repo-production"><small data-production ></small></div>
-    <div class="text-center ticket">
-        <small>
-            <a data-ticket class="ticket" href="" target="_blank" title="" data-toggle="tooltip"><i class="fa fa-ticket"></i></a>
-        </small>
+<div class="panel panel-default box-layout repo">
+    <div class="panel-body">
+        <div class="repo-name"><span data-repo ></span></div>
+        <div class="repo-testing"><span data-testing ></span></div>
+        <div class="repo-staging"><span data-staging ></span></div>
+        <div class="repo-production"><span data-production ></span></div>
     </div>
-    <div class="actions">
-        <small>
+    <div class="panel-footer actions">
+        <span>
             <a data-rollback class="rollback" data-repo-rollback data-job-id="" data-job-targetModule="" data-job-targetVersion="" href="#" title="rollback" data-toggle="tooltip" data-placement="top">
                 <i class="glyphicon glyphicon-repeat" ></i>
             </a>
-        </small>
+        </span>
+        <span>
+            <a data-ticket class="ticket" href="" target="_blank" title="" data-toggle="tooltip"><i class="fa fa-ticket"></i></a>
+        </span>
     </div>
 </div>
 <!-- web/templates/repo.html end -->

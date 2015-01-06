@@ -87,4 +87,5 @@ $(function() {
         remove(this);
         return false;
     });
+
 });

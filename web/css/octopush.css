@@ -1,10 +1,20 @@
+.page-header{
+  border:none!important;
+}
+
 .page-header > img {
-    width:62px
+    width:120px;
+    margin-top: 1rem;
+}
+
+.page-header > small,
+.page-header > img {
+    vertical-align:top;
 }
 
 .page-header{
     margin: 0 auto;
-    padding: 15px;
+    padding: 0 15px ;
 }
 .bs-callout {
     margin: 20px 0;
@@ -85,7 +95,6 @@
 
 /* container */
 .container {
-  box-shadow: -8px 0px 15px -6px #c5c5c5;
   max-width: 100%;
 }
 
@@ -168,14 +177,25 @@
 }
 
 /* content repos */
-.repo {
-  height: 40px
+
+.repos,
+.versions,
+.repos .panel{
+    display: inline-block;
 }
-.repo td {
-  vertical-align: middle
+
+.versions{
+    margin-top:1rem;
+    margin-left:1rem;
 }
+
+.repos .panel{
+    float:left;
+    margin-right:1rem;
+}
+
 .repo .ticket a {
-  display: none;
+    display: none;
 }
 
 .panel-heading h3{
@@ -200,28 +220,21 @@
     padding:0; 
 }
 
-.job{
-    display:block;
-    clear:both;
-    width: 100%
-}
-
-.job .panel-body{
+.box-layout .panel-body{
     position:relative;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-.job .panel-footer{
+.box-layout .panel-footer{
     padding:0 10px;
 }
 
-.job .panel-heading{
+.box-layout .panel-heading{
     padding:0 15px;
 }
 
-
-.job .email{
+.box-layout .email{
   color:#428bca;
   font-weight: bold;
   cursor:default;

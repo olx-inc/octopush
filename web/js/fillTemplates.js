@@ -53,7 +53,6 @@ var tml = {
         } else if (hours < 24) {
             return hours + " hours ago";
         } else if (!isNaN(days)) {
-            console.log(days)
             return days + " days ago";
         } else {
             return "-";
@@ -222,10 +221,9 @@ var tml = {
        -- Fill repo template ---
        ------------------------- */
     version: function (version) {
-        var newRepo = $("#resources .repo").clone(),
+        var newRepo = $("#versions-resources .repo").clone(),
             canRollback = false, //repo._canRollback
             rollback = "";
-
         if (canRollback){
             rollback = {
                 "id": version._id,
