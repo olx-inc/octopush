@@ -35,12 +35,12 @@
                 </div>
                 <div class="panel panel-body">
                     <div id="preprod">
-                        <div id="preprod-queued" class="queued" style="display:none">
+                        <div id="preprod-queued">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
                             {#if queued_jobs is empty #}
                             <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
                             {#if queued_jobs #}                    
-                            <div>
+                            <div class="queued" style="display:none" >
                                 <div>
                                     <div class="pre-queue"></div>
                                 </div>
@@ -76,12 +76,12 @@
                 </div>
                 <div class="panel panel-body">
                     <div id="prod">
-                        <div id="prod-queued" class="queued" style="display:none">
+                        <div id="prod-queued">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
                             {# if liveQueue is empty #}
                             <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
                             {#if liveQueue #}
-                            <div>
+                            <div class="queued" style="display:none">
                                 <div>
                                     <div class="prod-head">
                                         {% include "templates/prodHead.html" %}

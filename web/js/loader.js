@@ -80,6 +80,7 @@ var deployedJobs = function (selector, jobs, tml){
         table = $(selector + " .processed");
 
     table.children('div').html('');
+    
     if( !$.isEmptyObject(jobs) ){
         $.each(jobs, function(){
             table.children('div').append(tml(this));
