@@ -109,7 +109,6 @@ var getJobs = function (){
     });
 }
 
-
 $(document).ready(function (){
     $('#resources').load('../templates/job.html');
 
