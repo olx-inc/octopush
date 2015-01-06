@@ -14,7 +14,7 @@
         <!--  src/Views/index.html -->
     </head>
     <body>
-        
+
         <div class="page-header">
             {% include "templates/header.html" %}
             <div class="versions">
@@ -37,6 +37,9 @@
                     <div id="preprod">
                         <div id="preprod-queued" class="queued" style="display:none">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
+                            {#if queued_jobs is empty #}
+                            <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
+                            {#if queued_jobs #}                    
                             <div>
                                 <div>
                                     <div class="pre-queue"></div>
@@ -75,6 +78,9 @@
                     <div id="prod">
                         <div id="prod-queued" class="queued" style="display:none">
                             <h4>Queue <span class="glyphicon glyphicon-sort-by-attributes"></span></h4>
+                            {# if liveQueue is empty #}
+                            <div class="queued-empty alert alert-info" style="display:none"><strong>EMPTY!</strong> No pending jobs</div>
+                            {#if liveQueue #}
                             <div>
                                 <div>
                                     <div class="prod-head">
