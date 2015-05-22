@@ -41,7 +41,14 @@ class ThirdParty {
     public function getMemberPermissions($username) 
     {        
         $url = $this->_permissionsUrl . $username;
-        return json_decode(@file_get_contents($url), true);
+        if (isset($this->_permissionsUrl)){
+            $url = $this->_permissionsUrl . $username;
+            $perms = json_decode(@file_get_contents($url), true);
+        }
+        else
+            $perms = array('teams' => "*", 'repositories' => "*");
+
+        return $perms; 
     }
     
     public function canMemberGoLive($permissions, $repository) 
