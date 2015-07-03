@@ -82,11 +82,9 @@ class Version
     public static function createFromArray($data)
     {
         $version = new Version();
-        $version->_id = (int) $data['id'];
         $version->_module = $data['module'];
         $version->_version = $data['version'];
         $version->_environment = $data['environment'];
-        $version->_updated_at = $data['updated_at'];
         $version->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
 
         return $version;

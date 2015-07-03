@@ -24,7 +24,7 @@ var tml = {
 
     fillRepoFields: function (html, repo){
         html.find("[data-repo]").text(repo._module);
-        //html.find("[data-testing]").text(repo._testing);
+        html.find("[data-testing]").text(repo._testing);
         html.find("[data-staging]").text(repo._staging);
         html.find("[data-production]").text(repo._live);
         // ---- Ticket

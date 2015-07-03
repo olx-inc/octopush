@@ -37,6 +37,7 @@ class VersionController
 
           return $this->_app->json($error);
       }
+      return $version;
 
     }
 
@@ -47,7 +48,7 @@ class VersionController
             if (isset($_REQUEST['ticket']))
                 $version['ticket'] = $_REQUEST['ticket'];
 
-            $this->versionMapper->save($version);
+            $this->_versionMapper->save($version);
             $result = array(
                 'status' => "success",
                 'message' => "Version registered succesfully",
