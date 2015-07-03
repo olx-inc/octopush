@@ -13,7 +13,7 @@ class VersionController
     private $_log;
     private $_app;
 
-    public function __construct(OctopushApplication $app, 
+    public function __construct(OctopushApplication $app,
                                 VersionMapper $versionMapper,
                                 $log)
     {
@@ -22,6 +22,23 @@ class VersionController
         $this->_app = $app;
     }
 
+
+    public function get($environment, $module)
+    {
+      try{
+        $version = $this->_versionMapper->find($environment, $module);
+      } catch (\Exception $exc) {
+          $error = array(
+              'status' => "error",
+              'message' => "Problems trying to register Version",
+              'detail' => $exc->getMessage(),
+          );
+          $this->_log->addError($error['message'] . " :: " . $error['detail']);
+
+          return $this->_app->json($error);
+      }
+
+    }
 
     public function update($environment, $module, $version)
     {
@@ -35,7 +52,7 @@ class VersionController
                 'status' => "success",
                 'message' => "Version registered succesfully",
             );
-            
+
             return $this->_app->json($result);
         } catch (\Exception $exc) {
             $error = array(

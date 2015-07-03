@@ -29,6 +29,25 @@ class VersionMapper
         return $data;
     }
 
+    public function find($environment, $module)
+    {
+      $params = array($module, $environment);
+      try
+      {
+          $data = $this->_db->fetchAll(VersionMapper::FIND_VERSION_STATEMENT, $params);
+
+          if (empty($data)) {
+              return "";
+          } else {
+              return $data[0]['version'];
+          }
+
+      } catch (\Exception $exc) {
+          error_log($exc);
+      }
+
+    }
+
 
     public function save($version)
     {
@@ -44,7 +63,7 @@ class VersionMapper
             }
 
         } catch (\Exception $exc) {
-            error_log($exc);            
+            error_log($exc);
         }
 
     }

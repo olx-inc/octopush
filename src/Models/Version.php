@@ -12,12 +12,7 @@ class Version
     private $_ticket;
 
 
-    public function __construct($job)
-    {
-        $this->_module = $job->getTargetModule();
-        $this->_version = $job->getTargetVersion();
-        $this->_environment = $job->getTargetEnvironment();
-        $this->_ticket = $job->getTicket();
+    public function __construct(){
     }
 
 
@@ -62,7 +57,7 @@ class Version
     {
         return $this->_environment;
     }
-    
+
 
    public function setTicket($ticket)
     {
@@ -97,11 +92,20 @@ class Version
         return $version;
     }
 
+    public static function createFromJob($job)
+    {
+        $version = new Version();
+        $version->_module = $job->getTargetModule();
+        $version->_version = $job->getTargetVersion();
+        $version->_environment = $job->getTargetEnvironment();
+        $version->_ticket = $job->getTicket();
+    }
+
 
     public function serialize()
     {
         return get_object_vars($this);
 
-    }    
+    }
 
 }

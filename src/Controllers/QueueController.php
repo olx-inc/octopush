@@ -19,10 +19,10 @@ class QueueController
     private $_app;
     private $_log;
 
-    public function __construct(OctopushApplication $app, 
-                                JobMapper $jobMapper, 
-                                VersionMapper $versionMapper, 
-                                $jenkins, 
+    public function __construct(OctopushApplication $app,
+                                JobMapper $jobMapper,
+                                VersionMapper $versionMapper,
+                                $jenkins,
                                 $log) {
         $this->_jobMapper = $jobMapper;
         $this->_versionMapper = $versionMapper;
@@ -74,7 +74,7 @@ class QueueController
 
         return $this->_app->json($result);
     }
-    
+
 
     public function pause()
     {
@@ -197,7 +197,7 @@ class QueueController
                 case "SUCCESS":
                     $runningJob->moveStatusTo(JobStatus::PENDING_TESTS);
                     $this->_jobMapper->save($runningJob);
-                    $version = new Version($runningJob);
+                    $version = Version::createFromJob($runningJob);
                     $this->_versionMapper->save($version);
                     $message = "Job successfully processed.JobId:" . $runningJob->getId();
                     $this->_log->addInfo($message);
@@ -226,7 +226,7 @@ class QueueController
                 case "SUCCESS":
                     $runningJob->moveStatusTo(JobStatus::GO_LIVE_DONE);
                     $this->_jobMapper->save($runningJob);
-                    $version = new Version($runningJob);
+                    $version = Version::createFromJob($runningJob);
                     $this->_versionMapper->save($version);
 
                     $message = "Job successfully processed.JobId:" . $runningJob->getId();
@@ -250,9 +250,9 @@ class QueueController
     {
         $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
         if (count($jobsGoingLive) > 0) {
-            $this->_log->addInfo("There are jobs going LIVE, exit!"); 
+            $this->_log->addInfo("There are jobs going LIVE, exit!");
             return;
-        }        
+        }
         $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED_FOR_LIVE, 1);
 
         $this->_log->addInfo("About processing the live queue");
