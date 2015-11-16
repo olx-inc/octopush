@@ -8,6 +8,7 @@ use Models\JobMapper,
     Models\Version,
     Models\JobStatus,
     Models\OctopushVersion,
+    Services\ThirdParty,
     Library\OctopushApplication;
 
 class QueueController
@@ -18,6 +19,8 @@ class QueueController
     private $_jenkins;
     private $_app;
     private $_log;
+    private $_thirdParty;
+
 
     public function __construct(OctopushApplication $app,
                                 JobMapper $jobMapper,
@@ -30,6 +33,7 @@ class QueueController
         $this->_app = $app;
         $this->_jenkins = $jenkins;
         $this->_log = $log;
+        $this->_thirdParty = $app['services.ThirdParty'];
     }
 
     /**********************   API METHODS ***********************/
@@ -228,7 +232,7 @@ class QueueController
                     $this->_jobMapper->save($runningJob);
                     $version = Version::createFromJob($runningJob);
                     $this->_versionMapper->save($version);
-
+                    $this->_thirdParty->postDeploy($runningJob, ThirdParty::DEPLOY_SUCCESS);
                     $message = "Job successfully processed.JobId:" . $runningJob->getId();
                     $this->_log->addInfo($message);
                     break;
@@ -236,6 +240,7 @@ class QueueController
                 case "FAILURE":
                     $runningJob->moveStatusTo(JobStatus::GO_LIVE_FAILED);
                     $this->_jobMapper->save($runningJob);
+                    $this->_thirdParty->postDeploy($runningJob, ThirdParty::DEPLOY_FAILED);
                     $message = "Job failed. JobId:" . $runningJob->getId();
                     $this->_log->addError($message);
                     break;
