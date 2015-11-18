@@ -97,6 +97,8 @@ class Version
         $version->_version = $job->getTargetVersion();
         $version->_environment = $job->getTargetEnvironment();
         $version->_ticket = $job->getTicket();
+    
+        return $version;
     }
 
 
