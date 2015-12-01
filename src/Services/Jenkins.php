@@ -76,10 +76,19 @@ class Jenkins
         $url .= '/lastBuild/api/json';
         $this->_httpRequest->setUrl($url);
         $this->_log->addInfo("GettingLastBuild:" . $url);
-        $rawResponse = $this->_send();
-        $jsonResponse = json_decode($rawResponse['body'], true);
+        try {
+            $rawResponse = $this->_send();
+            $jsonResponse = json_decode($rawResponse['body'], true);
+            $number = $jsonResponse['number'];
+        } catch (\Exception $e) {
+            if ($this->_httpRequest->getResponseCode() == 404) {
+                $number = 0;
+            } else {
+                throw $e;
+            }
+        }
 
-        return $jsonResponse['number'];
+        return $number;
     }
 
     public function notifyResult($job, $status)
