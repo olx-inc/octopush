@@ -20,7 +20,7 @@ class GitHub {
     }
 
     public function IsUserAdmin($userToken) {
-        
+
         $login = $this->getUserName($userToken);
         $url = 'https://api.github.com/teams/' . $this->_adminTeamId
                 . '/members/' . $login . '?access_token='
@@ -34,7 +34,7 @@ class GitHub {
     }
 
     public function getUserName($userToken) {
-        
+
         $req = new \Library\HttpRequest();
         $token = $userToken->getAccessToken()->getAccessToken();
         $url = "https://api.github.com/user?access_token=" . $token;
@@ -45,7 +45,7 @@ class GitHub {
     }
 
     public function getUser($token) {
-        
+
         $req = new \Library\HttpRequest();
         $url = "https://api.github.com/user?access_token=" . $token;
         $req->setUrl($url);
@@ -53,7 +53,7 @@ class GitHub {
         $jsonResponse = json_decode($rawResponse['body'], true);
         return new User($jsonResponse['login'], $jsonResponse['email']);
     }
-    
+
     public function IsUserInAdminTeam($username) {
         $result = false;
         $url = "https://api.github.com/user/teams?client_id=" . $this->_key ."&client_secret=" .$this->_secret;
@@ -67,9 +67,13 @@ class GitHub {
         return $result;
     }
 
+    public function getUsersRepos($username){
+
+    }
+
 }
 
-class User 
+class User
 {
     private $name;
     private $mail;

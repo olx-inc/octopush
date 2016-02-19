@@ -266,7 +266,7 @@ class QueueController
         }
         foreach ($jobsToProcess as $job) {
             $job->moveStatusTo(JobStatus::GOING_LIVE);
-            $job->setTargetEnvironment("live");
+            $job->setTargetEnvironment(Version::PRODUCTION);
             $this->_jobMapper->save($job);
             if ($this->_jenkins->pushLive($job)) {
                 $this->_jobMapper->save($job);

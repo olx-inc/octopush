@@ -11,6 +11,8 @@ class Version
     private $_updated_at;
     private $_ticket;
 
+    const LIVE = "production";
+    const STAGING = "staging";
 
     public function __construct(){
     }
@@ -97,7 +99,7 @@ class Version
         $version->_version = $job->getTargetVersion();
         $version->_environment = $job->getTargetEnvironment();
         $version->_ticket = $job->getTicket();
-    
+
         return $version;
     }
 

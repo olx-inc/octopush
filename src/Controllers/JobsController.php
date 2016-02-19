@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
+    Models\Version,
     Library\OctopushApplication,
     Helpers\Session,
     Controllers\JenkinsController,
@@ -20,10 +21,10 @@ class JobsController
     private $_app;
     private $_thirdParty;
 
-    public function __construct(OctopushApplication $app, 
+    public function __construct(OctopushApplication $app,
                                 $config,
                                 JobMapper $jobMapper,
-                                $jenkins, 
+                                $jenkins,
                                 $log)
     {
         $this->_config = $config;
@@ -105,8 +106,8 @@ class JobsController
 
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
-            
-            $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED, 
+
+            $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED,
                             JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
 
             if (!isset($status[$job->getStatus()]))
@@ -151,10 +152,10 @@ class JobsController
 
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
-            
-            if ($this->canBePushedLive($job) && 
+
+            if ($this->canBePushedLive($job) &&
                     $job->canGoLive()) {
-                
+
                 $email = $helperSession->getUser()->getEmail();
                 if (!empty($email))
                     $job->setUser($email);
@@ -163,14 +164,14 @@ class JobsController
 
                 $response = $this->_thirdParty->preDeploy($job);
                 $ticket = isset($response->ticket) ? $response->ticket : false;
-                
+
                 if ($ticket) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
                     $job->movestatusTo(JobStatus::GO_LIVE_FAILED);
                 }
-                
+
                 $this->_jobMapper->save($job);
 
                 $result = array(
@@ -201,17 +202,17 @@ class JobsController
     }
 
     public function rollback($jobId)
-    {   
+    {
         try {
             $oldJob = $this->_jobMapper->get($jobId);
             $this->getKeyAndSession();
 
             $helperSession = $this->_app['helpers.session'];
             $permissions = $helperSession->getPermissions();
-            
-            if (! $this->canBePushedLive($oldJob) || 
+
+            if (! $this->canBePushedLive($oldJob) ||
                 ! $oldJob->wentLive()) {
-                
+
                 $result = array(
                     'job_status' => $oldJob->getStatus(),
                     'job_id' => $jobId,
@@ -222,8 +223,8 @@ class JobsController
 
                 return $this->_app->json($result);
             }
-            
-            $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(), 
+
+            $job = Job::createWith($oldJob->getTargetModule(), $oldJob->getTargetVersion(),
                     $oldJob->getTargetEnvironment(), $oldJob->getRequestorJenkins());
             $job->movestatusTo(JobStatus::QUEUED_FOR_LIVE);
             $job->setRollbackedFrom($oldJob->getId());
@@ -232,7 +233,7 @@ class JobsController
             $response = $this->_thirdParty->preDeploy($job, "rollback");
             $job->setTicket($response->ticket);
             $job->setUser($helperSession->getUser()->getEmail());
-            
+
             $this->_jobMapper->save($job);
 
             $result = array(
@@ -241,7 +242,7 @@ class JobsController
                 'job_id' => (int) $job->getId(),
             );
             $this->_log->addInfo($result['message'] . " with id: " . $result['job_id']);
-            
+
             return $this->_app->json($result);
         } catch (\Exception $exc) {
             $result = array(
@@ -254,7 +255,7 @@ class JobsController
         }
 
     }
-    
+
     public function registerTestJobUrl(Request $request)
     {
         try {
@@ -340,23 +341,23 @@ class JobsController
             return $this->_app->json($error);
         }
     }
-    
-    public function canBePushedLive($job) 
+
+    public function canBePushedLive($job)
     {
 
         $permissions = $this->_app['helpers.session']->getPermissions();
 
         if (isset($permissions)) {
             if ($this->_thirdParty->canMemberGoLive(
-                $permissions, 
+                $permissions,
                 $job->getTargetModule()
             )) {
                 return true;
             }
-        }               
-            
+        }
+
         return false;
-    } 
+    }
 
 
 
@@ -372,15 +373,15 @@ class JobsController
                 'version' => "-",
             );
             return $this->_app->json($result);
-        }        
+        }
         foreach ($jobsGoingLive as $job) {
             $result = array(
                 'status' => "Deploying",
                 'module' => $job->getTargetModule(),
-                'version' => $job->getTargetVersion(),                
+                'version' => $job->getTargetVersion(),
             );
             return $this->_app->json($result);
-            
+
         }
     }
 
@@ -394,10 +395,10 @@ class JobsController
     }
 
     public function all(){
-        $queueLenght = $this->getPageSize();    
+        $queueLenght = $this->getPageSize();
         $repos = $this->getRepoFilter();
 
-        $all = array('preprodQueue' => $this->_queued('staging'));
+        $all = array('preprodQueue' => $this->_queued(Version::STAGING));
         $all['preprodInprogress'] = $this->_inprogress('staging');
         $all['preprodDeployed'] = $this->_deployed('staging', $repos, $queueLenght);
         $all['prodQueue'] = $this->_queued('live');
@@ -409,7 +410,7 @@ class JobsController
 
     private function _deployed($env, $repos, $queueLenght = 10)
     {
-        $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED), 
+        $statuses = array('staging' => array(JobStatus::TESTS_PASSED, JobStatus::TESTS_FAILED, JobStatus::DEPLOY_FAILED),
             'live' => array(JobStatus::GO_LIVE_DONE, JobStatus::GO_LIVE_FAILED));
 
         $result =  $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], $repos, $queueLenght);
@@ -423,7 +424,7 @@ class JobsController
         foreach ($data as $record) {
             $job = Job::createFromArray($record);
             $job_array = $job->serialize();
-            
+
             $job_array['_buildJobUrl'] = $jenkins->getRequestorJobConsoleUrl($job);
             $job_array['_deployJobUrl'] = $jenkins->getPreProdJobDeployUrl($job);
             $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobDeployUrl($job);
@@ -443,10 +444,10 @@ class JobsController
         return $result;
     }
 
-    
+
     public function deployed($env)
     {
-        $queueLenght = $this->getPageSize();    
+        $queueLenght = $this->getPageSize();
         $repos = $this->getRepoFilter();
 
         $deployed = $this->_deployed($env, $repos, $queueLenght);
@@ -461,7 +462,7 @@ class JobsController
 
    private function _queued($env)
     {
-        $statuses = array('staging' => array(JobStatus::QUEUED), 
+        $statuses = array('staging' => array(JobStatus::QUEUED),
             'live' => array(JobStatus::QUEUED_FOR_LIVE));
 
         $queuedJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
@@ -478,7 +479,7 @@ class JobsController
 
    private function _inprogress($env)
     {
-        $statuses = array('staging' => array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS), 
+        $statuses = array('staging' => array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS),
             'live' => array(JobStatus::GOING_LIVE));
 
         $inProgressJobs = $this->_jobMapper->findAllByMultipleStatusAndModules($statuses[$env], array());
@@ -492,19 +493,19 @@ class JobsController
         $result = array();
 
         $record = array();
-        $record["Value"] = 'None';        
+        $record["Value"] = 'None';
         $record["URI"] = '&#47';
         array_push($result, $record);
 
         $record = array();
-        $record["Value"] = 'My Components';        
+        $record["Value"] = 'My Components';
         $record["URI"] = '?my_components=on';
         array_push($result, $record);
 
         ksort($this->_config['modules']);
         foreach ($this->_config['modules'] as $module => $value) {
             $record = array();
-            $record["Value"] = $module;        
+            $record["Value"] = $module;
             $record["URI"] = '?repo=' . $module;
             array_push($result, $record);
         }
@@ -515,11 +516,11 @@ class JobsController
     private function getPageSize()
     {
         if (isset($_REQUEST['pageSize']))
-            $queueLenght = $_REQUEST['pageSize'];    
+            $queueLenght = $_REQUEST['pageSize'];
         else
-            $queueLenght = $this->_config['jobs']['queue.lenght'] ? 
+            $queueLenght = $this->_config['jobs']['queue.lenght'] ?
                 $this->_config['jobs']['queue.lenght'] : null;
-   
+
         return $queueLenght;
     }
 
@@ -535,7 +536,7 @@ class JobsController
         if (isset($_REQUEST['repo']))
         {
             $repo = array($_REQUEST['repo']);
-        }    
+        }
         else
             if ( $sessionHelper->isMyComponentsOn() ){
                 $perm = $sessionHelper->getPermissions();
