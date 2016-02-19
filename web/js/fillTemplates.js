@@ -26,7 +26,7 @@ var tml = {
         html.find("[data-repo]").text(repo._module);
         html.find("[data-testing]").text(repo._testing);
         html.find("[data-staging]").text(repo._staging);
-        html.find("[data-production]").text(repo._live);
+        html.find("[data-production]").text(repo._production);
         // ---- Ticket
         tml.displayTicket(repo._ticket, html.find("[data-ticket]"));
         // ---- Start tooltip
