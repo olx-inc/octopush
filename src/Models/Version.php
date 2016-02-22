@@ -11,7 +11,7 @@ class Version
     private $_updated_at;
     private $_ticket;
 
-    const LIVE = "production";
+    const PRODUCTION = "production";
     const STAGING = "staging";
 
     public function __construct(){
