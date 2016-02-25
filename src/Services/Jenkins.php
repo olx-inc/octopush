@@ -28,9 +28,9 @@ class Jenkins
     {
         $url = $this->_getUrlForJob($job);
         $url .= '/buildWithParameters';
-        $data = array('env' => $job->getTargetEnvironment(), 
-            'repo' => $job->getTargetModule(), 
-            'revision' =>  $job->getTargetVersion());
+        $data = array('ENVIRONMENT' => $job->getTargetEnvironment(),
+            'COMPONENT' => $job->getTargetModule(),
+            'VERSION' =>  $job->getTargetVersion());
         $toLive = false;
         return $this->_doPush($job, $url, $data, $toLive);
     }
@@ -39,7 +39,9 @@ class Jenkins
     {
         $url = $this->_getLiveUrlForJob($job);
         $url .= '/buildWithParameters';
-        $data = array('tag' => $job->getTargetVersion());
+        $data = array('ENVIRONMENT' => $job->getTargetEnvironment(),
+            'COMPONENT' => $job->getTargetModule(),
+            'VERSION' =>  $job->getTargetVersion());
         if ($job->isARollback())
             $data['wait'] = "0";
         $toLive = true;
@@ -48,7 +50,7 @@ class Jenkins
 
     public function getLastBuildStatus($job)
     {
-        if ( ($job->getStatus() == JobStatus::QUEUED) || 
+        if ( ($job->getStatus() == JobStatus::QUEUED) ||
                 ($job->getStatus() == JobStatus::DEPLOYING)) {
             $url = $this->_getUrlForJob($job);
             $url .= "/" . $job->getDeploymentJobId();
@@ -67,7 +69,7 @@ class Jenkins
     public function getLastBuildId($job)
     {
         $url = "";
-        if ( ($job->getStatus() == JobStatus::QUEUED) || 
+        if ( ($job->getStatus() == JobStatus::QUEUED) ||
                 ($job->getStatus() == JobStatus::DEPLOYING)) {
             $url = $this->_getUrlForJob($job);
         } else {
@@ -158,7 +160,7 @@ class Jenkins
     private function _getUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['prefix'] . $job->getTargetModule();
+            $this->_jobs['prefix'] //. $job->getTargetModule();
 
         return $url;
     }
@@ -166,7 +168,7 @@ class Jenkins
     private function _getLiveUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['live.prefix'] . $job->getTargetModule();
+            $this->_jobs['live.prefix'] //. $job->getTargetModule();
 
         return $url;
     }
@@ -203,7 +205,7 @@ class Jenkins
                     if (is_numeric($job->getDeploymentJobId()))
                         $currentBuildId = $job->getDeploymentJobId();
                 }
-                
+
             }
             $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());
 
