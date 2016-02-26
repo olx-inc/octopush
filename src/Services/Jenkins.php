@@ -10,17 +10,15 @@ class Jenkins
     private $_user;
     private $_pass;
     private $_jobs;
-    private $_httpRequest;
     private $_log;
 
-    public function __construct($config, HttpRequest $httpRequest, $log)
+    public function __construct($config, $log)
     {
         $this->_host = $config['jenkins']['host'];
         $this->_user = $config['jenkins']['user'];
         $this->_pass = $config['jenkins']['pass'];
         $this->_jobs = $config['jenkins']['jobs'];
         $this->_log = $log;
-        $this->_httpRequest = $httpRequest;
         $this->_log->addInfo("New Jenkins instance created");
     }
 
@@ -59,8 +57,7 @@ class Jenkins
             $url .= "/" . $job->getLiveJobId();
         }
         $url .= "/api/json";
-        $this->_httpRequest->setUrl($url);
-        $rawResponse = $this->_send();
+        $rawResponse = $this->_send($url);
         $jsonResponse = json_decode($rawResponse['body'], true);
 
         return $jsonResponse['result'];
@@ -76,9 +73,8 @@ class Jenkins
             $url = $this->_getLiveUrlForJob($job);
         }
         $url .= '/lastBuild/api/json';
-        $this->_httpRequest->setUrl($url);
         $this->_log->addInfo("GettingLastBuild:" . $url);
-        $rawResponse = $this->_send();
+        $rawResponse = $this->_send($url);
         $jsonResponse = json_decode($rawResponse['body'], true);
 
         return $jsonResponse['number'];
@@ -94,31 +90,31 @@ class Jenkins
         $url .= '&revision=' . $job->getTargetVersion();
         $url .= '&status=' . $status;
         $url .= '&jobId=' . $job->getId();
-        $this->_httpRequest->setUrl($url);
 
-        return $this->_send();
+        return $this->_send($url);
     }
 
     public function ping()
     {
         $url = $this->_host;
-        $this->_httpRequest->setUrl($url);
-        $rawResponse = $this->_send();
-        if ($this->_httpRequest->getResponseCode() != 200) {
+        $httpRequest = new HttpRequest($url);
+        $rawResponse = $httpRequest->send();
+        if ($httpRequest->getResponseCode() != 200) {
             throw new \Exception();
         }
     }
 
-    private function _send()
+    private function _send($url)
     {
         try {
-            $this->_log->addInfo("Calling Jenkins:" . $this->_httpRequest->getUrl());
+            $httpRequest = new HttpRequest($url);
+            $this->_log->addInfo("Calling Jenkins:" . $url);
             $httpAuth = $this->_user . ':' . $this->_pass;
-            $this->_httpRequest->setOptions(array('httpauth' => $httpAuth));
-            $response = $this->_httpRequest->send();
-            $this->_log->addInfo("Response:" . $this->_httpRequest->getResponseCode());
-            if ($this->_httpRequest->getResponseCode() > 400) {
-                $this->_log->addError("Error while calling jenkins: " . $this->_httpRequest->getUrl());
+            $httpRequest->setOptions(array('httpauth' => $httpAuth));
+            $response = $httpRequest->send();
+            $this->_log->addInfo("Response:" . $httpRequest->getResponseCode());
+            if ($httpRequest->getResponseCode() > 400) {
+                $this->_log->addError("Error while calling jenkins: " . $httpRequest->getUrl());
                 throw new \Exception();
             }
         } catch (\Exception $e) {
@@ -160,7 +156,7 @@ class Jenkins
     private function _getUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['prefix'] //. $job->getTargetModule();
+            $this->_jobs['prefix']; //. $job->getTargetModule();
 
         return $url;
     }
@@ -168,7 +164,7 @@ class Jenkins
     private function _getLiveUrlForJob($job)
     {
         $url = $this->_host . "/job/" .
-            $this->_jobs['live.prefix'] //. $job->getTargetModule();
+            $this->_jobs['live.prefix']; //. $job->getTargetModule();
 
         return $url;
     }
@@ -179,7 +175,7 @@ class Jenkins
             $currentBuildId = 0;
             $lastBuildId = $this->getLastBuildId($job);
             $this->_log->addInfo("lastBuildId: " . $lastBuildId);
-            $req = new \HttpRequest($pushUrl, HttpRequest::METH_POST);
+            $req = new \HttpRequest($pushUrl);
             $httpAuth = $this->_user . ':' . $this->_pass;
             $this->_log->addInfo("auth" . $httpAuth);
             $req->setOptions(array('httpauthtype'=>HTTP_AUTH_BASIC, 'httpauth' => $httpAuth));
@@ -187,7 +183,7 @@ class Jenkins
             $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);
             $req->send();
             $this->_log->addInfo("Response:" . $req->getResponseCode());
-            $this->_log->addInfo("Response:" . $req->getResponseBody());
+            //$this->_log->addInfo("Response:" . $req->getResponseBody());
             if ($req->getResponseCode() > 400) {
                 $this->_log->addError("Error while calling jenkins: " . $req->getUrl());
                 throw new \Exception();

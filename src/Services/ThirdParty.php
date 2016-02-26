@@ -11,14 +11,12 @@ class ThirdParty {
     private $_permissionsUrl;
     private $_adminTeamId;
     private $_pocsTeamId;
-    private $_httpRequest;
     private $_log;
     const DEPLOY_SUCCESS = "success";
     const DEPLOY_FAILED = "failure";
     const NOT_AVAILABLE = "none";
 
-    public function __construct($config, 
-                                HttpRequest $httpRequest, 
+    public function __construct($config,
                                 $log) {
         if (isset($config['thirdparty']['pre-deploy']))
             $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
@@ -28,7 +26,6 @@ class ThirdParty {
         $this->_adminTeamId = $config['teams']['admin'];
         $this->_pocsTeamId = $config['teams']['pocs'];
         $this->_log = $log;
-        $this->_httpRequest = $httpRequest;
         $this->_log->addInfo("ThirdParty instance created");
     }
 
@@ -46,8 +43,8 @@ class ThirdParty {
         return NOT_AVAILABLE;
     }
 
-    public function getMemberPermissions($username) 
-    {        
+    public function getMemberPermissions($username)
+    {
         if (isset($this->_permissionsUrl)){
             $url = $this->_permissionsUrl . $username;
             $perms = json_decode(@file_get_contents($url), true);
@@ -55,18 +52,18 @@ class ThirdParty {
         else
             $perms = array('teams' => "*", 'repositories' => "*");
 
-        return $perms; 
+        return $perms;
     }
-    
-    public function canMemberGoLive($permissions, $repository) 
+
+    public function canMemberGoLive($permissions, $repository)
     {
-        if (isset($permissions["teams"]) && 
+        if (isset($permissions["teams"]) &&
                 isset($permissions["repositories"])) {
             if (in_array($this->_adminTeamId, $permissions["teams"]) ||
                     (in_array($repository, $permissions["repositories"]) &&
                     in_array($this->_pocsTeamId, $permissions["teams"]))) {
                 return true;
-            }            
+            }
         }
         return false;
     }
@@ -82,7 +79,7 @@ class ThirdParty {
 
         $url = $external_url . '?' . http_build_query($params);
         $response = json_decode(file_get_contents($url));
-        $response->ticket = urldecode($response->ticket); 
+        $response->ticket = urldecode($response->ticket);
         return $response;
     }
 

@@ -53,19 +53,19 @@ $app['models.VersionMapper'] = $app->share(
 
 $app['services.jenkins'] = $app->share(
         function ($app) {
-    return new Services\Jenkins($app['config'], new \Library\HttpRequest(), $app['monolog']);
+    return new Services\Jenkins($app['config'], $app['monolog']);
 }
 );
 
 $app['services.GitHub'] = $app->share(
         function ($app) {
-    return new Services\GitHub($app['config'], new \Library\HttpRequest(), $app['monolog']);
+    return new Services\GitHub($app['config'], $app['monolog']);
 }
 );
 
 $app['services.ThirdParty'] = $app->share(
         function ($app) {
-    return new Services\ThirdParty($app['config'], new \Library\HttpRequest(), $app['monolog']);
+    return new Services\ThirdParty($app['config'], $app['monolog']);
 }
 );
 

@@ -9,6 +9,7 @@ use Models\JobMapper,
     Models\JobStatus,
     Models\OctopushVersion,
     Services\ThirdParty,
+    Services\Jenkins,
     Library\OctopushApplication;
 
 class QueueController
@@ -25,7 +26,7 @@ class QueueController
     public function __construct(OctopushApplication $app,
                                 JobMapper $jobMapper,
                                 VersionMapper $versionMapper,
-                                $jenkins,
+                                Jenkins $jenkins,
                                 $log) {
         $this->_jobMapper = $jobMapper;
         $this->_versionMapper = $versionMapper;
@@ -41,16 +42,6 @@ class QueueController
     {
         $config = $this->_config;
         $jenkins = '';
-
-        if (!array_key_exists($module, $config['modules'])) {
-            $error = array(
-                'status' => "error",
-                'message' => "$module is not a valid module to push."
-            );
-            $this->_log->addError($error['message']);
-
-            return $this->_app->json($error);
-        }
 
         $this->_log->addInfo('checking jenkins');
         if (array_key_exists('HTTP_JENKINS', $_SERVER)) {
@@ -80,19 +71,35 @@ class QueueController
     }
 
 
-    public function pause()
+    public function pause($paused)
+    {
+        return $this->_pause("1");
+    }
+    public function _pause($paused)
     {
         $success = true;
-        $success = $this->_app->pause();
+        try {
+          $version = Version::createFromArray(array('environment' => 'paused',
+                              'module' => 'octopush', 'version' => $paused ) );
 
-        return $this->_jsonResult($success);
+          $this->_versionMapper->save($version);
+
+          return $this->_jsonResult(true);
+
+        } catch (\Exception $exception) {
+          return $this->_jsonResult(false, $exception->getMessage());
+        }
     }
 
+    private function _isPaused()
+    {
+        $paused = $this->_versionMapper->find("paused", "octopush");
+        return (empty($paused) or ($paused=="0"));
+    }
 
     public function resume()
     {
-        $success = $this->_app->resume();
-        return $this->_jsonResult($success);
+        return $this->_pause("0");
     }
 
     public function status()
@@ -101,11 +108,6 @@ class QueueController
         if ($this->_isPaused()) $status = 'OFF';
 //        $status = $this->_app['paused'];
         return $status;
-    }
-
-    private function _isPaused()
-    {
-        return $this->_app->isPaused();
     }
 
     public function health()
