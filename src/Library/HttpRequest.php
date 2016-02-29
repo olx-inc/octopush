@@ -31,7 +31,7 @@ class HttpRequest
 
     public function getResponseCode()
     {
-      return $_data;
+      return $this->_info;
     }
 
 
@@ -40,7 +40,7 @@ class HttpRequest
       $ch = curl_init();
       if (!empty($this->_options))
       {
-        $httpAuth=$this->_options['httpauth'];
+        $httpauth=$this->_options['httpauth'];
         curl_setopt($ch, CURLOPT_USERPWD, $httpauth);
       }
       if (!empty($this->_data))
@@ -54,10 +54,10 @@ class HttpRequest
 //      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       $res = curl_exec($ch);
+
+      $this->_info = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
       curl_close($ch);
-
-      $this->info = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
       return $res;
     }
 

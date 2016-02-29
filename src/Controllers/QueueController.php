@@ -71,7 +71,7 @@ class QueueController
     }
 
 
-    public function pause($paused)
+    public function pause()
     {
         return $this->_pause("1");
     }
@@ -94,7 +94,7 @@ class QueueController
     private function _isPaused()
     {
         $paused = $this->_versionMapper->find("paused", "octopush");
-        return (empty($paused) or ($paused=="0"));
+        return (!empty($paused) and ($paused=="1"));
     }
 
     public function resume()

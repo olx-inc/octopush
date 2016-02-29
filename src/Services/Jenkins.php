@@ -7,16 +7,14 @@ use Models\JobStatus,
 class Jenkins
 {
     private $_host;
-    private $_user;
-    private $_pass;
+    private $_token;
     private $_jobs;
     private $_log;
 
     public function __construct($config, $log)
     {
         $this->_host = $config['jenkins']['host'];
-        $this->_user = $config['jenkins']['user'];
-        $this->_pass = $config['jenkins']['pass'];
+        $this->_token = $config['jenkins']['token'];
         $this->_jobs = $config['jenkins']['jobs'];
         $this->_log = $log;
         $this->_log->addInfo("New Jenkins instance created");
@@ -109,12 +107,10 @@ class Jenkins
         try {
             $httpRequest = new HttpRequest($url);
             $this->_log->addInfo("Calling Jenkins:" . $url);
-            $httpAuth = $this->_user . ':' . $this->_pass;
-            $httpRequest->setOptions(array('httpauth' => $httpAuth));
             $response = $httpRequest->send();
             $this->_log->addInfo("Response:" . $httpRequest->getResponseCode());
             if ($httpRequest->getResponseCode() > 400) {
-                $this->_log->addError("Error while calling jenkins: " . $httpRequest->getUrl());
+                $this->_log->addError("Error while calling jenkins: " . $url);
                 throw new \Exception();
             }
         } catch (\Exception $e) {
@@ -176,9 +172,7 @@ class Jenkins
             $lastBuildId = $this->getLastBuildId($job);
             $this->_log->addInfo("lastBuildId: " . $lastBuildId);
             $req = new \HttpRequest($pushUrl);
-            $httpAuth = $this->_user . ':' . $this->_pass;
-            $this->_log->addInfo("auth" . $httpAuth);
-            $req->setOptions(array('httpauthtype'=>HTTP_AUTH_BASIC, 'httpauth' => $httpAuth));
+            $data['token'] = $this->_token;
             $req->addPostFields($data);
             $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);
             $req->send();
