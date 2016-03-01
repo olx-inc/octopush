@@ -136,7 +136,7 @@ class QueueController
             $this->_processQueue($modules);
 
             $this->_processLiveJobs();
-            $this->_processLiveQueue($modules);
+            $this->_processLiveQueue();
         } catch (\Exception $exception) {
             $resultOk = false;
             $this->_log->addError("Error when processing Jobs queue:" . $exception->getMessage());
@@ -253,7 +253,7 @@ class QueueController
         }
     }
 
-    private function _processLiveQueue($modules)
+    private function _processLiveQueue()
     {
         $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
         if (count($jobsGoingLive) > 0) {

@@ -56,7 +56,7 @@ class Jenkins
         }
         $url .= "/api/json";
         $rawResponse = $this->_send($url);
-        $jsonResponse = json_decode($rawResponse['body'], true);
+        $jsonResponse = json_decode($rawResponse, true);
 
         return $jsonResponse['result'];
     }
@@ -73,7 +73,7 @@ class Jenkins
         $url .= '/lastBuild/api/json';
         $this->_log->addInfo("GettingLastBuild:" . $url);
         $rawResponse = $this->_send($url);
-        $jsonResponse = json_decode($rawResponse['body'], true);
+        $jsonResponse = json_decode($rawResponse, true);
 
         return $jsonResponse['number'];
     }
@@ -171,7 +171,7 @@ class Jenkins
             $currentBuildId = 0;
             $lastBuildId = $this->getLastBuildId($job);
             $this->_log->addInfo("lastBuildId: " . $lastBuildId);
-            $req = new \HttpRequest($pushUrl);
+            $req = new HttpRequest($pushUrl);
             $data['token'] = $this->_token;
             $req->addPostFields($data);
             $this->_log->addInfo("About to call JenkinsRM to queue job: " . $pushUrl);

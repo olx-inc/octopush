@@ -50,22 +50,6 @@ class GitHub {
         return new User($jsonResponse['login'], $jsonResponse['email']);
     }
 
-    public function IsUserInAdminTeam($username) {
-        $result = false;
-        $url = "https://api.github.com/user/teams?client_id=" . $this->_key ."&client_secret=" .$this->_secret;
-        $req = new \Library\HttpRequest($url);
-        $rawResponse = $this->_httpRequest->send();
-        $jsonResponse = json_decode($rawResponse['body'], true);
-        if (strpos($rawResponse['body'], $username) > 1) {
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    public function getUsersRepos($username){
-
-    }
 
 }
 

@@ -161,13 +161,9 @@ class Job
 
     public function canRun($jobsInProgress, $modules)
     {
-        $dependencyTag = $modules[$this->getTargetModule()];
         foreach ($jobsInProgress as $job) {
             // check is the module is already running
             if ($job->getTargetModule() == $this->getTargetModule()) {
-                return false;
-            }
-            if ($dependencyTag != $modules[$job->getTargetModule()]) {
                 return false;
             }
         }
@@ -201,7 +197,7 @@ class Job
         $job->_user = "";
         $job->_ticket = "";
         $job->_rollbackedFrom = "";
-        
+
         return $job;
     }
 
@@ -234,6 +230,6 @@ class Job
     {
         return get_object_vars($this);
 
-    }    
+    }
 
 }
