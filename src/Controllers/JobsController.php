@@ -103,9 +103,6 @@ class JobsController
         try {
             $job = $this->_jobMapper->get($jobId);
 
-            $helperSession = $this->_app['helpers.session'];
-            $permissions = $helperSession->getPermissions();
-
             $status = array(JobStatus::QUEUED => JobStatus::DEPLOY_FAILED,
                             JobStatus::QUEUED_FOR_LIVE => JobStatus::GO_LIVE_FAILED);
 
@@ -150,7 +147,6 @@ class JobsController
             $this->getKeyAndSession();
 
             $helperSession = $this->_app['helpers.session'];
-            $permissions = $helperSession->getPermissions();
 
             if ($this->canBePushedLive($job) &&
                     $job->canGoLive()) {
@@ -207,7 +203,6 @@ class JobsController
             $this->getKeyAndSession();
 
             $helperSession = $this->_app['helpers.session'];
-            $permissions = $helperSession->getPermissions();
 
             if (! $this->canBePushedLive($oldJob) ||
                 ! $oldJob->wentLive()) {

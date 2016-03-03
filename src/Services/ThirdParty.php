@@ -57,6 +57,7 @@ class ThirdParty {
 
     public function canMemberGoLive($permissions, $repository)
     {
+/*
         if (isset($permissions["teams"]) &&
                 isset($permissions["repositories"])) {
             if (in_array($this->_adminTeamId, $permissions["teams"]) ||
@@ -66,6 +67,8 @@ class ThirdParty {
             }
         }
         return false;
+*/
+      return !empty($permissions);
     }
 
     private function _externalCall($job, $external_url, $action) {

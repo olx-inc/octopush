@@ -8,12 +8,14 @@ class GitHub {
 
     private $_managementKey;
     private $_adminTeamId;
+    private $_pocTeamId;
     private $_log;
 
     public function __construct($config, $log)
     {
         $this->_managementKey = $config['github_management_key'];
         $this->_adminTeamId = $config['teams']['admin'];
+        $this->_pocTeamId = $config['teams']['pocs'];
         $this->_log = $log;
     }
 
@@ -24,7 +26,7 @@ class GitHub {
                 . '/members/' . $login . '?access_token='
                 . $this->_managementKey;
 
-        $req = new \Library\HttpRequest();
+        $req = new HttpRequest();
         $req->setUrl($url);
         $rawResponse = $req->send();
 
@@ -35,19 +37,32 @@ class GitHub {
 
         $token = $userToken->getAccessToken()->getAccessToken();
         $url = "https://api.github.com/user?access_token=" . $token;
-        $req = new \Library\HttpRequest($url);
+        $req = new HttpRequest($url);
         $rawResponse = $req->send();
-        $jsonResponse = json_decode($rawResponse['body'], true);
+        $jsonResponse = json_decode($rawResponse, true);
         return $jsonResponse['login'];
     }
 
     public function getUser($token) {
 
         $url = "https://api.github.com/user?access_token=" . $token;
-        $req = new \Library\HttpRequest($url);
+        $req = new HttpRequest($url);
         $rawResponse = $req->send();
-        $jsonResponse = json_decode($rawResponse['body'], true);
+        $jsonResponse = json_decode($rawResponse, true);
         return new User($jsonResponse['login'], $jsonResponse['email']);
+    }
+
+    public function getMemberPermissions($user, $token) {
+
+        $url = "https://api.github.com/teams/" . $this->_pocTeamId . "/memberships/"
+              . $user . "?access_token=" . $this->_managementKey;
+        $req = new HttpRequest($url);
+        $rawResponse = $req->send();
+        if (req->getResponseCode() == 200){
+          $jsonResponse = json_decode($rawResponse, true);
+          return "active";
+        }
+        return "";
     }
 
 
