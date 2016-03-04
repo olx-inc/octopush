@@ -8,10 +8,12 @@ class HttpRequest
     private $_options;
     private $_data;
     private $_info;
+    private $_method;
 
-    public function __construct($url, $method="")
+    public function __construct($url, $method="POST")
     {
       $this->_url = $url;
+      $this->_method = $method;
     }
 
     public function setUrl($url)
@@ -19,7 +21,7 @@ class HttpRequest
       $this->_url = $url;
     }
 
-    public function setOptions($options)
+    public function setUserAgent($options)
     {
       $this->_options=$options;
     }
@@ -40,8 +42,7 @@ class HttpRequest
       $ch = curl_init();
       if (!empty($this->_options))
       {
-        $httpauth=$this->_options['httpauth'];
-        curl_setopt($ch, CURLOPT_USERPWD, $httpauth);
+        curl_setopt($ch,CURLOPT_USERAGENT, $this->_options);
       }
       if (!empty($this->_data))
       {
@@ -49,7 +50,11 @@ class HttpRequest
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
       }
       curl_setopt($ch, CURLOPT_URL,  $this->_url );
-      curl_setopt($ch, CURLOPT_POST, 1);
+      if ($this->_method="POST")
+        curl_setopt($ch, CURLOPT_POST, 1);
+      else
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);

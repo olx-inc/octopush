@@ -87,10 +87,7 @@ class Session
             'user' => $token->getUser(),
             'permissions' => $permissions,
             'my_components' => 'btn-on',
-            'is_admin_user' => in_array(
-                $app['config']['teams']['admin'],
-                $permissions['teams']
-            ),
+            'is_admin_user' => false,
         );
 
         $app['session']->set('userData', $userData);
