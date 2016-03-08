@@ -6,6 +6,7 @@ use Models\JobStatus,
     Models\JobMapper,
     Models\Job,
     Models\Version,
+    Services\ThirdParty,
     Library\OctopushApplication,
     Helpers\Session,
     Symfony\Component\HttpFoundation\Request,
@@ -226,7 +227,7 @@ class JobsController
             $job->setRollbackedFrom($oldJob->getId());
             $job->setTicket($oldJob->getTicket());
 
-            $ticket = $this->_thirdParty->preDeploy($job, "rollback");
+            $ticket = $this->_thirdParty->preDeploy($job, ThirdParty::ROLLBACK_ACTION);
             $job->setTicket($ticket);
             $job->setUser($helperSession->getUser()->getEmail());
 

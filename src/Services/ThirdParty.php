@@ -32,7 +32,6 @@ class ThirdParty {
         if (isset($ticketer))
             $this->_ticketer = $ticketer;
 
-        $this->_permissionsUrl = $config['thirdparty']['member-permissions'];
         $this->_adminTeamId = $config['teams']['admin'];
         $this->_pocsTeamId = $config['teams']['pocs'];
         $this->_log = $log;
@@ -44,18 +43,20 @@ class ThirdParty {
         if (isset($this->_preDeployUrl))
             return $this->_externalCall($job, $this->_preDeployUrl, $action);
         elseif (isset($this->_ticketer)){
-          if ($action==ThirdParty::ROLLBACK_ACTION){//When Rollback, retrieve original, mark and continue.
-            $ticket = $this->_ticketer->get_by_key($job->getTicket());
-            $this->_ticketer->add_label($ticket, "Rollbacked");
-          }else{//Normally creates a new Ticket
-            $tkt_user = $this->_ticketer->search_user($job->getUser());
-            $title = $job->getTargetModule() . "::" . "Deploy " . $job->getTargetVersion();
-            $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
+          $tkt_user = $this->_ticketer->search_user($job->getUser());
+          $title = $job->getTargetModule() . "::" . "Deploy " . $job->getTargetVersion();
+          $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
 
-            $ticket = $this->_ticketer->create_issue($title, $description,
-                            strtoupper($job->getTargetModule()), '', $tkt_user);
-          }
+          $ticket = $this->_ticketer->create_issue($title, $description,
+                          strtoupper($job->getTargetModule()), '', $tkt_user);
+
           $this->_ticketer->transition($ticket, Jira::TRANS_IN_PROGRESS);
+
+          if ($action==ThirdParty::ROLLBACK_ACTION){//When Rollback, mark and link with new.
+            $ticket_old=$this->_ticketer->getTicketUri($job->getTicket());
+            $this->_ticketer->add_label($ticket_old, "Rollbacked");
+            $this->_ticketer->link($ticket_old, array($ticket));
+          }//Normally creates a new Ticket
 
           return $this->_ticketer->getTicketUrl($ticket);
         }
@@ -70,13 +71,14 @@ class ThirdParty {
             return $this->_externalCall($job, $this->_postDeployUrl, $action);
         elseif (isset($this->_ticketer)){
           if ($action==ThirdParty::DEPLOY_SUCCESS)
-            $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::FIXED);
-          if ($action==ThirdParty::DEPLOY_FAILED)
-            $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::WONT_FIX);
+            return $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::FIXED);
+          elseif ($action==ThirdParty::DEPLOY_FAILED)
+            return $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::WONT_FIX);
           elseif ($action==ThirdParty::DEPLOY_CANCEL)
-            $this->_ticketer->transition($ticket, Jira::TRANS_CANCEL, Jira::WONT_FIX);
+            return $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::WONT_FIX);//label CANCELED?
+          else
+            return NOT_AVAILABLE;
         }
-        return NOT_AVAILABLE;
     }
 
     public function getMemberPermissions($username)

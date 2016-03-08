@@ -17,7 +17,7 @@ class Jira {
   const TRANS_IN_PROGRESS = 121;
   CONST FIXED = 'Fixed / Done';
   CONST WONT_FIX = 'Won\'t Fix';
-  CONST TRANS_CLOSED = 141;
+  CONST TRANS_CLOSED = 131;
   CONST TRANS_CANCEL = 131;
 
 	public function __construct($config){
@@ -31,8 +31,7 @@ class Jira {
 		try {
 			//return $this->getIssue ( $this->token, strtoupper ( $key ) );
 			$issue = $this->getIssue($key);
-			return new JiraIssue($issue['key'], $issue['fields']['summary'], $issue['fields']['status']['id'],
-				$issue['fields']['customfield_10577'] );
+			return $issue['key'];
 		}
 		catch( Exception $e ) {
 			return null;
@@ -40,11 +39,11 @@ class Jira {
 	}
 
   public function getTicketUrl($ticket){
-  		return $this->$jira_url . '/browse/' . $ticket;
+  		return $this->jira_url . '/browse/' . $ticket;
   }
 
   public function getTicketUri($ticket){
-  		return substr($ticket, strlen($this->$jira_url . '/browse/'));
+  		return substr($ticket, strlen($this->jira_url . '/browse/'));
   }
 
 	public function get_servicelist($service){
