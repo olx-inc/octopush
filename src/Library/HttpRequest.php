@@ -50,7 +50,7 @@ class HttpRequest
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
       }
       curl_setopt($ch, CURLOPT_URL,  $this->_url );
-      if ($this->_method="POST")
+      if ($this->_method=="POST")
         curl_setopt($ch, CURLOPT_POST, 1);
       else
         curl_setopt($ch, CURLOPT_HTTPGET, 1);

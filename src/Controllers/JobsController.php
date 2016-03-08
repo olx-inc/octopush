@@ -115,6 +115,8 @@ class JobsController
             $job->moveStatusTo($status[$job->getStatus()]);
             $this->_jobMapper->save($job);
 
+            $response = $this->_thirdParty->postDeploy($job, 'cancel');
+
             $result = array(
                 'job_status' => $job->getStatus(),
                 'job_id' => $jobId
@@ -149,7 +151,7 @@ class JobsController
             $helperSession = $this->_app['helpers.session'];
 
             if ($this->canBePushedLive($job) &&
-                    $job->canGoLive()) {
+                      $job->canGoLive()) {
 
                 $email = $helperSession->getUser()->getEmail();
                 if (!empty($email))
@@ -158,7 +160,7 @@ class JobsController
                     $job->setUser($helperSession->getUser()->getUserName());
 
                 $response = $this->_thirdParty->preDeploy($job);
-                $ticket = isset($response->ticket) ? $response->ticket : false;
+                $ticket = isset($ticket) ? $ticket : false;
 
                 if ($ticket) {
                     $job->setTicket($ticket);
@@ -224,8 +226,8 @@ class JobsController
             $job->setRollbackedFrom($oldJob->getId());
             $job->setTicket($oldJob->getTicket());
 
-            $response = $this->_thirdParty->preDeploy($job, "rollback");
-            $job->setTicket($response->ticket);
+            $ticket = $this->_thirdParty->preDeploy($job, "rollback");
+            $job->setTicket($ticket);
             $job->setUser($helperSession->getUser()->getEmail());
 
             $this->_jobMapper->save($job);
@@ -496,11 +498,12 @@ class JobsController
         $record["URI"] = '?my_components=on';
         array_push($result, $record);
 
-        ksort($this->_config['modules']);
-        foreach ($this->_config['modules'] as $module => $value) {
+        $components = $this->_jobMapper->findModules();
+
+        foreach ($components as $component) {
             $record = array();
-            $record["Value"] = $module;
-            $record["URI"] = '?repo=' . $module;
+            $record["Value"] = $component['module'];
+            $record["URI"] = '?repo=' . $component['module'];
             array_push($result, $record);
         }
 

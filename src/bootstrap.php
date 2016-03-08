@@ -63,9 +63,15 @@ $app['services.GitHub'] = $app->share(
 }
 );
 
+$app['services.Jira'] = $app->share(
+        function ($app) {
+    return new Services\GitHub($app['config']);
+}
+);
+
 $app['services.ThirdParty'] = $app->share(
         function ($app) {
-    return new Services\ThirdParty($app['config'], $app['monolog']);
+    return new Services\ThirdParty($app['config'], $app['monolog'], $app['services.Jira']);
 }
 );
 

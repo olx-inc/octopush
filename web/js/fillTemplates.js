@@ -23,7 +23,7 @@ var tml = {
     },
 
     fillRepoFields: function (html, repo){
-        html.find("[data-repo]").text(repo._module);
+        html.find("[data-repo]").text(repo._module).attr("href", "github.com/olx-inc/" + repo._module);
         html.find("[data-testing]").text(repo._testing);
         html.find("[data-staging]").text(repo._staging);
         html.find("[data-production]").text(repo._production);

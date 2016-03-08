@@ -16,6 +16,7 @@ class JobMapper
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC limit :limit";
     const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket, rollback_id, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_id = ?, environment = ? WHERE job_id = ?";
+    const FIND_ALL_MODULES_STATEMENT = "SELECT distinct module FROM jobs";
 
     public function __construct(Connection $db)
     {
@@ -40,7 +41,7 @@ class JobMapper
         if (! is_null($limit)) {
             $sql .= " limit " . $limit;
         }
-        
+
         $data = $this->_db->fetchAll($sql, $params);
 
         $result = array();
@@ -60,7 +61,7 @@ class JobMapper
             $targetModules = implode("','", $modulesArray);
             $modulesSQL = " AND module in ('" . $targetModules ."')";
         }
-        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') " 
+        $sql = "SELECT * FROM jobs WHERE STATUS in ('" . $targetStatus ."') "
                 . $modulesSQL . " ORDER BY updated_at DESC";
 
         if (!is_null($limit)) {
@@ -109,6 +110,16 @@ class JobMapper
         return $result;
     }
 
+    public function findAllModules()
+    {
+        $sql = JobMapper::FIND_ALL_MODULES_STATEMENT;
+        $params = array();
+
+        $data = $this->_db->fetchAll($sql, $params);
+
+        return $data;
+    }
+
     public function save($job)
     {
         if ($job->getId() == 0) {
@@ -134,7 +145,7 @@ class JobMapper
                 $job->getDeploymentJobId(),
                 $job->getUser(),
                 $job->getTicket(),
-                $job->getRollbackedFrom(),                
+                $job->getRollbackedFrom(),
                 $insertedDate,
             )
         );

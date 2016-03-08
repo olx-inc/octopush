@@ -12,16 +12,20 @@ class ThirdParty {
     private $_adminTeamId;
     private $_pocsTeamId;
     private $_log;
+    private $_ticketer
     const DEPLOY_SUCCESS = "success";
     const DEPLOY_FAILED = "failure";
     const NOT_AVAILABLE = "none";
 
     public function __construct($config,
-                                $log) {
+                                $log, $ticketer=null) {
         if (isset($config['thirdparty']['pre-deploy']))
             $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
         if (isset($config['thirdparty']['post-deploy']))
             $this->_postDeployUrl = $config['thirdparty']['post-deploy'];
+        if (isset($ticketer)
+            $this->_ticketer = $ticketer;
+
         $this->_permissionsUrl = $config['thirdparty']['member-permissions'];
         $this->_adminTeamId = $config['teams']['admin'];
         $this->_pocsTeamId = $config['teams']['pocs'];
@@ -33,6 +37,22 @@ class ThirdParty {
     {
         if (isset($this->_preDeployUrl))
             return $this->_externalCall($job, $this->_preDeployUrl, $action);
+        elseif (isset($this->_ticketer)){
+          if ($action="rollback"){//When Rollback, retrieve original, mark and continue.
+            $ticket = $this->_ticketer->get_by_key($job->getTicket());
+            $this->_ticketer->add_label($ticket, "Rollbacked");
+          }else{//Normally creates a new Ticket
+            $tkt_user = $this->_ticketer->search_user($job->getUser());
+            $title = $job->getTargetModule() . "::" . "Deploy " . $job->getTargetVersion();
+            $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
+
+            $ticket = $this->_ticketer->create_issue($title, $description, $job->getTargetModule(), '', $tkt_user);
+          }
+          $this->_ticketer->transition($ticket, Jira::TRANS_IN_PROGRESS);
+
+          return $ticket;
+        }
+
         return NOT_AVAILABLE;
     }
 
@@ -40,6 +60,12 @@ class ThirdParty {
     {
         if (isset($this->_postDeployUrl))
             return $this->_externalCall($job, $this->_postDeployUrl, $action);
+        elseif (isset($this->_ticketer)){
+          if ($action=='success')
+            res = $jira_service->transition($job->getTicket(), Jira::TRANS_CLOSED, Jira::FIXED);
+          elseif ($action=='cancel')
+            res = $jira_service->transition($job->getTicket(), Jira::TRANS_CANCEL, Jira::WONT_FIX);
+        }
         return NOT_AVAILABLE;
     }
 
@@ -83,7 +109,7 @@ class ThirdParty {
         $url = $external_url . '?' . http_build_query($params);
         $response = json_decode(file_get_contents($url));
         $response->ticket = urldecode($response->ticket);
-        return $response;
+        return $response->ticket;
     }
 
 }
