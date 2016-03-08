@@ -46,6 +46,7 @@ class HttpRequest
       }
       if (!empty($this->_data))
       {
+        $fields_string = "";
         foreach($this->_data as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
       }

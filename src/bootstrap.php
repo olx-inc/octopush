@@ -65,7 +65,7 @@ $app['services.GitHub'] = $app->share(
 
 $app['services.Jira'] = $app->share(
         function ($app) {
-    return new Services\GitHub($app['config']);
+    return new Services\Jira($app['config']);
 }
 );
 

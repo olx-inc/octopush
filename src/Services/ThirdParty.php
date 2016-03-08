@@ -12,10 +12,14 @@ class ThirdParty {
     private $_adminTeamId;
     private $_pocsTeamId;
     private $_log;
-    private $_ticketer
+    private $_ticketer;
     const DEPLOY_SUCCESS = "success";
     const DEPLOY_FAILED = "failure";
+    const DEPLOY_CANCEL = "cancel";
     const NOT_AVAILABLE = "none";
+
+    const DEPLOY_ACTION = "deploy";
+    const ROLLBACK_ACTION = "rollback";
 
     public function __construct($config,
                                 $log, $ticketer=null) {
@@ -23,7 +27,9 @@ class ThirdParty {
             $this->_preDeployUrl = $config['thirdparty']['pre-deploy'];
         if (isset($config['thirdparty']['post-deploy']))
             $this->_postDeployUrl = $config['thirdparty']['post-deploy'];
-        if (isset($ticketer)
+        if (isset($config['thirdparty']['member-permissions']))
+            $this->_permissionsUrl = $config['thirdparty']['member-permissions'];
+        if (isset($ticketer))
             $this->_ticketer = $ticketer;
 
         $this->_permissionsUrl = $config['thirdparty']['member-permissions'];
@@ -38,7 +44,7 @@ class ThirdParty {
         if (isset($this->_preDeployUrl))
             return $this->_externalCall($job, $this->_preDeployUrl, $action);
         elseif (isset($this->_ticketer)){
-          if ($action="rollback"){//When Rollback, retrieve original, mark and continue.
+          if ($action==ThirdParty::ROLLBACK_ACTION){//When Rollback, retrieve original, mark and continue.
             $ticket = $this->_ticketer->get_by_key($job->getTicket());
             $this->_ticketer->add_label($ticket, "Rollbacked");
           }else{//Normally creates a new Ticket
@@ -46,25 +52,29 @@ class ThirdParty {
             $title = $job->getTargetModule() . "::" . "Deploy " . $job->getTargetVersion();
             $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
 
-            $ticket = $this->_ticketer->create_issue($title, $description, $job->getTargetModule(), '', $tkt_user);
+            $ticket = $this->_ticketer->create_issue($title, $description,
+                            strtoupper($job->getTargetModule()), '', $tkt_user);
           }
           $this->_ticketer->transition($ticket, Jira::TRANS_IN_PROGRESS);
 
-          return $ticket;
+          return $this->_ticketer->getTicketUrl($ticket);
         }
 
         return NOT_AVAILABLE;
     }
 
-    public function postDeploy($job, $action = 'success')
+    public function postDeploy($job, $action = ThirdParty::DEPLOY_SUCCESS)
     {
+        $ticket=$this->_ticketer->getTicketUri($job->getTicket());
         if (isset($this->_postDeployUrl))
             return $this->_externalCall($job, $this->_postDeployUrl, $action);
         elseif (isset($this->_ticketer)){
-          if ($action=='success')
-            res = $jira_service->transition($job->getTicket(), Jira::TRANS_CLOSED, Jira::FIXED);
-          elseif ($action=='cancel')
-            res = $jira_service->transition($job->getTicket(), Jira::TRANS_CANCEL, Jira::WONT_FIX);
+          if ($action==ThirdParty::DEPLOY_SUCCESS)
+            $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::FIXED);
+          if ($action==ThirdParty::DEPLOY_FAILED)
+            $this->_ticketer->transition($ticket, Jira::TRANS_CLOSED, Jira::WONT_FIX);
+          elseif ($action==ThirdParty::DEPLOY_CANCEL)
+            $this->_ticketer->transition($ticket, Jira::TRANS_CANCEL, Jira::WONT_FIX);
         }
         return NOT_AVAILABLE;
     }

@@ -1,14 +1,11 @@
 <?php
 
-require_once dirname(__FILE__)  . '/config.php';
-
-//$jira=new Jira(JIRA_USER, JIRA_PASSWORD);
-//$jira->link("RLS-1200", array(1 => "BUY-100"));
+namespace Services;
 
 class Jira {
 // extends SoapClient
 	protected $token;
-  protected $$this->jira_url;
+  protected $jira_url;
 	protected $jira_user;
 	protected $jira_pwd;
 
@@ -24,7 +21,7 @@ class Jira {
   CONST TRANS_CANCEL = 131;
 
 	public function __construct($config){
-    $this->$this->jira_url=$config['jira']['host'];
+    $this->jira_url=$config['jira']['host'];
 		$this->jira_user=$config['jira']['user'];
 		$this->jira_pwd=$config['jira']['password'];
 
@@ -41,6 +38,14 @@ class Jira {
 			return null;
 		}
 	}
+
+  public function getTicketUrl($ticket){
+  		return $this->$jira_url . '/browse/' . $ticket;
+  }
+
+  public function getTicketUri($ticket){
+  		return substr($ticket, strlen($this->$jira_url . '/browse/'));
+  }
 
 	public function get_servicelist($service){
 		$ch = curl_init();
@@ -125,7 +130,7 @@ class Jira {
 			$summary = array('summary'=> $title);
 			$description = array('description'=> $message);
 			$issuetype = array('id' => '15');//EasyFix
-			$components = array(array('id' => $component)); //OLX
+			$components = array(array('name' => $component)); //OLX
 			$labels = array($label);
 			$env = array('value' => 'LIVE');
 			$fields = array('project' => $project, 'summary'=> $title, 'description'=> $message,

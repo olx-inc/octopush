@@ -112,10 +112,11 @@ class JobsController
             if (($job->getStatus() == JobStatus::QUEUED_FOR_LIVE) && (!$this->canBePushedLive($job)))
                 throw new \Exception('No permissions to cancel: ' . $jobId);
 
+            if ($job->getStatus() == JobStatus::QUEUED_FOR_LIVE)
+                $response = $this->_thirdParty->postDeploy($job, ThirdParty::DEPLOY_CANCEL);
+
             $job->moveStatusTo($status[$job->getStatus()]);
             $this->_jobMapper->save($job);
-
-            $response = $this->_thirdParty->postDeploy($job, 'cancel');
 
             $result = array(
                 'job_status' => $job->getStatus(),
@@ -159,10 +160,9 @@ class JobsController
                 else
                     $job->setUser($helperSession->getUser()->getUserName());
 
-                $response = $this->_thirdParty->preDeploy($job);
-                $ticket = isset($ticket) ? $ticket : false;
+                $ticket = $this->_thirdParty->preDeploy($job);
 
-                if ($ticket) {
+                if (isset($ticket)) {
                     $job->setTicket($ticket);
                     $job->moveStatusTo(JobStatus::QUEUED_FOR_LIVE);
                 } else {
@@ -498,7 +498,7 @@ class JobsController
         $record["URI"] = '?my_components=on';
         array_push($result, $record);
 
-        $components = $this->_jobMapper->findModules();
+        $components = $this->_jobMapper->findAllModules();
 
         foreach ($components as $component) {
             $record = array();
