@@ -44,7 +44,7 @@ class ThirdParty {
             return $this->_externalCall($job, $this->_preDeployUrl, $action);
         elseif (isset($this->_ticketer)){
           $tkt_user = $this->_ticketer->search_user($job->getUser());
-          $title = $job->getTargetModule() . "::" . "Deploy " . $job->getTargetVersion();
+          $title = strtoupper($job->getTargetModule()) . " :: " . "Deploy " . $job->getTargetVersion();
           $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
 
           $ticket = $this->_ticketer->create_issue($title, $description,

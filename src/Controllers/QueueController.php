@@ -50,6 +50,8 @@ class QueueController
 
         try {
             $job = Job::createWith($module, $version, $env, $jenkins);
+            $job->setStatusId(JobStatus::getStatusId(
+                          JobStatus::getQueuedStatus($env)));
             $this->_jobMapper->save($job);
 
             $result = array(

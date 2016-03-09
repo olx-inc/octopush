@@ -36,6 +36,14 @@ class JobStatus
     public static function getStatusId($status)
     {
         return array_search($status, self::$status_array);
-    }    
+    }
+
+    public static function getQueuedStatus($env)
+    {
+        $statuses = array(Version::STAGING => JobStatus::QUEUED,
+                        Version::PRODUCTION => JobStatus::QUEUED_FOR_LIVE);
+
+         return $statuses[$env];
+    }
 
 }
