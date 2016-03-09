@@ -23,10 +23,10 @@ var tml = {
     },
 
     fillRepoFields: function (html, repo){
-        html.find("[data-repo]").text(repo._module).attr("href", "github.com/olx-inc/" + repo._module);
-        html.find("[data-testing]").text(repo._testing);
-        html.find("[data-staging]").text(repo._staging);
-        html.find("[data-production]").text(repo._production);
+        html.find("[data-repo]").text(repo._module).attr("href", repo._module_link);
+        html.find("[data-testing]").text(repo._testing).attr("href", repo._testing_link);
+        html.find("[data-staging]").text(repo._staging).attr("href", repo._staging_link);
+        html.find("[data-production]").text(repo._production).attr("href", repo._production_link);
         // ---- Ticket
         tml.displayTicket(repo._ticket, html.find("[data-ticket]"));
         // ---- Start tooltip

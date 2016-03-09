@@ -89,7 +89,7 @@ $app['queue.controller'] = $app->share(
 
 $app['version.controller'] = $app->share(
         function () use ($app) {
-    return new Controllers\VersionController($app, $app['models.VersionMapper'], $app['monolog']);
+    return new Controllers\VersionController($app, $app['models.VersionMapper'], $app['config']['links']['prefix'], $app['config']['links']['uri'], $app['config']['links']['regex'], $app['monolog']);
 }
 );
 

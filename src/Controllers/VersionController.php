@@ -12,14 +12,25 @@ class VersionController
     private $_versionMapper;
     private $_log;
     private $_app;
+    private $_url_prefix;
+    private $_regex_version;
+    private $_uri_version;
+
 
     public function __construct(OctopushApplication $app,
                                 VersionMapper $versionMapper,
+                                $url_prefix,
+                                $regex_version,
+                                $uri_version,
                                 $log)
     {
         $this->_versionMapper = $versionMapper;
         $this->_log = $log;
         $this->_app = $app;
+        $this->_url_prefix = $url_prefix;
+        $this->_uri_version = $uri_version;
+        $this->_regex_version = $regex_version;
+
     }
 
 
@@ -89,7 +100,14 @@ class VersionController
                 $version_array['_ticket'] = $version['ticket'];
             $version_array['_module'] = $version['module'] ;
             $version_array['_' . $version['environment']] = $version['version'];
-
+            $version_array['_' . $version['environment'] . '_time'] = $version['updated'];
+            $version_array['_module_link'] = $this->_url_prefix . $version['module'];
+            preg_match($this->_regex_version, $version['version'], $match);
+            if (! empty ( $match ))
+              $version_array['_' . $version['environment'] . '_link'] = $this->_url_prefix
+                    . $this->_uri_version . $match[0];
+            else
+              $version_array['_' . $version['environment'] . '_link'] = $this->_url_prefix . $version['module'];
         }
         array_push($result, $version_array);
 
