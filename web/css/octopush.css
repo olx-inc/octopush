@@ -57,17 +57,17 @@
   width: 205px
 }
 .filters button,
-.btn-default:hover, 
-.btn-default:focus, 
-.btn-default:active, 
-.btn-default.active, 
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
 .open .dropdown-toggle.btn-default {
   background-color: #d9edf7;
   color: #3a87ad
 }
 .btn-default .caret {
   border-top-color: #3a87ad;
-  margin-left: 6px 
+  margin-left: 6px
 }
 .dropdown-menu {
   max-height: 335px;
@@ -131,7 +131,7 @@
   width: 82px
 }
 .actions-column {
-  width: 200px  
+  width: 200px
 }
 .label-DEPLOYING        { background-color: orange }
 .label-PENDING_TESTS    { background-color: orange }
@@ -178,7 +178,15 @@
 .repo .ticket a {
   display: none;
 }
-
+.repo-testing small, .repo-staging small, .repo-production small {
+  display: block;
+  font-size: 12px;
+  text-align: center;
+}
+.repo-testing small:last-of-type, .repo-staging small:last-of-type, .repo-production small:last-of-type {
+  font-size: 10px !important;
+  color: #999;
+}
 /* responsive */
 @media (max-width: 1040px) {
   .page-header {

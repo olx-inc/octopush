@@ -27,6 +27,7 @@ var tml = {
         html.find("[data-testing]").text(repo._testing).attr("href", repo._testing_link);
         html.find("[data-staging]").text(repo._staging).attr("href", repo._staging_link);
         html.find("[data-production]").text(repo._production).attr("href", repo._production_link);
+        html.find("[data-production-time]").text(repo._production_time);
         // ---- Ticket
         tml.displayTicket(repo._ticket, html.find("[data-ticket]"));
         // ---- Start tooltip
