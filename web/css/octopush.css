@@ -178,10 +178,16 @@
 .repo .ticket a {
   display: none;
 }
+[data-repo] {
+    font-size: 15px;
+}
+.testing-column, .staging-column, .production-column {
+  text-align: left;
+}
 .repo-testing small, .repo-staging small, .repo-production small {
   display: block;
-  font-size: 12px;
-  text-align: center;
+  font-size: 13px;
+  text-align: left;
 }
 .repo-testing small:last-of-type, .repo-staging small:last-of-type, .repo-production small:last-of-type {
   font-size: 10px !important;

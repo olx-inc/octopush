@@ -25,7 +25,9 @@ var tml = {
     fillRepoFields: function (html, repo){
         html.find("[data-repo]").text(repo._module).attr("href", repo._module_link);
         html.find("[data-testing]").text(repo._testing).attr("href", repo._testing_link);
+        html.find("[data-testing-time]").text(repo._testing_time);
         html.find("[data-staging]").text(repo._staging).attr("href", repo._staging_link);
+        html.find("[data-staging-time]").text(repo._staging_time);
         html.find("[data-production]").text(repo._production).attr("href", repo._production_link);
         html.find("[data-production-time]").text(repo._production_time);
         // ---- Ticket
