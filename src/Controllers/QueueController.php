@@ -37,11 +37,20 @@ class QueueController
         $this->_thirdParty = $app['services.ThirdParty'];
     }
 
+    // Refactorizar!
+    private function getKeyAndSession(){
+        if (isset($_REQUEST['access_token'])){
+            Session::buildBackendSession($this->_app, $_REQUEST['access_token']);
+        }
+    }
+
     /**********************   API METHODS ***********************/
     public function queueJob($env, $module, $version)
     {
         $config = $this->_config;
         $jenkins = '';
+        $helperSession = $this->_app['helpers.session'];
+        $this->getKeyAndSession();
 
         $this->_log->addInfo('checking jenkins');
         if (array_key_exists('HTTP_JENKINS', $_SERVER)) {
@@ -52,6 +61,10 @@ class QueueController
             $job = Job::createWith($module, $version, $env, $jenkins);
             $job->setStatusId(JobStatus::getStatusId(
                           JobStatus::getQueuedStatus($env)));
+            $email = $helperSession->getUser()->getEmail();
+            if (!empty($email))
+                $job->setUser($email);
+
             $this->_jobMapper->save($job);
 
             $result = array(
@@ -255,6 +268,22 @@ class QueueController
         }
     }
 
+    private function setJobTicket($job)
+    {
+        $ticket=$job->getTicket();
+        if (!isset($ticket)) {
+          $ticket = $this->_thirdParty->preDeploy($job);
+
+          if (isset($ticket)) {
+            $job->setTicket($ticket);
+            return true;
+          } else
+            return false;
+        }
+        return true;
+
+    }
+
     private function _processLiveQueue()
     {
         $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
@@ -269,10 +298,11 @@ class QueueController
             $this->_log->addInfo("The Live queue is empty");
         }
         foreach ($jobsToProcess as $job) {
+            $hasTicket=setJobTicket($job);
             $job->moveStatusTo(JobStatus::GOING_LIVE);
             $job->setTargetEnvironment(Version::PRODUCTION);
             $this->_jobMapper->save($job);
-            if ($this->_jenkins->pushLive($job)) {
+            if ($hasTicket && $this->_jenkins->pushLive($job)) {
                 $this->_jobMapper->save($job);
                 $result = array(
                     'status' => "success",
