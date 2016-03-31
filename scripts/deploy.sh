@@ -96,7 +96,7 @@ then
 
 else
     case "${STAGE}" in
-        testing)
+        staging)
             git checkout ${BRANCH}
             git rebase ${REMOTE}/${BRANCH}
 
