@@ -159,7 +159,7 @@ class Job
         $this->_deploymentJobId = 0;
     }
 
-    public function canRun($jobsInProgress, $modules)
+    public function canRun($jobsInProgress)
     {
         foreach ($jobsInProgress as $job) {
             // check is the module is already running

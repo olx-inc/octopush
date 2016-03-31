@@ -10,6 +10,7 @@ use Models\JobMapper,
     Models\OctopushVersion,
     Services\ThirdParty,
     Services\Jenkins,
+    Helpers\Session,
     Library\OctopushApplication;
 
 class QueueController
@@ -41,7 +42,9 @@ class QueueController
     private function getKeyAndSession(){
         if (isset($_REQUEST['access_token'])){
             Session::buildBackendSession($this->_app, $_REQUEST['access_token']);
+            return true;
         }
+        return false;
     }
 
     /**********************   API METHODS ***********************/
@@ -50,7 +53,7 @@ class QueueController
         $config = $this->_config;
         $jenkins = '';
         $helperSession = $this->_app['helpers.session'];
-        $this->getKeyAndSession();
+        $withToken=$this->getKeyAndSession();
 
         $this->_log->addInfo('checking jenkins');
         if (array_key_exists('HTTP_JENKINS', $_SERVER)) {
@@ -61,7 +64,9 @@ class QueueController
             $job = Job::createWith($module, $version, $env, $jenkins);
             $job->setStatusId(JobStatus::getStatusId(
                           JobStatus::getQueuedStatus($env)));
-            $email = $helperSession->getUser()->getEmail();
+
+            if ($withToken)
+                $email = $helperSession->getUser()->getEmail();
             if (!empty($email))
                 $job->setUser($email);
 
@@ -145,10 +150,8 @@ class QueueController
                 return $this->_jsonResult(true, "The service is paused");
             }
 
-            $modules = $this->_config['modules'];
-
             $this->_processJobs();
-            $this->_processQueue($modules);
+            $this->_processQueue();
 
             $this->_processLiveJobs();
             $this->_processLiveQueue();
@@ -161,7 +164,7 @@ class QueueController
     }
 
 
-    private function _processQueue($modules)
+    private function _processQueue()
     {
         $jobsToProcess = $this->_jobMapper->findAllByStatus(JobStatus::QUEUED);
         $this->_log->addInfo("About processing the testing queue");
@@ -174,7 +177,7 @@ class QueueController
                 array(JobStatus::DEPLOYING, JobStatus::PENDING_TESTS));
             $jobsInProgress = $this->fillResults($jobsInProgress);
 
-            if ($job->canRun($jobsInProgress, $modules)) {
+            if ($job->canRun($jobsInProgress)) {
                 $job->moveStatusTo(JobStatus::DEPLOYING);
                 $this->_jobMapper->save($job);
                 if ($this->_jenkins->push($job)) {
@@ -271,10 +274,10 @@ class QueueController
     private function setJobTicket($job)
     {
         $ticket=$job->getTicket();
-        if (!isset($ticket)) {
+        if (empty($ticket)) {
           $ticket = $this->_thirdParty->preDeploy($job);
 
-          if (isset($ticket)) {
+          if (!empty($ticket)) {
             $job->setTicket($ticket);
             return true;
           } else
@@ -298,7 +301,7 @@ class QueueController
             $this->_log->addInfo("The Live queue is empty");
         }
         foreach ($jobsToProcess as $job) {
-            $hasTicket=setJobTicket($job);
+            $hasTicket=$this->setJobTicket($job);
             $job->moveStatusTo(JobStatus::GOING_LIVE);
             $job->setTargetEnvironment(Version::PRODUCTION);
             $this->_jobMapper->save($job);

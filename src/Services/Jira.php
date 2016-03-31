@@ -154,8 +154,8 @@ class Jira {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		    if( ! $res = curl_exec($ch)) {
 		    	var_dump($res);
-				error_log($res);
-				return null;
+					error_log($res);
+					return null;
 		    }
 
 			//$res = curl_exec($ch);
