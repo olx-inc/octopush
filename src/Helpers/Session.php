@@ -61,7 +61,7 @@ class Session
         $user = $github->getUser($token);
         $permissions = $github->
                 getMemberPermissions($user->getUserName());
-        $admin = $github->isAdminUser($token);
+        $admin = $github->IsUserAdmin($token);
 
         $userData = array(
             'user' => $user,
@@ -80,7 +80,7 @@ class Session
         $username = $github->getUserName($token);
         $permissions = $github->
                 getMemberPermissions($username, $token);
-        $admin = $github->isAdminUser($token);
+        $admin = $github->IsUserAdmin($token);
 
         $userData = array(
             'user' => $token->getUser(),

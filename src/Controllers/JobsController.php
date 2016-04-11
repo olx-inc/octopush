@@ -360,6 +360,28 @@ class JobsController
 
     /*************************/
 
+    public function deploying() //DEPRECATE and use inprogress(live)
+    {
+        $jobsGoingLive = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
+        if (count($jobsGoingLive) == 0) {
+            $result = array(
+                'status' => "Idle",
+                'module' => "-",
+                'version' => "-",
+            );
+            return $this->_app->json($result);
+        }
+        foreach ($jobsGoingLive as $job) {
+            $result = array(
+                'status' => "Deploying",
+                'module' => $job->getTargetModule(),
+                'version' => $job->getTargetVersion(),
+            );
+            return $this->_app->json($result);
+
+        }
+    }
+
     public function my_components($state)
     {
         $sessionHelper = $this->_app['helpers.session'];
