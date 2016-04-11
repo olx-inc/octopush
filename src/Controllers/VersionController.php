@@ -86,6 +86,7 @@ class VersionController
         $version_array = array();
         $versions = $this->_versionMapper->findAll();
         $module = "";
+        $session = $this->_app['helpers.session'];
 
         foreach ($versions as $version) {
             if ( $version['module']!=$module ){
@@ -108,6 +109,8 @@ class VersionController
                     . $this->_uri_version . $match[0];
             else
               $version_array['_' . $version['environment'] . '_link'] = $this->_url_prefix . $version['module'];
+            $version_array['_canGoLive'] = $session->isAdminUser();
+
         }
         array_push($result, $version_array);
 

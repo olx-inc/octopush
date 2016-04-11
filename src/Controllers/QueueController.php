@@ -50,8 +50,6 @@ class QueueController
     /**********************   API METHODS ***********************/
     public function queueJob($env, $module, $version)
     {
-//echo "llego1";
-
         $helperSession = $this->_app['helpers.session'];
         $withToken=$this->getKeyAndSession();
         $this->_log->addInfo('checking jenkins');
@@ -66,8 +64,7 @@ class QueueController
             $job->setStatusId(JobStatus::getStatusId(
                           JobStatus::getQueuedStatus($env)));
 
-//            if ($withToken)
-                $email = $helperSession->getUser()->getEmail();
+            $email = $helperSession->getUser()->getEmail();
             if (!empty($email))
                 $job->setUser($email);
 
@@ -80,8 +77,6 @@ class QueueController
             );
             $this->_log->addInfo($result['message'] . " with id: " . $result['job_id']);
         } catch (\Exception $exc) {
-error_log("ERROR" . $exc->getMessage());
-
             $result = array(
                 'status' => "error",
                 'message' => "Job not inserted in queue",

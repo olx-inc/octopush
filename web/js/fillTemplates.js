@@ -236,13 +236,14 @@ var tml = {
             }
         }
         if (typeof version._prod_ready != 'undefined')
-          if (version._prod_ready != version._production){
+          if (version._prod_ready != version._production) && (version._canGoLive) {
             goLive = {
                 "targetModule": version._module,
                 "targetVersion": version._prod_ready
             };
         }
         tml.fillRepoFields(newRepo, version);
+        newRepo.find("[data-production]").attr("href", repo._prod_ready_link);
         tml.displayActions(goLive, newRepo.find("[data-conf-live]"), true);
 
         //tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);

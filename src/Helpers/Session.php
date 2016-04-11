@@ -61,15 +61,13 @@ class Session
         $user = $github->getUser($token);
         $permissions = $github->
                 getMemberPermissions($user->getUserName());
+        $admin = $github->isAdminUser($token);
 
         $userData = array(
             'user' => $user,
             'permissions' => $permissions,
             'my_components' => 'btn-on',
-            'is_admin_user' => in_array(
-                $app['config']['teams']['admin'],
-                $permissions['teams']
-            ),
+            'is_admin_user' => $admin,
         );
 
         $app['session']->set('userData', $userData);
@@ -82,12 +80,13 @@ class Session
         $username = $github->getUserName($token);
         $permissions = $github->
                 getMemberPermissions($username, $token);
+        $admin = $github->isAdminUser($token);
 
         $userData = array(
             'user' => $token->getUser(),
             'permissions' => $permissions,
             'my_components' => 'btn-on',
-            'is_admin_user' => false,
+            'is_admin_user' => $admin,
         );
 
         $app['session']->set('userData', $userData);
