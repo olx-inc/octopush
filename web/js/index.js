@@ -10,7 +10,7 @@ function goLive(element) {
     if (answer == true) {
         var url = '/jobs/' + jobId + '/golive',
             $icon = $el.find('i');
-        
+
         $icon.removeAttr('class');
         $icon.addClass('fa').addClass('fa-spinner').addClass('fa-spin');
 
@@ -35,10 +35,10 @@ function redeploy(element) {
     if (answer == true) {
         var url = '/jobs/' + jobId + '/rollback',
             $icon = $el.find('i');
-        
+
         $icon.removeAttr('class');
         $icon.addClass('fa').addClass('fa-spinner').addClass('fa-spin');
-        
+
         $.get(url)
                 .done(function() {
                     getJobs();
@@ -60,10 +60,10 @@ function remove(element) {
     if (answer == true) {
         var url = '/jobs/' + jobId + '/cancel',
             $icon = $el.find('i');
-        
+
         $icon.removeAttr('class');
         $icon.addClass('fa').addClass('fa-spinner').addClass('fa-spin');
-        
+
         $.get(url)
                 .done(function() {
                     getJobs();
@@ -73,6 +73,7 @@ function remove(element) {
                 });
     }
 }
+
 
 $(function() {
     $(".container").on('click', "[data-job-go-live]", function (e) {

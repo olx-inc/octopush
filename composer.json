@@ -8,6 +8,6 @@
         "symfony/yaml": "2.2.*",
         "symfony/form": "~2.3",
         "symfony/security": "~2.3",
-        "gigablah/silex-oauth": "~0.1"
+        "gigablah/silex-oauth": "0.1.0"
     }
 }

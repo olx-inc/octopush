@@ -196,7 +196,6 @@ class Job
         $job->_testJobUrl = "";
         $job->_user = "";
         $job->_ticket = "";
-        $job->_rollbackedFrom = "";
 
         return $job;
     }
@@ -221,7 +220,7 @@ class Job
         $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
-        $job->_rollbackedFrom = isset($data['rollback_id']) ? $data['rollback_id'] : "";
+        $job->_rollbackedFrom = isset($data['rollback_id']) ? $data['rollback_id'] : null;
 
         return $job;
     }

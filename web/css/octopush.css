@@ -178,6 +178,10 @@
 .repo .ticket a {
   display: none;
 }
+.repo .actions a {
+  display: none;
+}
+
 [data-repo] {
     font-size: 15px;
 }

@@ -56,7 +56,6 @@ var tml = {
         } else if (hours < 24) {
             return hours + " hours ago";
         } else if (!isNaN(days)) {
-            console.log(days)
             return days + " days ago";
         } else {
             return "-";
@@ -227,6 +226,7 @@ var tml = {
     version: function (version) {
         var newRepo = $("#resources .repo").clone(),
             canRollback = false, //repo._canRollback
+            goLive = "",
             rollback = "";
 
         if (canRollback){
@@ -235,8 +235,15 @@ var tml = {
                 "targetModule": version._module,
             }
         }
-
+        if (typeof version._prod_ready != 'undefined')
+          if (version._prod_ready != version._production){
+            goLive = {
+                "targetModule": version._module,
+                "targetVersion": version._prod_ready
+            };
+        }
         tml.fillRepoFields(newRepo, version);
+        tml.displayActions(goLive, newRepo.find("[data-conf-live]"), true);
 
         //tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);
 
