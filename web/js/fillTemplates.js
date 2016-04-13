@@ -83,16 +83,6 @@ var tml = {
 
     },
 
-    function getLocalTime(remoteDate){
-        diff = getMinutesBetweenDates(new Date(), remoteDate);
-        return new Date().getTime() + diff;
-    }
-
-    function getMinutesBetweenDates(startDate, endDate) {
-        var diff = endDate.getTime() - startDate.getTime();
-        return (diff / 60000);
-    }
-
     displayActions: function (data, selector, toJson) {
         var toJson = toJson || false;
         if(toJson && data != "") {
