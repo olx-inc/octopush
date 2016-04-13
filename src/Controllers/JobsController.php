@@ -433,8 +433,13 @@ class JobsController
 
             $job_array['_canCancel'] = ($canBePushedLive);
 
-            $job_array['_serverTime'] = date('Y-m-d H:i:s');
-
+            $job_array['_serverTime'] = date('Y-m-d') . 'T' . date('H:i:s') . 'Z';
+            $queueDate = new \DateTime($job->getQueuedDate());
+            $updatedDate = new \DateTime($job->getUpdateDate());
+            $job_array['_queued_at'] = $queueDate->format('Y-m-d') .
+                              'T' . $queueDate->format('H:i:s') . 'Z';
+            $job_array['_updated_at'] = $updatedDate->format('Y-m-d') .
+                              'T' . $updatedDate->format('H:i:s') . 'Z';
             array_push($result, $job_array);
         }
 

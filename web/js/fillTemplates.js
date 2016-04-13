@@ -8,10 +8,13 @@ var tml = {
         html.find("[data-target-version]").text(job._targetVersion);
         html.find("[data-status]").text(job._status);
         html.find(".label").addClass("label-" + job._status);
-        html.find("[data-queued-date]").text(job._queued_at);
-        html.find("[data-updated-date]").text(job._updated_at);
+        html.find("[data-queued-date]").text(job._queued_ago);
+        html.find("[data-updated-date]").text(job._updated_ago);
         // ---- User
-        tml.displayUser(job._user, html.find("[data-user]"));
+        tml.displayTooltip(job._user, html.find("[data-user]"));
+        tml.displayTooltip(job._queued_at, html.find("[data-queue]"));
+        tml.displayTooltip(job._updated_at, html.find("[data-update]"));
+
         // ---- Ticket
         tml.displayTicket(job._ticket, html.find("[data-ticket]"));
         // ---- Common actions
@@ -20,6 +23,8 @@ var tml = {
         tml.displayActions(job._testJobUrl, html.find("[data-test-job]"));
         // ---- Start tooltip
         html.find("[data-toggle='tooltip']").tooltip();
+        html.find("[data-toggle='tooltipQueue']").tooltip();
+        html.find("[data-toggle='tooltipUpdate']").tooltip();
     },
 
     fillRepoFields: function (html, repo){
@@ -62,7 +67,7 @@ var tml = {
         }
     },
 
-    displayUser: function (data, selector){
+    displayTooltip: function (data, selector){
         if (data != "") {
             selector.attr("title", data);
             selector.show();
@@ -77,6 +82,16 @@ var tml = {
         }
 
     },
+
+    function getLocalTime(remoteDate){
+        diff = getMinutesBetweenDates(new Date(), remoteDate);
+        return new Date().getTime() + diff;
+    }
+
+    function getMinutesBetweenDates(startDate, endDate) {
+        var diff = endDate.getTime() - startDate.getTime();
+        return (diff / 60000);
+    }
 
     displayActions: function (data, selector, toJson) {
         var toJson = toJson || false;
@@ -110,8 +125,8 @@ var tml = {
         }
 
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
@@ -124,8 +139,8 @@ var tml = {
             date = new Date(job._serverTime);
 
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
 
@@ -145,10 +160,9 @@ var tml = {
                 "targetVersion": job._targetVersion
             };
         }
-
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
         tml.displayActions(goLive, newJob.find("[data-go-live]"), true);
@@ -170,8 +184,8 @@ var tml = {
         }
 
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
         tml.displayActions(remove, newJob.find("[data-remove]"), true);
@@ -185,8 +199,8 @@ var tml = {
             date = new Date(job._serverTime);
 
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
@@ -210,8 +224,8 @@ var tml = {
         }
 
         // convert date to time
-        job._queued_at = tml.handleDate(job._queued_at, date);
-        job._updated_at = tml.handleDate(job._updated_at, date);
+        job._queued_ago = tml.handleDate(job._queued_at, date);
+        job._updated_ago = tml.handleDate(job._updated_at, date);
 
         tml.fillJobCommonFields(newJob, job);
         tml.displayActions(viewLiveJob, newJob.find("[data-live-job]"));
