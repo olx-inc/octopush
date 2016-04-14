@@ -64,9 +64,12 @@ class QueueController
             $job->setStatusId(JobStatus::getStatusId(
                           JobStatus::getQueuedStatus($env)));
 
-            $email = $helperSession->getUser()->getEmail();
-            if (!empty($email))
-                $job->setUser($email);
+            if ($helperSession->getUser()!=null)
+            {
+                $email = $helperSession->getUser()->getEmail();
+                if (!empty($email))
+                    $job->setUser($email);
+            }
 
             $this->_jobMapper->save($job);
 
