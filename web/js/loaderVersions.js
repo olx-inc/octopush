@@ -27,7 +27,8 @@ function enqueueConf(element) {
 
         $.get(url)
                 .done(function() {
-                    getVersions();
+                    //getVersions();
+                    window.location.href='/#production';
                 })
                 .fail(function() {
                     alert("An error occurred, if you don't see the job deployed, please try again");
@@ -44,7 +45,7 @@ $(document).ready(function (){
 
     getVersions();
 
-    /*setInterval(function(){
+    setInterval(function(){
         getVersions();
-    }, 15 * 1000);*/
+    }, 15 * 1000);
 });

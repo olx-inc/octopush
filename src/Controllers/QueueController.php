@@ -64,6 +64,7 @@ class QueueController
             $job->setStatusId(JobStatus::getStatusId(
                           JobStatus::getQueuedStatus($env)));
 
+            // If the call is NOT anonymous
             if ($helperSession->getUser()!=null)
             {
                 $email = $helperSession->getUser()->getEmail();

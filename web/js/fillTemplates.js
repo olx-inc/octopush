@@ -23,8 +23,6 @@ var tml = {
         tml.displayActions(job._testJobUrl, html.find("[data-test-job]"));
         // ---- Start tooltip
         html.find("[data-toggle='tooltip']").tooltip();
-        html.find("[data-toggle='tooltipQueue']").tooltip();
-        html.find("[data-toggle='tooltipUpdate']").tooltip();
     },
 
     fillRepoFields: function (html, repo){
@@ -239,15 +237,19 @@ var tml = {
                 "targetModule": version._module,
             }
         }
+        tml.fillRepoFields(newRepo, version);
+
         if (typeof version._prod_ready != 'undefined')
           if (version._prod_ready != version._production && version._canGoLive) {
             goLive = {
                 "targetModule": version._module,
                 "targetVersion": version._prod_ready
             };
+            prod_label = newRepo.find("[data-production]");
+            prod_label.attr("href", version._prod_ready_link);
+            prod_label.css("color", "red");
+            tml.displayTooltip("Production ready", prod_label);
         }
-        tml.fillRepoFields(newRepo, version);
-        newRepo.find("[data-production]").attr("href", version._prod_ready_link);
         tml.displayActions(goLive, newRepo.find("[data-conf-live]"), true);
 
         //tml.displayActions(rollback, newRepo.find("[data-rollback]"), true);

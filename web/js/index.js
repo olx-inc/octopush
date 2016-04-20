@@ -75,6 +75,7 @@ function remove(element) {
 }
 
 
+
 $(function() {
     $(".container").on('click', "[data-job-go-live]", function (e) {
         goLive(this);

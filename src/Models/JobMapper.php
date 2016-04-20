@@ -14,7 +14,7 @@ class JobMapper
     const FIND_ALL_BY_STATUS_LIMIT_STATEMENT = "SELECT * FROM jobs WHERE STATUS = ? ORDER BY updated_at limit ?";
     const FIND_ALL_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC";
     const FIND_ALL_WITH_LIMIT_STATEMENT = "SELECT * FROM jobs ORDER BY updated_at DESC limit :limit";
-    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket, rollback_id, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const INSERT_STATEMENT = "INSERT INTO jobs (module, version, environment, jenkins, status, test_job_url, deployment_job_id, user, ticket, rollback_id, updated_at, queue_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE jobs SET status = ?, updated_at = ?, test_job_url = ?, deployment_job_id = ?, live_job_id = ?, user = ?, ticket = ?, rollback_id = ?, environment = ? WHERE job_id = ?";
     const FIND_ALL_MODULES_STATEMENT = "SELECT distinct module FROM jobs order by module";
 
@@ -146,6 +146,7 @@ class JobMapper
                 $job->getUser(),
                 $job->getTicket(),
                 $job->getRollbackedFrom(),
+                $insertedDate,
                 $insertedDate,
             )
         );

@@ -114,10 +114,10 @@
 
 /* content jobs */
 .module-column {
-  width: 150px;
+  width: 200px;
 }
 .version-column {
-  width: 150px;
+  width: 200px;
 }
 .status-column {
   width: 120px;
@@ -185,8 +185,9 @@
 [data-repo] {
     font-size: 15px;
 }
-.testing-column, .staging-column, .production-column {
+.repo-column, .testing-column, .staging-column, .production-column {
   text-align: left;
+  width: 200px;
 }
 .repo-testing small, .repo-staging small, .repo-production small {
   display: block;

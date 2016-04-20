@@ -16,10 +16,6 @@ class Session
       return self::$_instance;
     }
 
-    public function isMyComponentsOn()
-    {
-        return self::$_app['session']->get('myComponents')=='btn-on';
-    }
 
     public function getMyComponentsValue()
     {

@@ -499,11 +499,6 @@ class JobsController
         $record["URI"] = '&#47';
         array_push($result, $record);
 
-        $record = array();
-        $record["Value"] = 'My Components';
-        $record["URI"] = '?my_components=on';
-        array_push($result, $record);
-
         $components = $this->_jobMapper->findAllModules();
 
         foreach ($components as $component) {
@@ -530,23 +525,13 @@ class JobsController
     private function getRepoFilter()
     {
         $sessionHelper = $this->_app['helpers.session'];
-        $sessionHelper->setMyComponents('btn-off');
-
-        if (isset($_REQUEST['my_components']))
-            if ($_REQUEST['my_components']='on')
-                $sessionHelper->setMyComponents('btn-on');
 
         if (isset($_REQUEST['repo']))
         {
             $repo = array($_REQUEST['repo']);
         }
         else
-            if ( $sessionHelper->isMyComponentsOn() ){
-                $perm = $sessionHelper->getPermissions();
-                $repo = $perm["repositories"];
-            }
-            else
-                $repo = array();
+            $repo = array();
 
         return $repo;
     }

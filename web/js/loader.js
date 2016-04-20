@@ -23,7 +23,7 @@ var filterHandler = function (){
             if(this.URI == parameters){
                 $('.filters .text').text(this.Value);
             }
-            
+
             filter.append(
                 "<li><a href=" + this.URI + ">" + this.Value + "</a></li>"
             );
@@ -31,7 +31,7 @@ var filterHandler = function (){
             if (this.Value == "None" || this.Value == "My Components") {
                 filter.append(
                     "<li class='divider'></li>"
-                );                
+                );
             }
         });
     });
@@ -121,3 +121,19 @@ $(document).ready(function (){
         getJobs();
     }, 15 * 1000);
 });
+
+function scroleate() {
+  $('a[href^="#"]').on('click',function (e) {
+    e.preventDefault();
+
+    var target = this.hash,
+    $target = $(target);
+    console.log($target);
+
+    $('html, body').stop().animate({
+      'scrollTop': $target.offset().top
+    }, 900, 'swing', function () {
+      window.location.href = '/#production';
+    });
+  });
+}
