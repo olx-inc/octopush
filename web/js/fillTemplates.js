@@ -239,8 +239,8 @@ var tml = {
         }
         tml.fillRepoFields(newRepo, version);
 
-        if (typeof version._prod_ready != 'undefined')
-          if (version._prod_ready != version._production)
+        if (typeof version._prod_ready != 'undefined'){
+          if (version._prod_ready != version._production){
             if (version._canGoLive) {
               goLive = {
                   "targetModule": version._module,
@@ -251,6 +251,7 @@ var tml = {
             prod_label.attr("href", version._prod_ready_link);
             prod_label.css("color", "red");
             tml.displayTooltip("Production ready", prod_label);
+          }
         }
         tml.displayActions(goLive, newRepo.find("[data-conf-live]"), true);
 
