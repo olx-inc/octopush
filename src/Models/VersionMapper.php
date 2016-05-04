@@ -12,6 +12,7 @@ class VersionMapper
     const FIND_VERSION_STATEMENT = "SELECT * FROM versions WHERE module = ? AND environment = ?";
     const INSERT_STATEMENT = "INSERT INTO versions (module, version, environment, ticket, updated) VALUES (?, ?, ?, ?, ?);";
     const UPDATE_STATEMENT = "UPDATE versions SET version = ?, ticket = ?, updated = ? WHERE module = ? AND environment = ?";
+    const FIND_ALL_MODULES_STATEMENT = "SELECT distinct module FROM versions order by module";
 
     public function __construct(Connection $db)
     {
@@ -103,4 +104,15 @@ class VersionMapper
         );
         $version->setUpdateDate($updatedDate);
     }
+
+    public function findAllModules()
+    {
+        $sql = JobMapper::FIND_ALL_MODULES_STATEMENT;
+        $params = array();
+
+        $data = $this->_db->fetchAll($sql, $params);
+
+        return $data;
+    }
+
 }

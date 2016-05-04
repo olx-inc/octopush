@@ -117,4 +117,25 @@ class VersionController
         return $this->_app->json($result);
     }
 
+    public function getComponentList()
+    {
+         $result = array();
+
+         $record = array();
+         $record["Value"] = 'None';
+         $record["URI"] = '&#47';
+         array_push($result, $record);
+
+         $components = $this->_versionMapper->findAllModules();
+
+         foreach ($components as $component) {
+             $record = array();
+             $record["Value"] = $component['module'];
+             $record["URI"] = '?repo=' . $component['module'];
+             array_push($result, $record);
+         }
+
+         return $this->_app->json($result);
+    }
+
 }
