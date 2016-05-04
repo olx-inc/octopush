@@ -240,11 +240,13 @@ var tml = {
         tml.fillRepoFields(newRepo, version);
 
         if (typeof version._prod_ready != 'undefined')
-          if (version._prod_ready != version._production && version._canGoLive) {
-            goLive = {
-                "targetModule": version._module,
-                "targetVersion": version._prod_ready
-            };
+          if (version._prod_ready != version._production)
+            if (version._canGoLive) {
+              goLive = {
+                  "targetModule": version._module,
+                  "targetVersion": version._prod_ready
+              };
+            }
             prod_label = newRepo.find("[data-production]");
             prod_label.attr("href", version._prod_ready_link);
             prod_label.css("color", "red");
