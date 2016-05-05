@@ -107,7 +107,7 @@ class VersionMapper
 
     public function findAllModules()
     {
-        $sql = JobMapper::FIND_ALL_MODULES_STATEMENT;
+        $sql = VersionMapper::FIND_ALL_MODULES_STATEMENT;
         $params = array();
 
         $data = $this->_db->fetchAll($sql, $params);
