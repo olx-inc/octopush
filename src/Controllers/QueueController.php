@@ -335,11 +335,12 @@ class QueueController
         $config = $this->_config;
 
         $sessionHelper = $app['helpers.session'];
+        $version = $this->versionMapper->find($config['environment'], "Octopush");
 
         return $app['twig']->render($page . '.html', array(
             'contact' => $config['contact_to'],
             'my_components' => $sessionHelper->getMyComponentsValue(),
-            'version' => OctopushVersion::getShort(),
+            'version' => $version,
             'userdata' => $app['helpers.session']->getUserData(),
             'logoutUrl' =>  $app['url_generator']->generate('logout', array(
                 '_csrf_token' => $app['form.csrf_provider']->generateCsrfToken('logout')))

@@ -100,6 +100,7 @@ class Jenkins
         if ($httpRequest->getResponseCode() != 200) {
             throw new \Exception();
         }
+        return true;
     }
 
     private function _send($url)
@@ -133,7 +134,7 @@ class Jenkins
         $url = $job->getRequestorJenkins();
 
         return empty($url) ? "" : $url . "/console";
-    }
+      }
 
     public function getTestJobConsoleUrl($job)
     {
@@ -149,20 +150,34 @@ class Jenkins
         return $url;
     }
 
+    public function getCustomJob($job, $prefix)
+    {
+        return $this->_host . "/job/" .
+            $prefix . "_" . $job->getTargetModule() . "/";
+    }
+
+    public function customJobExists($job, $prefix)
+    {
+
+        $httpRequest = new HttpRequest($this->getCustomJob($job, $prefix));
+        $rawResponse = $httpRequest->send();
+        return ($httpRequest->getResponseCode() == 200);
+    }
+
     private function _getUrlForJob($job)
     {
-        $url = $this->_host . "/job/" .
-            $this->_jobs['prefix']; //. $job->getTargetModule();
-
-        return $url;
+      if ($this->customJobExists($job, $this->_jobs['prefix']))
+        return $this->getCustomJob($job, $this->_jobs['prefix']);
+      else
+        return $this->_host . "/job/" . $this->_jobs['prefix']; //. $job->getTargetModule();
     }
 
     private function _getLiveUrlForJob($job)
     {
-        $url = $this->_host . "/job/" .
-            $this->_jobs['live.prefix']; //. $job->getTargetModule();
-
-        return $url;
+      if ($this->customJobExists($job, $this->_jobs['live.prefix']))
+        return $this->getCustomJob($job, $this->_jobs['live.prefix']);
+      else
+        return $this->_host . "/job/" . $this->_jobs['live.prefix']; //. $job->getTargetModule();
     }
 
     private function _doPush($job, $pushUrl, $data, $toLive)
