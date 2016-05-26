@@ -335,7 +335,7 @@ class QueueController
         $config = $this->_config;
 
         $sessionHelper = $app['helpers.session'];
-        $version = $this->versionMapper->find($config['environment'], "Octopush");
+        $version = $this->_versionMapper->find($config['environment'], "Octopush");
 
         return $app['twig']->render($page . '.html', array(
             'contact' => $config['contact_to'],
