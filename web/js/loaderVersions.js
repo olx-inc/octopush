@@ -28,7 +28,7 @@ function enqueueConf(element) {
         $.get(url)
                 .done(function() {
                     //getVersions();
-                    window.location.href='deploys/#production';
+                    window.location.href='deploys#production';
                 })
                 .fail(function() {
                     alert("An error occurred, if you don't see the job deployed, please try again");
