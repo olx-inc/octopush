@@ -15,6 +15,7 @@ if (isset($app['config']['timezone']) && $app['config']['timezone'] != '') {
 
 $app->get('/run', "queue.controller:processJob");
 $app->get('/', "queue.controller:index");
+$app->get('/deploys', "queue.controller:index");
 $app->get('/versions', "queue.controller:versions");
 $app->get('/pause', "queue.controller:pause");
 $app->get('/resume', "queue.controller:resume");

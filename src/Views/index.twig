@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head profile="http://www.w3.org/2005/10/profile">
-        <link rel="icon" 
-              type="image/png" 
+        <link rel="icon"
+              type="image/png"
               href="/images/favicon.png" />
         <title>Octopush</title>
         <meta http-equiv="refresh" content="15" />
@@ -17,7 +17,7 @@
     <body>
         <div class="container">
             <div class="page-header">
-                <img src="/images/logo.png" />
+                <img src="images/logo.png" />
                 <small>v{{ version }}</small>
                 {% if userdata %}
                     <div class="loginBox">
@@ -31,7 +31,7 @@
                         <button type="button" class="btn-align btn" id="my-components">
                           <span class="glyphicon glyphicon-filter"></span> My Components
                         </button>
-                    </div>                   
+                    </div>
                 {% else %}
                     <span class="loginBox" style="width: 180px;">
                         <a class="btn btn-block btn-social btn-github" href="/login"><i class="fa fa-github"></i>Sign in with GitHub</a>
@@ -198,7 +198,7 @@
                                                     <span class="glyphicon glyphicon-new-window" />
                                                 </a>
                                             {% endif %}
-                                            {% if (userdata.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}                                            
+                                            {% if (userdata.user and processed_job.canGoLive and jobsController.canBePushedLive(processed_job)) %}
                                                 <a data-job-go-live data-job-id="{{ processed_job.id }}" data-job-targetModule="{{ processed_job.targetModule }}" data-job-targetVersion="{{ processed_job.targetVersion }}" href="#" title="go live" data-toggle="tooltip" data-placement="top">
                                                     <i class="glyphicon glyphicon-new-window"></i>
                                                 </a>

@@ -5,7 +5,7 @@ var getParameters = function (){
 };
 
 var isPaused = function (){
-    $.get("/status", function (status){
+    $.get("status", function (status){
         if( status == "ON" ){
             $("#paused").hide();
         } else {
@@ -15,7 +15,7 @@ var isPaused = function (){
 };
 
 var filterHandler = function (){
-    $.get("/components", function (component){
+    $.get("components", function (component){
         var filter = $(".filters .dropdown-menu"),
             parameters = getParameters();
 
@@ -96,7 +96,7 @@ var deployedJobs = function (selector, jobs, tml){
 
 var getJobs = function (){
     var parameters = getParameters(),
-        url = "/all" + parameters;
+        url = "all" + parameters;
 
     $.get(url, function (jobs){
         queuedJobs("#preprod-queued", jobs.preprodQueue, tml.preprodQueue);
@@ -110,7 +110,7 @@ var getJobs = function (){
 
 
 $(document).ready(function (){
-    $('#resources').load('../templates/job.html');
+    $('#resources').load('templates/job.html');
 
     isPaused();
     filterHandler();

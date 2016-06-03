@@ -8,7 +8,7 @@ function goLive(element) {
 
 
     if (answer == true) {
-        var url = '/jobs/' + jobId + '/golive',
+        var url = 'jobs/' + jobId + '/golive',
             $icon = $el.find('i');
 
         $icon.removeAttr('class');
@@ -33,7 +33,7 @@ function redeploy(element) {
         answer = confirm(message);
 
     if (answer == true) {
-        var url = '/jobs/' + jobId + '/rollback',
+        var url = 'jobs/' + jobId + '/rollback',
             $icon = $el.find('i');
 
         $icon.removeAttr('class');
@@ -58,7 +58,7 @@ function remove(element) {
         answer = confirm(message);
 
     if (answer == true) {
-        var url = '/jobs/' + jobId + '/cancel',
+        var url = 'jobs/' + jobId + '/cancel',
             $icon = $el.find('i');
 
         $icon.removeAttr('class');
