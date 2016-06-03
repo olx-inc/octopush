@@ -112,11 +112,11 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/',
             'anonymous' => true,
             'oauth' => array(
-                'failure_path' => '/login_error',
+                'failure_path' => 'login_error',
                 'with_csrf' => true,
             ),
             'logout' => array(
-                'logout_path' => '/logout',
+                'logout_path' => 'logout',
                 'with_csrf' => true
             ),
             'users' => new Gigablah\Silex\OAuth\Security\User\Provider\OAuthInMemoryUserProvider()
