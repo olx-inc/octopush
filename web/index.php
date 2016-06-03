@@ -63,7 +63,7 @@ $app->before(function (Symfony\Component\HttpFoundation\Request $request) use ($
 });
 
 $app->get('/login', function () use ($app) {
-    $url = "/auth/GitHub?_csrf_token=" . $app['form.csrf_provider']->generateCsrfToken('oauth');
+    $url = "auth/GitHub?_csrf_token=" . $app['form.csrf_provider']->generateCsrfToken('oauth');
 
     return $app->redirect($url);
 });
