@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker-compose run --rm feeds php phpunit.phar --bootstrap app/phpunit_bootstrap.php $@

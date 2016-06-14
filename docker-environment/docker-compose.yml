@@ -1,0 +1,31 @@
+base:
+    build: images/base
+
+mysql:
+   build: images/mysql
+   volumes_from:
+       - mysql-data
+   environment:
+       - MYSQL_ROOT_PASSWORD=verysecret
+
+nginx-proxy:
+    build: images/nginx-proxy
+    ports:
+        - "80:80"
+    volumes:
+        - /var/run/docker.sock:/tmp/docker.sock
+
+mysql-data:
+   build: images/mysql/mysql-data
+   volumes:
+       - /var/lib/mysql
+   command: /bin/true
+
+octopush:
+    build: images/octopush
+    volumes:
+        - ..:/var/www/site
+    links:
+        - mysql
+    environment:
+        - VIRTUAL_HOST=octopush.*

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export CURDIR=$(dirname $0)
+
+exec 2> >(logger -t 'docker-gen' -p daemon.error)
+exec 1> >(logger -t 'docker-gen' -p daemon.info)
+
+exec /usr/local/bin/docker-gen -watch -only-exposed -notify "sv reload nginx" /app/nginx.tmpl /etc/nginx/conf.d/default.conf

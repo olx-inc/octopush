@@ -1,0 +1,6 @@
+#!/bin/bash
+
+exec 2> >(logger -t 'nginx' -p daemon.error)
+exec 1> >(logger -t 'nginx' -p daemon.info)
+
+exec /usr/sbin/nginx
