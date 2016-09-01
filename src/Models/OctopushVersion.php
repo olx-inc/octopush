@@ -9,6 +9,7 @@ class OctopushVersion
     const BUILD ="[build]";
     const REVISION ="[revision]";
 
+
     public static function getFull()
     {
         return OctopushVersion::MAJOR . "." . OctopushVersion::MINOR . "." . OctopushVersion::REVISION . "." . OctopushVersion::BUILD;
