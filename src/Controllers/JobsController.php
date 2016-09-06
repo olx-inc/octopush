@@ -453,10 +453,10 @@ class JobsController
 
             preg_match($this->_regex_version, $job_array['_targetVersion'], $match);
             if (! empty ( $match ))
-              $version_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule']
+              $job_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule']
                     . $this->_uri_version . $match[0];
             else
-              $version_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule'];
+              $job_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule'];
 
             array_push($result, $job_array);
         }

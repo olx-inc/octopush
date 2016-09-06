@@ -5,7 +5,7 @@ var tml = {
 
         html.find("[data-id]").text(job._id);
         html.find("[data-target-module]").text(job._targetModule);
-        html.find("[data-target-version]").text(job._targetVersion).attr("href", repo._version_link);
+        html.find("[data-target-version]").text(job._targetVersion).attr("href", job._version_link);
 
         html.find("[data-status]").text(job._status);
         html.find(".label").addClass("label-" + job._status);

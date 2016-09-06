@@ -189,7 +189,7 @@
   text-align: left;
   width: 200px;
 }
-.repo-testing small, .repo-staging small, .repo-production small, .version small {
+.repo-testing small, .repo-staging small, .repo-production small {
   display: block;
   font-size: 13px;
   text-align: left;
