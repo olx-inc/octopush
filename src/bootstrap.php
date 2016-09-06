@@ -30,7 +30,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new \Monolog\Handler\SyslogHandler($app['config']['syslog']['ident'], $app['config']['syslog']['facility']),
+    'monolog.logfile' => $app['config']['log.path'],
     'monolog.level' => $app['config']['log.level'],
     'monolog.name' => 'octopush',
 ));
@@ -77,7 +77,7 @@ $app['services.ThirdParty'] = $app->share(
 
 $app['jobs.controller'] = $app->share(
         function () use ($app) {
-    return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['services.jenkins'], $app['monolog']);
+    return new Controllers\JobsController($app, $app['config'], $app['models.JobMapper'], $app['services.jenkins'], $app['config']['links']['prefix'], $app['config']['links']['uri'], $app['config']['links']['regex'], $app['monolog']);
 }
 );
 

@@ -20,11 +20,17 @@ class JobsController
     private $_log;
     private $_app;
     private $_thirdParty;
+    private $_url_prefix;
+    private $_regex_version;
+    private $_uri_version;
 
     public function __construct(OctopushApplication $app,
                                 $config,
                                 JobMapper $jobMapper,
                                 $jenkins,
+                                $url_prefix,
+                                $uri_version,
+                                $regex_version,
                                 $log)
     {
         $this->_config = $config;
@@ -33,6 +39,10 @@ class JobsController
         $this->_app = $app;
         $this->_jenkins = $jenkins;
         $this->_thirdParty = $app['services.ThirdParty'];
+        $this->_url_prefix = $url_prefix;
+        $this->_uri_version = $uri_version;
+        $this->_regex_version = $regex_version;
+
     }
 
     public function createJob(Request $request)
@@ -440,6 +450,14 @@ class JobsController
                               'T' . $queueDate->format('H:i:s') . 'Z';
             $job_array['_updated_at'] = $updatedDate->format('Y-m-d') .
                               'T' . $updatedDate->format('H:i:s') . 'Z';
+
+            preg_match($this->_regex_version, $job_array['_targetVersion'], $match);
+            if (! empty ( $match ))
+              $version_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule']
+                    . $this->_uri_version . $match[0];
+            else
+              $version_array['_version_link'] = $this->_url_prefix . $job_array['_targetModule'];
+
             array_push($result, $job_array);
         }
 
