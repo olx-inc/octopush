@@ -158,6 +158,7 @@ class Jenkins
 
     public function customJobExists($job, $prefix)
     {
+        return false; // TODO CAMBIAR!
 
         $httpRequest = new HttpRequest($this->getCustomJob($job, $prefix));
         $rawResponse = $httpRequest->send();

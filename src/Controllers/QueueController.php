@@ -128,13 +128,15 @@ class QueueController
     {
         $status = 'ON';
         if ($this->_isPaused()) $status = 'OFF';
+        $jenkins_status = "DOWN"
+        if ($this->_jenkins->ping())
+          $jenkins_status = "UP";
 //        $status = $this->_app['paused'];
-        return $status;
+        return $status . "(Jenkins: " . $jenkins_status . ")";
     }
 
     public function health()
     {
-        $this->_jenkins->ping();
         $this->_jobMapper->findAllByStatus(JobStatus::DEPLOYING, 1);
 
         $status = 'Ok';
