@@ -128,7 +128,7 @@ class QueueController
     {
         $status = 'ON';
         if ($this->_isPaused()) $status = 'OFF';
-        $jenkins_status = "DOWN"
+        $jenkins_status = "DOWN";
         if ($this->_jenkins->ping())
           $jenkins_status = "UP";
 //        $status = $this->_app['paused'];
