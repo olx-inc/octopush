@@ -6,7 +6,7 @@ var getParameters = function (){
 
 var isPaused = function (){
     $.get("status", function (status){
-        if( status == "ON" ){
+        if( status.lastIndexOf("ON", 0)===0 ){
             $("#paused").hide();
         } else {
             $("#paused").show();
