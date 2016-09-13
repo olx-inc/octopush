@@ -432,9 +432,9 @@ class JobsController
             $job = Job::createFromArray($record);
             $job_array = $job->serialize();
 
-            $job_array['_buildJobUrl'] = $jenkins->getRequestorJobConsoleUrl($job);
-            $job_array['_deployJobUrl'] = $jenkins->getPreProdJobDeployUrl($job);
-            $job_array['_deployLiveJobUrl'] = $jenkins->getLiveJobDeployUrl($job);
+            $job_array['_buildJobUrl'] = $job-> $jenkins->getRequestorJobConsoleUrl($job);
+            $job_array['_deployJobUrl'] = $job->getDeploymentJobId();#$jenkins->getPreProdJobDeployUrl($job);
+            $job_array['_deployLiveJobUrl'] = $job->getLiveJobId();#$jenkins->getLiveJobDeployUrl($job);
 
             $canBePushedLive = $this->canBePushedLive($job);
             $job_array['_canGoLive'] = ($job->canGoLive() && $canBePushedLive);

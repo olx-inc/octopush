@@ -27,8 +27,9 @@ class Jenkins
         $data = array('ENVIRONMENT' => $job->getTargetEnvironment(),
             'COMPONENT' => $job->getTargetModule(),
             'VERSION' =>  $job->getTargetVersion());
-        $toLive = false;
-        return $this->_doPush($job, $url, $data, $toLive);
+        $buildNro = $this->_doPush($job, $url, $data);
+        $job->setDeploymentJobId(str_replace("buildWithParameters", $buildNro, $url));
+        return ($buildNro>0);
     }
 
     public function pushLive($job)
@@ -40,20 +41,25 @@ class Jenkins
             'VERSION' =>  $job->getTargetVersion());
         if ($job->isARollback())
             $data['wait'] = "0";
-        $toLive = true;
-        return $this->_doPush($job, $url, $data, $toLive);
+
+        $buildNro = $this->_doPush($job, $url, $data);
+        $job->setLiveJobId(str_replace("buildWithParameters", $buildNro, $url));
+        return ($buildNro>0);
     }
 
     public function getLastBuildStatus($job)
     {
-        if ( ($job->getStatus() == JobStatus::QUEUED) ||
-                ($job->getStatus() == JobStatus::DEPLOYING)) {
-            $url = $this->_getUrlForJob($job);
-            $url .= "/" . $job->getDeploymentJobId();
-        } else {
-            $url = $this->_getLiveUrlForJob($job);
-            $url .= "/" . $job->getLiveJobId();
-        }
+        $url = $job->getDeploymentJobId();
+        $url .= "/api/json";
+        $rawResponse = $this->_send($url);
+        $jsonResponse = json_decode($rawResponse, true);
+
+        return $jsonResponse['result'];
+    }
+
+    public function getLastBuildStatusLive($job)
+    {
+        $url = $job->getLiveJobId();
         $url .= "/api/json";
         $rawResponse = $this->_send($url);
         $jsonResponse = json_decode($rawResponse, true);
@@ -124,7 +130,7 @@ class Jenkins
 
     public function getPreProdJobDeployUrl($job)
     {
-        $url = $job->getDeploymentJobId() > 0 ? $this->_getUrlForJob($job) . "/" . $job->getDeploymentJobId(): "";
+        $url = $job->getDeploymentJobId();
 
         return $url;
     }
@@ -145,7 +151,7 @@ class Jenkins
 
     public function getLiveJobDeployUrl($job)
     {
-        $url = $job->getLiveJobId() > 0 ? $this->_getLiveUrlForJob($job) . "/" . $job->getLiveJobId(): "";
+        $url = $job->getLiveJobId();
 
         return $url;
     }
@@ -158,8 +164,6 @@ class Jenkins
 
     public function customJobExists($job, $prefix)
     {
-        return false; // TODO CAMBIAR!
-
         $httpRequest = new HttpRequest($this->getCustomJob($job, $prefix));
         $rawResponse = $httpRequest->send();
         return ($httpRequest->getResponseCode() == 200);
@@ -181,7 +185,7 @@ class Jenkins
         return $this->_host . "/job/" . $this->_jobs['live.prefix']; //. $job->getTargetModule();
     }
 
-    private function _doPush($job, $pushUrl, $data, $toLive)
+    private function _doPush($job, $pushUrl, $data)
     {
         try {
             $currentBuildId = 0;
@@ -202,24 +206,17 @@ class Jenkins
                 $this->_log->addInfo("lastBuildId: " . $lastBuildId);
                 $this->_log->addInfo("currentBuildId: " . $currentBuildId);
                 sleep(2);
-                if ($toLive) {
-                    $job->setLiveJobId($this->getLastBuildId($job));
-                    if (is_numeric($job->getLiveJobId()))
-                        $currentBuildId = $job->getLiveJobId();
-                } else {
-                    $job->setDeploymentJobId($this->getLastBuildId($job));
-                    if (is_numeric($job->getDeploymentJobId()))
-                        $currentBuildId = $job->getDeploymentJobId();
-                }
-
+                $buildId = $this->getLastBuildId($job);
+                if (is_numeric($jobId))
+                    $currentBuildId = $buildId;
             }
             $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());
 
-            return true;
+            return $buildId;
         } catch (\Exception $ex) {
             $this->_log->addError("Error while pushing Job to Jenkins RM:" . $ex->getMessage());
             error_log($ex->getMessage());
-            return false;
+            return 0;
         }
 
     }

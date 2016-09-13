@@ -251,7 +251,7 @@ class QueueController
         $jobs = $this->_jobMapper->findAllByStatus(JobStatus::GOING_LIVE);
         $this->_log->addInfo("Checking progress of jobs that are already running");
         foreach ($jobs as $runningJob) {
-            $buildStatus = $this->_jenkins->getLastBuildStatus($runningJob);
+            $buildStatus = $this->_jenkins->getLastBuildStatusLive($runningJob);
             switch ($buildStatus) {
                 case "SUCCESS":
                     $runningJob->moveStatusTo(JobStatus::GO_LIVE_DONE);
