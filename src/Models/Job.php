@@ -156,7 +156,7 @@ class Job
         $this->_id = 0;
         $this->_statusId = 0;
         $this->_status = JobStatus::QUEUED;
-        $this->_deploymentJobId = 0;
+        $this->_deploymentJobId = "";
     }
 
     public function canRun($jobsInProgress)
@@ -215,9 +215,9 @@ class Job
         $job->_queued_at = $data['queue_date'];
         $job->_updated_at = $data['updated_at'];
         $key = 'deployment_job_id';
-        $job->_deploymentJobId = isset($data[$key]) ? $data[$key] : 0;
+        $job->_deploymentJobId = isset($data[$key]) ? $data[$key] : "";
         $key = 'live_job_id';
-        $job->_liveJobId = isset($data[$key]) ? $data[$key] : 0;
+        $job->_liveJobId = isset($data[$key]) ? $data[$key] : "";
         $job->_user = isset($data['user']) ? $data['user'] : "";
         $job->_ticket = isset($data['ticket']) ? $data['ticket'] : "";
         $job->_rollbackedFrom = isset($data['rollback_id']) ? $data['rollback_id'] : null;

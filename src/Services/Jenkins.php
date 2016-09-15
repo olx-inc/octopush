@@ -207,7 +207,7 @@ class Jenkins
                 $this->_log->addInfo("currentBuildId: " . $currentBuildId);
                 sleep(2);
                 $buildId = $this->getLastBuildId($job);
-                if (is_numeric($jobId))
+                if (is_numeric($buildId))
                     $currentBuildId = $buildId;
             }
             $this->_log->addInfo("currentBuildIdAssigned: " . $job->getDeploymentJobId());
