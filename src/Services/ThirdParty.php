@@ -13,6 +13,10 @@ class ThirdParty {
     private $_pocsTeamId;
     private $_log;
     private $_ticketer;
+    private $_url_prefix;
+    private $_regex_version;
+    private $_uri_version;
+
     const DEPLOY_SUCCESS = "success";
     const DEPLOY_FAILED = "failure";
     const DEPLOY_CANCEL = "cancel";
@@ -36,6 +40,11 @@ class ThirdParty {
         $this->_pocsTeamId = $config['teams']['pocs'];
         $this->_log = $log;
         $this->_log->addInfo("ThirdParty instance created");
+
+        $this->_url_prefix = $config['links']['prefix'];
+        $this->_uri_version = $config['links']['uri'];;
+        $this->_regex_version = $config['links']['regex'];;
+
     }
 
     public function preDeploy($job, $action = 'deploy')
@@ -44,8 +53,15 @@ class ThirdParty {
             return $this->_externalCall($job, $this->_preDeployUrl, $action);
         elseif (isset($this->_ticketer)){
           $tkt_user = $this->_ticketer->search_user($job->getUser());
+
+          preg_match($this->_regex_version, $job->getTargetVersion(), $match);
+          if (! empty ( $match ))
+            $version = "[" . $job->getTargetVersion() . "|" . $this->_url_prefix .
+                  $job->getTargetModule() . $this->_uri_version . $match[0] . "]";
+          else
+            $version = $job->getTargetVersion();
           $title = strtoupper($job->getTargetModule()) . " :: " . "Deploy " . $job->getTargetVersion();
-          $description = "Deploy " . $job->getTargetModule() . " " . $job->getTargetVersion();
+          $description = "Deploy " . $job->getTargetModule() . " " . $version;
 
           $ticket = $this->_ticketer->create_issue($title, $description,
                           strtoupper($job->getTargetModule()), '', $tkt_user);
