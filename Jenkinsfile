@@ -19,7 +19,7 @@ node('master') {
 
             sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file param.properties -u 107:107 olx-inc/composer:5.5 scripts/jenkins/compile.sh'
 
-            step([$class: 'ArtifactArchiver', artifacts: 'application/build/*.zip'', fingerprint: true])
+            step([$class: 'ArtifactArchiver', artifacts: 'application/build/*.zip', fingerprint: true])
 
        stage 'Test'
 
