@@ -14,8 +14,8 @@ node('master') {
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
-            writeFile file: 'params.properties', text: '''BUILD_DIR=build\n
-            BUILD_FILE=octopush-1-master.zip'''
+            sh 'echo \'BUILD_DIR=build\ >  params.properties'
+            sh 'echo \'BUILD_FILE=octopush-1-master.zip\' >  params.properties'
 
             sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file param.properties -u 107:107 olx-inc/composer:5.5 scripts/jenkins/compile.sh'
 
