@@ -1,4 +1,4 @@
-node('node') {
+node('master') {
 
 
     currentBuild.result = "SUCCESS"
@@ -14,8 +14,12 @@ node('node') {
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
+            writeFile file: 'params.properties', text: '''BUILD_DIR=build\n
+            BUILD_FILE=octopush-1-master.zip'''
 
-            sh 'scripts/jenkins/compile.sh'
+            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file param.properties -u 107:107 olx-inc/composer:5.5 scripts/jenkins/compile.sh'
+
+            step([$class: 'ArtifactArchiver', artifacts: 'application/build/*.zip'', fingerprint: true])
 
        stage 'Test'
 
