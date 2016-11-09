@@ -7,14 +7,14 @@ class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testConfigService()
     {
         $file = 'database:
-    driver: un_driver
-    dbname: esquema
-    host: host.olx.com.ar
-    user: db_user
-    password: db_password
-    port: 3306
-environments: [\'qa1\',\'testing\',\'production\']
-modules: [\'billing\',\'adserving\',\'pannello\']';
+          driver: un_driver
+          dbname: esquema
+          host: host.olx.com.ar
+          user: db_user
+          password: db_password
+          port: 3306
+          environments: [\'qa1\',\'testing\',\'production\']
+          modules: [\'billing\',\'adserving\',\'pannello\']';
 
         $app = new Silex\Application();
 
@@ -32,14 +32,14 @@ modules: [\'billing\',\'adserving\',\'pannello\']';
     public function testGetFile()
     {
         $file = 'database:
-    driver: un_driver
-    dbname: esquema
-    host: host.olx.com.ar
-    user: db_user
-    password: db_password
-    port: 3306
-environments: [\'qa1\',\'testing\',\'production\']
-modules: [\'billing\',\'adserving\',\'pannello\']';
+          driver: un_driver
+          dbname: esquema
+          host: host.olx.com.ar
+          user: db_user
+          password: db_password
+          port: 3306
+          environments: [\'qa1\',\'testing\',\'production\']
+          modules: [\'billing\',\'adserving\',\'pannello\']';
 
         $configProvider = new ConfigServiceProvider($file);
         $getFile = $configProvider->getConfigFile();

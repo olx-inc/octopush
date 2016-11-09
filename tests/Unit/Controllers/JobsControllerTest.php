@@ -57,7 +57,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
         $appMock = new ApplicationMock();
         $appMock['services.ThirdParty'] = "";
 
-        $jobsController = new JobsController($appMock, $this->_config, $this->_jobMapperMock, null, $this->_logMock);
+        $jobsController = new JobsController($appMock, $this->_config, $this->_jobMapperMock, null, "", "", "", $this->_logMock);
 
         $result = $jobsController->getJobStatus($jobId);
 

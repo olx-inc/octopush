@@ -14,12 +14,12 @@ node('master') {
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
-            writeFile file: 'params.properties', text: 'BUILD_DIR=build'
+            writeFile file: 'params.properties', text: 'BUILD_DIR=/data\n'
             writeFile file: 'params.properties', text: 'BUILD_FILE=octopush-1-master.zip'
 
-            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties -u 107:107 olx-inc/composer:5.5 scripts/jenkins/compile.sh'
+            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/compile.sh'
 
-            step([$class: 'ArtifactArchiver', artifacts: 'application/build/*.zip', fingerprint: true])
+            step([$class: 'ArtifactArchiver', artifacts: '*.zip', fingerprint: true])
 
        stage 'Test'
 
@@ -31,10 +31,10 @@ node('master') {
 
        stage 'Cleanup'
 
-            mail body: 'project build successful',
-                        from: 'release@olx.com',
-                        subject: 'project build successful',
-                        to: 'release@olx.com'
+            mail  body: 'project build successful',
+                  from: 'release@olx.com',
+                  subject: 'project build successful',
+                  to: 'release@olx.com'
 
         }
 

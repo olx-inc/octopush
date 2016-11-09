@@ -74,29 +74,6 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testCanRunShouldReturnTrueIfOtherModuleWithSameTagIsInProgress()
-    {
-
-        $jobsInProgress = array($this->_otherJob);
-        $modules = array(
-                $this->_job->getTargetModule() => 1,
-                $this->_otherJob->getTargetModule() =>1
-                );
-        $result = $this->_job->canRun($jobsInProgress, $modules);
-        $this->assertTrue($result);
-    }
-
-    public function testCanRunShouldReturnFalseIfOtheModuleWithOtherTagIsInProgress()
-    {
-        $jobsInProgress = array($this->_otherJob);
-        $modules = array(
-                $this->_job->getTargetModule() => 1,
-                $this->_otherJob->getTargetModule() =>2
-                );
-        $result = $this->_job->canRun($jobsInProgress, $modules);
-        $this->assertFalse($result);
-    }
-
     public function testCanGoLiveShouldReturnTrueIsStatusIsTestPassed()
     {
         $this->_job->moveStatusTo(JobStatus::TESTS_PASSED);

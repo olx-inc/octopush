@@ -166,6 +166,7 @@ class ApplicationMock extends OctopushApplication
                 'processed.lenght' => 10,
             )
         );
+        $this->values['services.ThirdParty'] = "mock";
     }
 
     public function setTwigMock($twigMock)
@@ -173,7 +174,7 @@ class ApplicationMock extends OctopushApplication
         $this->values['twig'] = $twigMock;
     }
 
-    public function abort($statusCode, $message)
+    public function abort($statusCode, $message, $headers)
     {
         throw new HttpExceptionMock();
     }
