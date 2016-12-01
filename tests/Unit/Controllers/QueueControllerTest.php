@@ -3,6 +3,7 @@
 use Controllers\QueueController,
     Models\JobMapper,
     Models\Job,
+    Helpers\Session,
     Library\OctopushApplication;
 
 //require_once  __DIR__ .'/../src/OctopushApplication.php';
@@ -12,6 +13,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
     private $_jenkinsMock;
     private $_versionMapperMock;
     private $_logMock;
+    private $_helperSessionMock;
 
     public function setUp()
     {
@@ -26,13 +28,14 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
         $this->_logMock = $this->getMockBuilder('Monolog\Logger')
             ->disableOriginalConstructor()
             ->getMock();
+
     }
 
     public function testQueueJob()
     {
         $_GET['jenkins'] = "jenkins.olx.com";
 
-        $appMock = new ApplicationMock();
+        $appMock = new ApplicationMock($this->getHelperMock());
 
         $jobMapperMock = $this->getMockBuilder('Models\JobMapper')
             ->disableOriginalConstructor()
@@ -43,26 +46,30 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
 
         $queueController = new QueueController($appMock, $jobMapperMock, $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
 
-        $result = $queueController->queueJob("qa1", "billing", "3.3.3");
+        $result = $queueController->queueJob("staging", "billing", "3.3.3");
         $this->assertEquals('{"status":"success","message":"Job inserted in queue","job_id":0}', $result->getContent());
     }
 
-    public function testInvalidModule()
+
+    private function getHelperMock()
     {
-        $appMock = new ApplicationMock();
+      $mock = $this->getMockBuilder('Helpers\Session')
+          ->setMethods(array('getUser'))
+          ->disableOriginalConstructor()
+          ->getMock();
 
-        $jobsMapperMock = $this->getMockBuilder('Models\JobMapper')
-            ->disableOriginalConstructor()
-            ->getMock();
+      $mock->expects($this->atLeastOnce())
+          ->method('getUser')
+          ->will($this->returnValue(null));
 
-        $queueController = new QueueController($appMock, $jobsMapperMock, $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
-        $result = $queueController->queueJob("qa1", "xxx", "3.3.3");
-        $this->assertEquals('{"status":"error","message":"xxx is not a valid module to push."}', $result->getContent());
+      return $mock;
+
+//      return null; //$helperSessionMock
     }
 
     public function testQueueJobWithError()
     {
-        $appMock = new ApplicationMock();
+        $appMock = new ApplicationMock($this->getHelperMock());
 
         $jobsMapperMock = $this->getMockBuilder('Models\JobMapper')
             ->disableOriginalConstructor()
@@ -73,7 +80,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new Exception("Error")));
 
         $queueController = new QueueController($appMock, $jobsMapperMock,  $this->_versionMapperMock, $this->_jenkinsMock, $this->_logMock);
-        $result = $queueController->queueJob("qa1", "billing", "3.3.3");
+        $result = $queueController->queueJob("staging", "billing", "3.3.3");
         $this->assertEquals('{"status":"error","message":"Job not inserted in queue","detail":"Error"}', $result->getContent());
     }
 
@@ -84,7 +91,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
                 'job_id' => 1,
                 'module' => 'billing',
                 'version' => '3.43.2',
-                'environment' => 'qa1',
+                'environment' => 'staging',
                 'jenkins' => '',
                 'status' => "queued",
                 'updated_at' => null,
@@ -96,7 +103,7 @@ class QueueControllerTest extends \PHPUnit_Framework_TestCase
                 'job_id' => 2,
                 'module' => 'billing',
                 'version' => '3.43.3',
-                'environment' => 'qa1',
+                'environment' => 'staging',
                 'jenkins' => '',
                 'status' => "queued",
                 'updated_at' => null,
@@ -154,10 +161,11 @@ class ApplicationMock extends OctopushApplication
 {
     protected $values;
 
-    public function __construct()
+    public function __construct($helperSessionMock = null)
     {
+
         $this->values['config'] = array(
-            'environments' => array('qa1'),
+            'environments' => array('staging'),
             'modules' => array(
                 "billing" => 1),
             'control_file' => __DIR__.'/../../../src/control/control.txt',
@@ -167,6 +175,7 @@ class ApplicationMock extends OctopushApplication
             )
         );
         $this->values['services.ThirdParty'] = "mock";
+        $this->values['helpers.session'] = $helperSessionMock;
     }
 
     public function setTwigMock($twigMock)
@@ -174,7 +183,7 @@ class ApplicationMock extends OctopushApplication
         $this->values['twig'] = $twigMock;
     }
 
-    public function abort($statusCode, $message, $headers)
+    public function abort($statusCode, $message = '', array $headers = array())
     {
         throw new HttpExceptionMock();
     }

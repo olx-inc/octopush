@@ -15,7 +15,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->_config = array(
-            'environments' => array('qa1'),
+            'environments' => array('staging'),
             'modules' => array("ok-project"),
             'jobs' => array(
                 'queue.lenght' => 5,
@@ -35,7 +35,7 @@ class JobsControllerTest extends \PHPUnit_Framework_TestCase
             'job_id' => 1,
             'module' => 'ok-project',
             'version' => '3.43.2',
-            'environment' => 'qa1',
+            'environment' => 'staging',
             'status' => JobStatus::QUEUED,
             'queue_date' => "2013-08-30 15:57:21",
             'jenkins' => "jenkins.olx.com.ar",

@@ -11,7 +11,7 @@ mysql:
 nginx-proxy:
     build: images/nginx-proxy
     ports:
-        - "80:80"
+        - "8080:80"
     volumes:
         - /var/run/docker.sock:/tmp/docker.sock
 

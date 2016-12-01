@@ -6,15 +6,17 @@ class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigService()
     {
-        $file = 'database:
+        $file =
+        'database:
           driver: un_driver
           dbname: esquema
           host: host.olx.com.ar
           user: db_user
           password: db_password
           port: 3306
-          environments: [\'qa1\',\'testing\',\'production\']
-          modules: [\'billing\',\'adserving\',\'pannello\']';
+environment: production
+jenkins:
+          host: http://jenkins.olx.com';
 
         $app = new Silex\Application();
 
@@ -24,9 +26,9 @@ class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register($configProvider);
 
-        $this->assertArrayHasKey("environments", $app['config']);
-        $this->assertContains("qa1", $app['config']['environments']);
         $this->assertArrayHasKey("driver", $app['config']['database']);
+        $this->assertEquals("production", $app['config']['environment']);
+        $this->assertArrayHasKey("host", $app['config']['jenkins']);
     }
 
     public function testGetFile()
