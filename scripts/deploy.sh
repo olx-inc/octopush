@@ -71,7 +71,7 @@ then
 fi
 
 GIT_STATUS="$(git status 2> /dev/null)"
-if [[ ! ${GIT_STATUS}} =~ "working directory clean" ]]
+if [[ ! ${GIT_STATUS}} =~ "working tree clean" ]]
 then
     echo "Fatal Error: Your current branch has changes"
     exit 1
