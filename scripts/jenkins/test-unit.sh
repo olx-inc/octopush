@@ -4,4 +4,4 @@ composer install
 
 echo 'Running Unit tests'
 
-./vendor/bin/phpunit
+phpunit
