@@ -6,6 +6,8 @@ Unit tests:
 
 Acceptance tests:
 [![Build Status](https://jenkins-dev.olxlatam.com/job/helper_deploy_staging_octopush_tests/badge/icon)](https://jenkins-dev.olxlatam.com/job/helper_deploy_staging_octopush_tests/)
+
+
 Octopush is an application to manage deployment requests executed by Jenkins.
 
 You can check out our running demo [here](http://162.242.230.200/)
