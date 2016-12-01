@@ -12,6 +12,7 @@ Octopush is an application to manage deployment requests executed by Jenkins.
 
 Installation
 ------------
+You can check the docker-environment folder and follow instructions on how to run it on Docker o Manually following these instrucions: 
 Octopush is built on PHP and MySQL. Its PHP dependencies are managed with composer but there are some components that should be installed manually:  
 
 * PHP 5.3
