@@ -1,2 +1,7 @@
 #!/usr/bin/env bash
-phpunit
+
+composer install
+
+echo 'Running Unit tests'
+
+./vendor/bin/phpunit
