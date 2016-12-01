@@ -10,9 +10,6 @@ Acceptance tests:
 
 Octopush is an application to manage deployment requests executed by Jenkins.
 
-You can check out our running demo [here](http://162.242.230.200/)
- and play arround with its [Jenkins](http://162.242.230.200/jenkins)
-
 Installation
 ------------
 Octopush is built on PHP and MySQL. Its PHP dependencies are managed with composer but there are some components that should be installed manually:  
