@@ -5,11 +5,15 @@ node('master') {
 
     try {
 
-       stage 'Checkout'
+        stage 'Checkout'
 
             checkout scm
 
-       stage 'Build'
+        stage 'Test'
+
+        sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/test-unit.sh'
+
+        stage 'Build'
 
             env.NODE_ENV = "test"
 
@@ -21,9 +25,6 @@ node('master') {
 
             step([$class: 'ArtifactArchiver', artifacts: '*.zip', fingerprint: true])
 
-       stage 'Test'
-
-            echo 'Test'
 
        stage 'Deploy'
 
