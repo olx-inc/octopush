@@ -2,11 +2,10 @@ Octopush
 ========
 
 Unit tests:
-[![Build Status](https://jenkins-dev.olxlatam.com/job/octopush_compile/badge/icon)](https://jenkins-dev.olxlatam.com/job/octopush_compile/)
+[![Build Status](https://jenkins-dev.olxlatam.com/job/octopush_test_unit/badge/icon)](https://jenkins-dev.olxlatam.com/job/octopush_test_unit/)
 
 Acceptance tests:
-[![Build Status](https://jenkins-dev.olxlatam.com/job/helper_deploy_staging_octopush_tests/badge/icon)](https://jenkins-dev.olxlatam.com/job/helper_deploy_staging_octopush_tests/)
-
+[![Build Status](https://jenkins-dev.olxlatam.com/job/octopush_staging_test_acceptance/badge/icon)](https://jenkins-dev.olxlatam.com/job/octopush_staging_test_acceptance/)
 
 Octopush is an application to manage deployment requests executed by Jenkins.
 
