@@ -11,7 +11,7 @@ node('master') {
 
         stage 'Test'
 
-        sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/test-unit.sh'
+            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/test-unit.sh'
 
         stage 'Build'
 
