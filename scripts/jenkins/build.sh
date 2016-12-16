@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-phpunit
-
 composer install
 
-zip -r ${BUILD_DIR}/${BUILD_FILE} . -x '.git/*' -x \*.zip -x 'test*' -x 'README.md' -x '/scripts*'
+composer run phpunit
+
+tar -vzcf ${BUILD_DIR}/${BUILD_FILE} \ 
+      --exclude '.git/*' \
+      --exclude '*.tar.gz' \
+      --exclude 'test*' \
+      --exclude 'README.md' \
+      --exclude '/scripts*' \
+      .
