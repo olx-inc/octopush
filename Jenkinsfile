@@ -11,17 +11,19 @@ node('master') {
 
         stage 'Test'
 
-            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/test-unit.sh'
-
+            withDockerContainer(args: '-v ${PWD}:/data  -w /data -u root:root', image: 'olx-inc/composer:5.5') {
+                sh 'scripts/jenkins/test-unit.sh'
+            }
+            
         stage 'Build'
 
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
-            writeFile file: 'params.properties', text: 'BUILD_DIR=/data\n'
-            writeFile file: 'params.properties', text: 'BUILD_FILE=octopush-1-master.zip'
 
-            sh 'docker run --rm -v ${PWD}:/data  -w /data --env-file ${PWD}/params.properties olx-inc/composer:5.5 scripts/jenkins/compile.sh'
+            withDockerContainer(args: '-v ${PWD}:/data  -w /data -e BUILD_DIR=\'/data\' -e BUILD_FILE=\'octopush-1-master.zip\' -u root:root', image: 'olx-inc/composer:5.5') {
+                sh 'scripts/jenkins/compile.sh'
+            }
 
             step([$class: 'ArtifactArchiver', artifacts: '*.zip', fingerprint: true])
 
