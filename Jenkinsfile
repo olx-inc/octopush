@@ -12,13 +12,17 @@ node('master') {
 
             checkout scm
 
+        stage 'Cleanup'
+
+          sh 'rm -Rf octopush*.tar.gz'
+
         stage 'Test & Build'
 
             octopush_img.inside {
                 sh 'scripts/jenkins/build.sh'
             }
 
-            step([$class: 'ArtifactArchiver', artifacts: '*.tar.gz', fingerprint: true])
+            step([$class: 'ArtifactArchiver', artifacts: 'build/*.tar.gz', fingerprint: true])
 
         stage 'Create & Push image'
 
@@ -26,16 +30,21 @@ node('master') {
 
             print "Environment will be : ${env.NODE_ENV}"
 
-            docker.withRegistry( url: 'quay.io', credentialsId: '4344abd5-437a-48f7-bca9-981e0bad88fd') {
+            withCredentials([usernamePassword(credentialsId: '823fa80c-a916-4be5-931d-feb3a3a4f778', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+              sh 'docker login -u="$USERNAME" -p="$PASSWORD" quay.io'
+            }
 
-                docker.build("quay.io/olx_inc/octopush:${env.BUILD_NUMBER}", "--build-arg VERSION=${env.BUILD_NUMBER}").push()
+            docker.withRegistry('https://quay.io') {
+
+                def image=docker.build("olx_inc/octopush:${env.BUILD_NUMBER}", "--build-arg VERSION=${env.BUILD_NUMBER} build/")
+                image.push()
             }
 
        stage 'Deploy'
 
             echo 'Push Env'
 
-       stage 'Cleanup'
+       stage 'Communicate'
 
             mail  body: 'project build successful',
                   from: 'release@olx.com',
