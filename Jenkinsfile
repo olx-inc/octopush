@@ -2,6 +2,9 @@ node('master') {
 
 
     currentBuild.result = "SUCCESS"
+    env.BUILD_DIR="build/"
+    env.BUILD_FILE="octopush-${env.BUILD_NUMBER}.tar.gz"
+    def octopush_img=docker.image("quay.io/olx_inc/composer:5.5")
 
     try {
 
@@ -11,7 +14,7 @@ node('master') {
 
         stage 'Test & Build'
 
-            withDockerContainer(args: "-v ${PWD}:/data  -w /data -u root:root -e BUILD_DIR=${BUILD_DIR} -e BUILD_FILE=${BUILD_FILE}", image: 'olx-inc/composer:5.5') {
+            octopush_img.inside {
                 sh 'scripts/jenkins/build.sh'
             }
 
