@@ -2,7 +2,7 @@
 
 composer install
 
-phpunit
+composer exec phpunit
 
 tar -vzcf ${BUILD_DIR}/${BUILD_FILE} \
       --exclude '.git/*' \
