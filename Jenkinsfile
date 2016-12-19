@@ -9,24 +9,24 @@ node('master') {
 
             checkout scm
 
-        stage 'Test'
+        stage 'Test & Build'
 
-            withDockerContainer(args: '-v ${PWD}:/data  -w /data -u root:root', image: 'olx-inc/composer:5.5') {
-                sh 'scripts/jenkins/test-unit.sh'
+            withDockerContainer(args: "-v ${PWD}:/data  -w /data -u root:root -e BUILD_DIR=${BUILD_DIR} -e BUILD_FILE=${BUILD_FILE}", image: 'olx-inc/composer:5.5') {
+                sh 'scripts/jenkins/build.sh'
             }
-            
-        stage 'Build'
+
+            step([$class: 'ArtifactArchiver', artifacts: '*.tar.gz', fingerprint: true])
+
+        stage 'Create & Push image'
 
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
 
-            withDockerContainer(args: '-v ${PWD}:/data  -w /data -e BUILD_DIR=\'/data\' -e BUILD_FILE=\'octopush-1-master.zip\' -u root:root', image: 'olx-inc/composer:5.5') {
-                sh 'scripts/jenkins/compile.sh'
+            docker.withRegistry( url: 'quay.io', credentialsId: '4344abd5-437a-48f7-bca9-981e0bad88fd') {
+
+                docker.build("quay.io/olx_inc/octopush:${env.BUILD_NUMBER}", "--build-arg VERSION=${env.BUILD_NUMBER}").push()
             }
-
-            step([$class: 'ArtifactArchiver', artifacts: '*.zip', fingerprint: true])
-
 
        stage 'Deploy'
 

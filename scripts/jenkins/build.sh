@@ -2,9 +2,9 @@
 
 composer install
 
-composer run phpunit
+phpunit
 
-tar -vzcf ${BUILD_DIR}/${BUILD_FILE} \ 
+tar -vzcf ${BUILD_DIR}/${BUILD_FILE} \
       --exclude '.git/*' \
       --exclude '*.tar.gz' \
       --exclude 'test*' \
