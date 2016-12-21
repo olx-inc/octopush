@@ -14,7 +14,7 @@ node('master') {
 
         stage 'Cleanup'
 
-          sh 'rm -Rf octopush*.tar.gz'
+          sh 'rm -Rf build/octopush*.tar.gz'
 
         stage 'Test & Build'
 
@@ -30,18 +30,17 @@ node('master') {
 
             print "Environment will be : ${env.NODE_ENV}"
 
-            withCredentials([usernamePassword(credentialsId: '823fa80c-a916-4be5-931d-feb3a3a4f778', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-              sh 'docker login -u="$USERNAME" -p="$PASSWORD" quay.io'
-            }
-
             docker.withRegistry('https://quay.io') {
 
                 def image=docker.build("olx_inc/octopush:${env.BUILD_NUMBER}", "--build-arg VERSION=${env.BUILD_NUMBER} build/")
                 image.push()
+
             }
 
        stage 'Deploy'
 
+            sh 'oc get projects octopush'
+            sh "oc -n octopush tag quay.io/olx_inc/octopush:${env.BUILD_NUMBER} octopush/octopush:latest"
             echo 'Push Env'
 
        stage 'Communicate'
