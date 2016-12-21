@@ -4,6 +4,7 @@ node('master') {
     currentBuild.result = "SUCCESS"
     env.BUILD_DIR="build/"
     env.BUILD_FILE="octopush-${env.BUILD_NUMBER}.tar.gz"
+
     def octopush_img=docker.image("quay.io/olx_inc/composer:5.5")
 
     try {
@@ -12,10 +13,12 @@ node('master') {
 
             checkout scm
 
+        
         stage 'Cleanup'
 
           sh 'rm -Rf build/octopush*.tar.gz'
 
+        
         stage 'Test & Build'
 
             octopush_img.inside {
@@ -24,24 +27,21 @@ node('master') {
 
             step([$class: 'ArtifactArchiver', artifacts: 'build/*.tar.gz', fingerprint: true])
 
+
         stage 'Create & Push image'
+       
+            env.IMAGE_NAME = "quay.io/olx_inc/octopush:${env.BUILD_NUMBER}"
 
-            env.NODE_ENV = "test"
+            currentBuild.displayName = "Build Image"
+            def image=docker.build(env.IMAGE_NAME, "--build-arg VERSION=${env.BUILD_NUMBER} build/")
 
-            print "Environment will be : ${env.NODE_ENV}"
+            currentBuild.displayName = "Push Image"
+            image.push()
 
-            docker.withRegistry('https://quay.io') {
 
-                def image=docker.build("olx_inc/octopush:${env.BUILD_NUMBER}", "--build-arg VERSION=${env.BUILD_NUMBER} build/")
-                image.push()
+        stage 'Deploy'
 
-            }
-
-       stage 'Deploy'
-
-            sh 'oc get projects octopush'
             sh "oc -n octopush tag quay.io/olx_inc/octopush:${env.BUILD_NUMBER} octopush/octopush:latest"
-            echo 'Push Env'
 
        stage 'Communicate'
 
