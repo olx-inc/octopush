@@ -48,17 +48,14 @@ node('master') {
                   subject: 'project build successful',
                   to: 'release@olx.com'
 
-        }
-
-
-    catch (err) {
+    } catch (err) {
 
         currentBuild.result = "FAILURE"
 
-            mail body: "project build error is here: ${env.BUILD_URL}" ,
-            from: 'release@olx.com',
-            subject: 'project build failed',
-            to: 'release@olx.com'
+        mail body: "project build error is here: ${env.BUILD_URL}" ,
+             from: 'release@olx.com',
+             subject: 'project build failed',
+             to: 'release@olx.com'
 
         throw err
     }
