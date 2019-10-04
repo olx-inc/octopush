@@ -11,7 +11,7 @@ class ConfigServiceProviderTest extends \PHPUnit_Framework_TestCase
     dbname: esquema
     host: host.olx.com.ar
     user: db_user
-    password: db_password
+    password: ******
     port: 3306
 environments: [\'qa1\',\'testing\',\'production\']
 modules: [\'billing\',\'adserving\',\'pannello\']';
@@ -36,7 +36,7 @@ modules: [\'billing\',\'adserving\',\'pannello\']';
     dbname: esquema
     host: host.olx.com.ar
     user: db_user
-    password: db_password
+    password: ******
     port: 3306
 environments: [\'qa1\',\'testing\',\'production\']
 modules: [\'billing\',\'adserving\',\'pannello\']';
