@@ -9,7 +9,7 @@ GEM
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
-    json (1.7.7)
+    json (2.3.0)
     multi_json (1.7.9)
     multi_xml (0.5.5)
     rspec (2.14.1)
@@ -30,7 +30,6 @@ GEM
       selenium-webdriver (>= 2.18.0)
     watir-webdriver-performance (0.2.2)
       watir-webdriver
-      watir-webdriver
     websocket (1.0.7)
 
 PLATFORMS
@@ -39,7 +38,7 @@ PLATFORMS
 DEPENDENCIES
   builder
   httparty
-  json (~> 1.7.7)
+  json (~> 2.3.0)
   rspec
   watir-webdriver
   watir-webdriver-performance
